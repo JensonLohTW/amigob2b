@@ -11,6 +11,7 @@ import { StylizedImage } from '@/components/StylizedImage'
 import { Testimonial } from '@/components/Testimonial'
 import { StatList, StatListItem } from '@/components/StatList'
 import { Button } from '@/components/Button'
+import { StatCard, ProgressBar, CircularProgress } from '@/components/AnimatedCounter'
 // 暫時保留原有的 logo 圖片，後續會替換為合作夥伴 logo
 import logoBrightPath from '@/images/clients/bright-path/logo-light.svg'
 import logoFamilyFund from '@/images/clients/family-fund/logo-light.svg'
@@ -201,19 +202,76 @@ export default async function Home() {
       {/* 市場數據展示區塊 - 展示關鍵投資數據 */}
       <Container className="mt-24 sm:mt-32 lg:mt-40">
         <FadeIn>
-          <h2 className="font-display text-2xl font-semibold text-neutral-950 text-center">
-            市場機會與投資回報
+          <h2 className="font-display text-3xl font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-4xl text-center">
+            市場潛力與投資機會
           </h2>
           <p className="mt-6 text-xl text-neutral-600 text-center max-w-3xl mx-auto">
-            高雄寵物市場潛力巨大，我們的 AI 自動販賣機為您提供穩定且高回報的投資機會
+            台灣寵物市場規模已突破600億元，其中寵物食品佔比超過40%。
+            隨著飼主對寵物健康意識提升，高品質鮮食需求快速成長。
           </p>
         </FadeIn>
-        <StatList className="mt-16">
-          <StatListItem value="400台" label="高雄市場機台潛力" />
-          <StatListItem value="34萬隻" label="高雄寵物飼養數量" />
-          <StatListItem value="7萬+" label="單機月毛利預估" />
-          <StatListItem value="8個月" label="投資回本時間" />
-        </StatList>
+
+        <FadeInStagger>
+          <div className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-4">
+            <FadeIn>
+              <StatCard
+                title="機台潛力"
+                value={400}
+                suffix="台"
+                description="全台預計可設置機台數量"
+                color="blue"
+                icon={
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                }
+              />
+            </FadeIn>
+            <FadeIn>
+              <StatCard
+                title="目標寵物數"
+                value={340000}
+                suffix="隻"
+                description="服務範圍內寵物數量"
+                color="green"
+                icon={
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                }
+              />
+            </FadeIn>
+            <FadeIn>
+              <StatCard
+                title="月毛利潛力"
+                value={70000}
+                prefix="NT$ "
+                suffix="+"
+                description="單台機器月毛利預估"
+                color="purple"
+                icon={
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  </svg>
+                }
+              />
+            </FadeIn>
+            <FadeIn>
+              <StatCard
+                title="回本時間"
+                value={8}
+                suffix="個月"
+                description="平均投資回本時間"
+                color="orange"
+                icon={
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                }
+              />
+            </FadeIn>
+          </div>
+        </FadeInStagger>
 
         {/* 快速導航按鈕 */}
         <FadeIn>

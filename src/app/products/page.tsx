@@ -5,6 +5,7 @@ import { PageIntro } from '@/components/PageIntro'
 import { RootLayout } from '@/components/RootLayout'
 import { ProductCatalog } from '@/components/ProductCatalog'
 import { SectionIntro } from '@/components/SectionIntro'
+import { CentralKitchenJourney } from '@/components/CentralKitchenJourney'
 
 export const metadata: Metadata = {
   title: '產品系列',
@@ -22,6 +23,9 @@ export default function Products() {
       </PageIntro>
 
       <ProductCatalog />
+
+      {/* 中央廚房探索區塊 */}
+      <CentralKitchenJourney />
 
       {/* 產品優勢說明 */}
       <SectionIntro

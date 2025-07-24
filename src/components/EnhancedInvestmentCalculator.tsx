@@ -285,6 +285,66 @@ export function EnhancedInvestmentCalculator() {
                   <p className="text-xs text-neutral-500 mt-1">包含機台、裝修、保證金等</p>
                 </div>
               </div>
+
+              {/* 進階參數 */}
+              <div className="mt-8 p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
+                <h5 className="text-lg font-semibold text-neutral-950 mb-4">進階參數調整</h5>
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-700 mb-2">
+                      地點因子
+                    </label>
+                    <select
+                      value={inputs.locationFactor}
+                      onChange={(e) => handleInputChange('locationFactor', e.target.value)}
+                      className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-sm p-2"
+                    >
+                      <option value="0.7">偏遠地區 (0.7x)</option>
+                      <option value="0.8">一般地區 (0.8x)</option>
+                      <option value="1.0">市區 (1.0x)</option>
+                      <option value="1.2">商業區 (1.2x)</option>
+                      <option value="1.5">黃金地段 (1.5x)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-700 mb-2">
+                      競爭程度
+                    </label>
+                    <select
+                      value={inputs.competitionLevel}
+                      onChange={(e) => handleInputChange('competitionLevel', e.target.value)}
+                      className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-sm p-2"
+                    >
+                      <option value="0.6">競爭激烈 (0.6x)</option>
+                      <option value="0.8">中等競爭 (0.8x)</option>
+                      <option value="1.0">一般競爭 (1.0x)</option>
+                      <option value="1.2">競爭較少 (1.2x)</option>
+                      <option value="1.4">獨家經營 (1.4x)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-700 mb-2">
+                      季節因子
+                    </label>
+                    <select
+                      value={inputs.seasonalFactor}
+                      onChange={(e) => handleInputChange('seasonalFactor', e.target.value)}
+                      className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-sm p-2"
+                    >
+                      <option value="0.8">淡季影響大 (0.8x)</option>
+                      <option value="0.9">輕微季節影響 (0.9x)</option>
+                      <option value="1.0">無季節影響 (1.0x)</option>
+                      <option value="1.1">旺季效應 (1.1x)</option>
+                      <option value="1.2">強烈旺季 (1.2x)</option>
+                    </select>
+                  </div>
+                </div>
+                <p className="text-xs text-neutral-500 mt-3">
+                  💡 這些因子會影響實際銷量，請根據您的實際情況調整
+                </p>
+              </div>
             </div>
 
             {/* 計算結果顯示 */}
@@ -360,6 +420,260 @@ export function EnhancedInvestmentCalculator() {
                     : '❌ 投資風險較高，建議重新評估參數。'
                   }
                 </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'scenarios' && (
+          <div className="space-y-8">
+            <div className="text-center mb-8">
+              <h4 className="text-lg font-semibold text-neutral-950 mb-2">情境分析比較</h4>
+              <p className="text-neutral-600">比較保守、現實和樂觀三種情境下的投資表現</p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              {/* 保守情境 */}
+              <div className="rounded-2xl bg-white p-6 border-2 border-red-100">
+                <div className="text-center mb-4">
+                  <h5 className="text-lg font-semibold text-red-600">保守估計</h5>
+                  <p className="text-sm text-neutral-600">銷量 70%</p>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-neutral-600">月淨利</span>
+                    <span className="font-semibold">{formatCurrency(scenarios.conservative.monthlyNetProfit || 0)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-neutral-600">回本時間</span>
+                    <span className="font-semibold">
+                      {scenarios.conservative.paybackMonths > 0 ? `${formatNumber(scenarios.conservative.paybackMonths || 0)} 個月` : '無法回本'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-neutral-600">年報酬率</span>
+                    <span className="font-semibold">{formatNumber(scenarios.conservative.annualROI || 0)}%</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 現實情境 */}
+              <div className="rounded-2xl bg-white p-6 border-2 border-blue-100">
+                <div className="text-center mb-4">
+                  <h5 className="text-lg font-semibold text-blue-600">現實估計</h5>
+                  <p className="text-sm text-neutral-600">銷量 100%</p>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-neutral-600">月淨利</span>
+                    <span className="font-semibold">{formatCurrency(scenarios.realistic.monthlyNetProfit || 0)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-neutral-600">回本時間</span>
+                    <span className="font-semibold">
+                      {scenarios.realistic.paybackMonths > 0 ? `${formatNumber(scenarios.realistic.paybackMonths || 0)} 個月` : '無法回本'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-neutral-600">年報酬率</span>
+                    <span className="font-semibold">{formatNumber(scenarios.realistic.annualROI || 0)}%</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 樂觀情境 */}
+              <div className="rounded-2xl bg-white p-6 border-2 border-green-100">
+                <div className="text-center mb-4">
+                  <h5 className="text-lg font-semibold text-green-600">樂觀估計</h5>
+                  <p className="text-sm text-neutral-600">銷量 130%</p>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-neutral-600">月淨利</span>
+                    <span className="font-semibold">{formatCurrency(scenarios.optimistic.monthlyNetProfit || 0)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-neutral-600">回本時間</span>
+                    <span className="font-semibold">
+                      {scenarios.optimistic.paybackMonths > 0 ? `${formatNumber(scenarios.optimistic.paybackMonths || 0)} 個月` : '無法回本'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-neutral-600">年報酬率</span>
+                    <span className="font-semibold">{formatNumber(scenarios.optimistic.annualROI || 0)}%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 情境說明 */}
+            <div className="rounded-2xl bg-white p-6">
+              <h5 className="text-lg font-semibold text-neutral-950 mb-4">情境說明</h5>
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <div>
+                  <h6 className="font-medium text-red-600 mb-2">保守情境 (70%)</h6>
+                  <ul className="text-sm text-neutral-600 space-y-1">
+                    <li>• 競爭激烈的市場</li>
+                    <li>• 位置較不理想</li>
+                    <li>• 淡季影響較大</li>
+                    <li>• 客戶接受度較低</li>
+                  </ul>
+                </div>
+                <div>
+                  <h6 className="font-medium text-blue-600 mb-2">現實情境 (100%)</h6>
+                  <ul className="text-sm text-neutral-600 space-y-1">
+                    <li>• 一般市場競爭</li>
+                    <li>• 位置適中</li>
+                    <li>• 季節影響正常</li>
+                    <li>• 預期銷售表現</li>
+                  </ul>
+                </div>
+                <div>
+                  <h6 className="font-medium text-green-600 mb-2">樂觀情境 (130%)</h6>
+                  <ul className="text-sm text-neutral-600 space-y-1">
+                    <li>• 市場競爭較少</li>
+                    <li>• 黃金地段位置</li>
+                    <li>• 旺季效應明顯</li>
+                    <li>• 客戶接受度高</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'analysis' && (
+          <div className="space-y-8">
+            <div className="text-center mb-8">
+              <h4 className="text-lg font-semibold text-neutral-950 mb-2">風險評估與建議</h4>
+              <p className="text-neutral-600">深入分析投資風險和成功因素</p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+              {/* 風險因素分析 */}
+              <div className="rounded-2xl bg-white p-6">
+                <h5 className="text-lg font-semibold text-neutral-950 mb-4">風險因素分析</h5>
+                <div className="space-y-4">
+                  <div className="p-4 rounded-lg bg-red-50 border border-red-200">
+                    <h6 className="font-medium text-red-600 mb-2">高風險因素</h6>
+                    <ul className="text-sm text-neutral-600 space-y-1">
+                      <li>• 回本時間超過 12 個月</li>
+                      <li>• 年報酬率低於 15%</li>
+                      <li>• 月淨利低於 3 萬元</li>
+                      <li>• 損益平衡點過高</li>
+                    </ul>
+                  </div>
+
+                  <div className="p-4 rounded-lg bg-yellow-50 border border-yellow-200">
+                    <h6 className="font-medium text-yellow-600 mb-2">中等風險因素</h6>
+                    <ul className="text-sm text-neutral-600 space-y-1">
+                      <li>• 回本時間 8-12 個月</li>
+                      <li>• 年報酬率 15-20%</li>
+                      <li>• 市場競爭激烈</li>
+                      <li>• 季節性影響明顯</li>
+                    </ul>
+                  </div>
+
+                  <div className="p-4 rounded-lg bg-green-50 border border-green-200">
+                    <h6 className="font-medium text-green-600 mb-2">低風險因素</h6>
+                    <ul className="text-sm text-neutral-600 space-y-1">
+                      <li>• 回本時間少於 8 個月</li>
+                      <li>• 年報酬率超過 20%</li>
+                      <li>• 穩定的客戶群</li>
+                      <li>• 優質地段位置</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* 成功建議 */}
+              <div className="rounded-2xl bg-white p-6">
+                <h5 className="text-lg font-semibold text-neutral-950 mb-4">成功建議</h5>
+                <div className="space-y-4">
+                  <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
+                    <h6 className="font-medium text-blue-600 mb-2">選址建議</h6>
+                    <ul className="text-sm text-neutral-600 space-y-1">
+                      <li>• 寵物醫院或寵物店附近</li>
+                      <li>• 社區密集住宅區</li>
+                      <li>• 人流量穩定的商圈</li>
+                      <li>• 停車方便的位置</li>
+                    </ul>
+                  </div>
+
+                  <div className="p-4 rounded-lg bg-purple-50 border border-purple-200">
+                    <h6 className="font-medium text-purple-600 mb-2">營運建議</h6>
+                    <ul className="text-sm text-neutral-600 space-y-1">
+                      <li>• 定期檢查產品新鮮度</li>
+                      <li>• 與當地寵物店合作</li>
+                      <li>• 建立客戶回饋機制</li>
+                      <li>• 適時調整產品組合</li>
+                    </ul>
+                  </div>
+
+                  <div className="p-4 rounded-lg bg-indigo-50 border border-indigo-200">
+                    <h6 className="font-medium text-indigo-600 mb-2">行銷建議</h6>
+                    <ul className="text-sm text-neutral-600 space-y-1">
+                      <li>• 社群媒體宣傳</li>
+                      <li>• 開幕優惠活動</li>
+                      <li>• 會員制度建立</li>
+                      <li>• 口碑行銷推廣</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 投資決策建議 */}
+            <div className="rounded-2xl bg-white p-6">
+              <h5 className="text-lg font-semibold text-neutral-950 mb-4">投資決策建議</h5>
+              <div className={`p-6 rounded-lg border-2 ${getRiskColor(results.riskLevel)}`}>
+                <div className="text-center mb-4">
+                  <h6 className="text-xl font-bold mb-2">
+                    當前風險等級：{getRiskText(results.riskLevel)}
+                  </h6>
+                  <p className="text-sm">
+                    基於您輸入的參數，系統評估的投資風險等級
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                  <div>
+                    <h6 className="font-medium mb-2">關鍵指標</h6>
+                    <ul className="text-sm space-y-1">
+                      <li>• 回本時間：{formatNumber(results.paybackMonths)} 個月</li>
+                      <li>• 年報酬率：{formatNumber(results.annualROI)}%</li>
+                      <li>• 月淨利：{formatCurrency(results.monthlyNetProfit)}</li>
+                      <li>• 損益平衡：{Math.round(results.breakEvenPoint)} 件/月</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h6 className="font-medium mb-2">建議行動</h6>
+                    <ul className="text-sm space-y-1">
+                      {results.riskLevel === 'low' && (
+                        <>
+                          <li>• ✅ 建議立即投資</li>
+                          <li>• ✅ 考慮多點布局</li>
+                          <li>• ✅ 準備擴展計劃</li>
+                        </>
+                      )}
+                      {results.riskLevel === 'medium' && (
+                        <>
+                          <li>• ⚠️ 謹慎評估後投資</li>
+                          <li>• ⚠️ 先試營運觀察</li>
+                          <li>• ⚠️ 準備風險應對</li>
+                        </>
+                      )}
+                      {results.riskLevel === 'high' && (
+                        <>
+                          <li>• ❌ 建議重新評估</li>
+                          <li>• ❌ 尋找更好位置</li>
+                          <li>• ❌ 降低初始投資</li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

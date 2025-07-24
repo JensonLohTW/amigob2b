@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { FadeIn } from '@/components/FadeIn'
+import { motion } from 'framer-motion'
 
 interface CalculationInputs {
   dailySales: number
@@ -9,6 +10,9 @@ interface CalculationInputs {
   monthlyRent: number
   monthlyUtilities: number
   initialInvestment: number
+  locationFactor: number
+  competitionLevel: number
+  seasonalFactor: number
 }
 
 interface CalculationResults {
@@ -17,6 +21,15 @@ interface CalculationResults {
   monthlyNetProfit: number
   paybackMonths: number
   annualROI: number
+  breakEvenPoint: number
+  riskLevel: string
+  projectedYearlyProfit: number
+}
+
+interface ScenarioComparison {
+  conservative: CalculationResults
+  realistic: CalculationResults
+  optimistic: CalculationResults
 }
 
 export function InvestmentCalculator() {
@@ -26,6 +39,9 @@ export function InvestmentCalculator() {
     monthlyRent: 15000,
     monthlyUtilities: 3000,
     initialInvestment: 500000,
+    locationFactor: 1.0,
+    competitionLevel: 0.8,
+    seasonalFactor: 1.0,
   })
 
   const [results, setResults] = useState<CalculationResults>({
@@ -34,13 +50,27 @@ export function InvestmentCalculator() {
     monthlyNetProfit: 0,
     paybackMonths: 0,
     annualROI: 0,
+    breakEvenPoint: 0,
+    riskLevel: 'medium',
+    projectedYearlyProfit: 0,
   })
 
-  // 實時計算邏輯
+  const [scenarios, setScenarios] = useState<ScenarioComparison>({
+    conservative: {} as CalculationResults,
+    realistic: {} as CalculationResults,
+    optimistic: {} as CalculationResults,
+  })
+
+  const [activeTab, setActiveTab] = useState<'calculator' | 'scenarios' | 'analysis'>('calculator')
+
+  // 增強的計算邏輯
   useEffect(() => {
-    const calculateResults = () => {
-      // 月營收 = 日銷量 × 平均單價 × 30天
-      const monthlyRevenue = inputs.dailySales * inputs.averagePrice * 30
+    const calculateResults = (multiplier: number = 1) => {
+      // 考慮地點、競爭和季節因素的調整銷量
+      const adjustedDailySales = inputs.dailySales * inputs.locationFactor * inputs.competitionLevel * inputs.seasonalFactor * multiplier
+
+      // 月營收 = 調整後日銷量 × 平均單價 × 30天
+      const monthlyRevenue = adjustedDailySales * inputs.averagePrice * 30
 
       // 月毛利 = 月營收 × 30% (分潤比例)
       const monthlyGrossProfit = monthlyRevenue * 0.3
@@ -54,16 +84,38 @@ export function InvestmentCalculator() {
       // 年投資報酬率 = (月淨利 × 12) ÷ 初始投資 × 100%
       const annualROI = inputs.initialInvestment > 0 ? (monthlyNetProfit * 12) / inputs.initialInvestment * 100 : 0
 
-      setResults({
+      // 損益平衡點 = 固定成本 ÷ (單價 × 毛利率)
+      const breakEvenPoint = (inputs.monthlyRent + inputs.monthlyUtilities) / (inputs.averagePrice * 0.3)
+
+      // 風險評估
+      const riskLevel = paybackMonths <= 8 && annualROI >= 20 ? 'low' :
+                       paybackMonths <= 12 && annualROI >= 15 ? 'medium' : 'high'
+
+      // 預計年利潤
+      const projectedYearlyProfit = monthlyNetProfit * 12
+
+      return {
         monthlyRevenue,
         monthlyGrossProfit,
         monthlyNetProfit,
         paybackMonths,
         annualROI,
-      })
+        breakEvenPoint,
+        riskLevel,
+        projectedYearlyProfit,
+      }
     }
 
-    calculateResults()
+    // 計算主要結果
+    const mainResults = calculateResults()
+    setResults(mainResults)
+
+    // 計算三種情境
+    setScenarios({
+      conservative: calculateResults(0.7), // 保守估計：70%
+      realistic: calculateResults(1.0),    // 現實估計：100%
+      optimistic: calculateResults(1.3),   // 樂觀估計：130%
+    })
   }, [inputs])
 
   const handleInputChange = (field: keyof CalculationInputs, value: string) => {
@@ -86,13 +138,33 @@ export function InvestmentCalculator() {
     return num.toFixed(decimals)
   }
 
+  const getRiskColor = (risk: string) => {
+    switch (risk) {
+      case 'low': return 'text-green-600 bg-green-50 border-green-200'
+      case 'medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200'
+      case 'high': return 'text-red-600 bg-red-50 border-red-200'
+      default: return 'text-gray-600 bg-gray-50 border-gray-200'
+    }
+  }
+
+  const getRiskText = (risk: string) => {
+    switch (risk) {
+      case 'low': return '低風險'
+      case 'medium': return '中等風險'
+      case 'high': return '高風險'
+      default: return '未知風險'
+    }
+  }
+
+
+
   return (
     <FadeIn>
       <div className="rounded-3xl bg-neutral-50 p-8">
         <h3 className="text-2xl font-semibold text-neutral-950 text-center mb-8">
           投資回報試算工具
         </h3>
-        
+
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* 輸入參數區域 */}
           <div className="rounded-2xl bg-white p-6">
@@ -209,7 +281,7 @@ export function InvestmentCalculator() {
                   </span>
                 </div>
               </div>
-              
+
               <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-medium text-neutral-600">年投資報酬率</span>
@@ -219,12 +291,12 @@ export function InvestmentCalculator() {
                 </div>
               </div>
             </div>
-            
+
             {/* 投資建議 */}
             <div className="mt-6 p-4 rounded-lg bg-neutral-50 border border-neutral-200">
               <h5 className="font-medium text-neutral-950 mb-2">投資建議</h5>
               <p className="text-sm text-neutral-600">
-                {results.paybackMonths <= 8 && results.annualROI >= 20 
+                {results.paybackMonths <= 8 && results.annualROI >= 20
                   ? '✅ 優秀的投資機會！回本時間短且報酬率高。'
                   : results.paybackMonths <= 12 && results.annualROI >= 15
                   ? '⚠️ 可考慮的投資機會，建議評估風險。'

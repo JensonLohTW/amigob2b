@@ -35,7 +35,7 @@ const journeySteps: JourneyStep[] = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
-    color: 'from-green-500 to-emerald-600'
+    color: 'from-neutral-700 to-neutral-800'
   },
   {
     id: 'kitchen',
@@ -54,7 +54,7 @@ const journeySteps: JourneyStep[] = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
       </svg>
     ),
-    color: 'from-blue-500 to-cyan-600'
+    color: 'from-neutral-600 to-neutral-700'
   },
   {
     id: 'quality',
@@ -73,7 +73,7 @@ const journeySteps: JourneyStep[] = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
-    color: 'from-purple-500 to-indigo-600'
+    color: 'from-neutral-500 to-neutral-600'
   },
   {
     id: 'delivery',
@@ -92,7 +92,7 @@ const journeySteps: JourneyStep[] = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
-    color: 'from-orange-500 to-red-600'
+    color: 'from-neutral-400 to-neutral-500'
   }
 ]
 
@@ -116,7 +116,7 @@ export function CentralKitchenJourney() {
         <FadeIn>
           <div className="relative">
             {/* 連接線 */}
-            <div className="absolute top-20 left-8 right-8 h-0.5 bg-gradient-to-r from-green-500 via-blue-500 via-purple-500 to-orange-500 hidden lg:block" />
+            <div className="absolute top-20 left-8 right-8 h-0.5 bg-gradient-to-r from-neutral-300 via-neutral-400 via-neutral-500 to-neutral-600 hidden lg:block" />
             
             {/* 步驟卡片 */}
             <FadeInStagger className="grid grid-cols-1 gap-8 lg:grid-cols-4">
@@ -198,6 +198,100 @@ export function CentralKitchenJourney() {
           </div>
         </FadeIn>
 
+        {/* 製作流程展示 */}
+        <FadeIn>
+          <div className="mt-20 rounded-3xl bg-gradient-to-br from-neutral-50 to-neutral-100 p-8 lg:p-12">
+            <div className="text-center mb-12">
+              <h3 className="text-2xl font-semibold text-neutral-950 mb-4">
+                專業製作流程一覽
+              </h3>
+              <p className="text-lg text-neutral-600 max-w-3xl mx-auto">
+                透過先進的設備和嚴格的流程控制，我們確保每一份寵物鮮食都達到最高品質標準。
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+              {/* 製作流程圖 */}
+              <div className="space-y-6">
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="w-8 h-8 bg-neutral-100 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-neutral-700 font-bold text-sm">1</span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-neutral-950">原料預處理</h4>
+                  </div>
+                  <p className="text-sm text-neutral-600">
+                    新鮮食材送達後立即進行清洗、切割和分類，確保食材的新鮮度和衛生安全。
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="w-8 h-8 bg-neutral-200 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-neutral-700 font-bold text-sm">2</span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-neutral-950">營養配比</h4>
+                  </div>
+                  <p className="text-sm text-neutral-600">
+                    根據寵物營養需求，精確計算各種食材的比例，確保營養均衡完整。
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="w-8 h-8 bg-neutral-300 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-neutral-700 font-bold text-sm">3</span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-neutral-950">低溫烹調</h4>
+                  </div>
+                  <p className="text-sm text-neutral-600">
+                    採用低溫慢煮技術，最大程度保留食材的營養價值和天然風味。
+                  </p>
+                </div>
+              </div>
+
+              {/* 品質控制要點 */}
+              <div className="space-y-6">
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="w-8 h-8 bg-neutral-400 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-white font-bold text-sm">4</span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-neutral-950">急速冷卻</h4>
+                  </div>
+                  <p className="text-sm text-neutral-600">
+                    烹調完成後立即進行急速冷卻，鎖住營養和新鮮度，抑制細菌滋生。
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="w-8 h-8 bg-neutral-500 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-white font-bold text-sm">5</span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-neutral-950">無菌包裝</h4>
+                  </div>
+                  <p className="text-sm text-neutral-600">
+                    在無塵環境中進行自動化包裝，每個包裝都經過密封檢測確保完整性。
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="w-8 h-8 bg-neutral-600 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-white font-bold text-sm">6</span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-neutral-950">冷鏈配送</h4>
+                  </div>
+                  <p className="text-sm text-neutral-600">
+                    全程冷鏈運輸，從工廠到販賣機維持0-4°C低溫，確保產品品質。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
+
         {/* 品質保證說明 */}
         <FadeIn>
           <div className="mt-20 rounded-3xl bg-gradient-to-br from-neutral-50 to-neutral-100 p-8 lg:p-12">
@@ -217,8 +311,8 @@ export function CentralKitchenJourney() {
                 whileHover={{ y: -5 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-neutral-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
@@ -233,8 +327,8 @@ export function CentralKitchenJourney() {
                 whileHover={{ y: -5 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="w-12 h-12 bg-neutral-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-neutral-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
@@ -249,8 +343,8 @@ export function CentralKitchenJourney() {
                 whileHover={{ y: -5 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="w-12 h-12 bg-neutral-300 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-neutral-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </div>
@@ -258,6 +352,52 @@ export function CentralKitchenJourney() {
                 <p className="text-sm text-neutral-600">
                   每日新鮮製作，24小時內配送到販賣機，確保毛孩享用最新鮮的美味。
                 </p>
+              </motion.div>
+            </div>
+          </div>
+        </FadeIn>
+
+        {/* 數據統計展示 */}
+        <FadeIn>
+          <div className="mt-20 text-center">
+            <h3 className="text-2xl font-semibold text-neutral-950 mb-8">
+              我們的製作實力
+            </h3>
+            <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
+              <motion.div
+                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="text-3xl font-bold text-neutral-950 mb-2">50,000+</div>
+                <div className="text-sm text-neutral-600">日產能（份）</div>
+              </motion.div>
+
+              <motion.div
+                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="text-3xl font-bold text-neutral-950 mb-2">99.9%</div>
+                <div className="text-sm text-neutral-600">品質合格率</div>
+              </motion.div>
+
+              <motion.div
+                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="text-3xl font-bold text-neutral-950 mb-2">24小時</div>
+                <div className="text-sm text-neutral-600">配送時效</div>
+              </motion.div>
+
+              <motion.div
+                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="text-3xl font-bold text-neutral-950 mb-2">15+</div>
+                <div className="text-sm text-neutral-600">產品系列</div>
               </motion.div>
             </div>
           </div>

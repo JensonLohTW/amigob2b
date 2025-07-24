@@ -6,17 +6,17 @@ import { RootLayout } from '@/components/RootLayout'
 import { InvestmentCalculator } from '@/components/InvestmentCalculator'
 
 export const metadata: Metadata = {
-  title: '投資試算',
-  description: '互動式投資試算工具，輸入您的營運參數，即時計算投資回報率和回本時間。',
+  title: '智能投資試算 - AMIGO 寵物鮮食自動販賣機',
+  description: '使用我們的智能投資試算工具，包含情境分析、風險評估和詳細的投資回報計算，幫助您做出明智的投資決策。',
 }
 
 export default function Calculator() {
   return (
     <RootLayout>
-      <PageIntro eyebrow="投資試算" title="投資回報計算工具">
+      <PageIntro eyebrow="智能投資試算" title="全方位投資分析工具">
         <p>
-          使用我們的互動式投資試算工具，輸入您的營運參數，
-          即時計算月毛利、淨利潤和投資回本時間，讓您清楚了解投資效益。
+          使用我們的智能投資試算工具，不僅能計算基礎的投資回報，
+          還提供情境分析、風險評估和專業建議，讓您全面了解投資機會，做出最明智的決策。
         </p>
       </PageIntro>
 
