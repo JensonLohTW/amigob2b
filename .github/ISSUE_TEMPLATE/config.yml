@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 文檔和幫助
+    url: https://github.com/amigo-pet-food/amigob2b/wiki
+    about: 查看項目文檔和常見問題解答
+  - name: 💬 討論區
+    url: https://github.com/amigo-pet-food/amigob2b/discussions
+    about: 參與社區討論，分享想法和經驗
+  - name: 🔒 安全問題報告
+    url: mailto:security@amigo.com.tw
+    about: 報告安全漏洞（請勿在公開 issue 中報告安全問題）
+  - name: 📧 商業支援
+    url: mailto:support@amigo.com.tw
+    about: 商業支援和合作諮詢

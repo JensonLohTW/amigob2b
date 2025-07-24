@@ -1,0 +1,98 @@
+MIT License
+
+Copyright (c) 2025 AMIGO 寵物鮮食科技有限公司
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## 中文說明
+
+MIT 授權條款
+
+版權所有 (c) 2025 AMIGO 寵物鮮食科技有限公司
+
+茲免費授予任何取得本軟體及相關說明文件（以下稱「軟體」）副本之人，
+不受限制地處置該軟體，包括但不限於使用、複製、修改、合併、發布、
+散布、再授權及/或販售軟體副本之權利，且得向軟體提供者要求提供軟體，
+惟須符合以下條件：
+
+上述版權聲明及本授權聲明應包含在軟體的所有副本或重要部分中。
+
+軟體係依「現狀」提供，不提供任何形式之明示或默示擔保，包括但不限於
+適售性、特定目的適用性及非侵權之擔保。無論任何情況，作者或版權所有人
+均不負任何契約、侵權或其他責任，無論該等責任係因軟體或軟體之使用或
+其他軟體相關行為所生。
+
+## 第三方授權
+
+本項目使用了以下開源軟體：
+
+### Next.js
+- 授權：MIT License
+- 版權：Vercel, Inc.
+- 網址：https://github.com/vercel/next.js
+
+### React
+- 授權：MIT License  
+- 版權：Facebook, Inc.
+- 網址：https://github.com/facebook/react
+
+### Tailwind CSS
+- 授權：MIT License
+- 版權：Tailwind Labs, Inc.
+- 網址：https://github.com/tailwindlabs/tailwindcss
+
+### TypeScript
+- 授權：Apache License 2.0
+- 版權：Microsoft Corporation
+- 網址：https://github.com/microsoft/TypeScript
+
+### Framer Motion
+- 授權：MIT License
+- 版權：Framer B.V.
+- 網址：https://github.com/framer/motion
+
+### MDX
+- 授權：MIT License
+- 版權：MDX contributors
+- 網址：https://github.com/mdx-js/mdx
+
+完整的第三方授權清單請參見 package.json 中的依賴項。
+
+## 商標聲明
+
+"AMIGO" 是 AMIGO 寵物鮮食科技有限公司的註冊商標。
+本授權不授予使用商標、服務標記、商號或產品名稱的權利，
+除非是為了合理和慣常使用來描述作品的來源。
+
+## 貢獻
+
+通過向本項目提交貢獻，您同意您的貢獻將在相同的 MIT 授權下發布。
+
+## 免責聲明
+
+本軟體僅供學習和參考使用。在生產環境中使用前，請確保：
+
+1. 遵守所有適用的法律法規
+2. 進行充分的安全審查
+3. 實施適當的數據保護措施
+4. 獲得必要的商業授權
+
+AMIGO 寵物鮮食科技有限公司不對因使用本軟體而產生的任何直接或間接損失承擔責任。

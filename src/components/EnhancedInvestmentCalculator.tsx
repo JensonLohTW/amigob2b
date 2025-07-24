@@ -1,0 +1,370 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { FadeIn } from '@/components/FadeIn'
+import { motion } from 'framer-motion'
+
+interface CalculationInputs {
+  dailySales: number
+  averagePrice: number
+  monthlyRent: number
+  monthlyUtilities: number
+  initialInvestment: number
+  locationFactor: number
+  competitionLevel: number
+  seasonalFactor: number
+}
+
+interface CalculationResults {
+  monthlyRevenue: number
+  monthlyGrossProfit: number
+  monthlyNetProfit: number
+  paybackMonths: number
+  annualROI: number
+  breakEvenPoint: number
+  riskLevel: string
+  projectedYearlyProfit: number
+}
+
+interface ScenarioComparison {
+  conservative: CalculationResults
+  realistic: CalculationResults
+  optimistic: CalculationResults
+}
+
+export function EnhancedInvestmentCalculator() {
+  const [inputs, setInputs] = useState<CalculationInputs>({
+    dailySales: 50,
+    averagePrice: 180,
+    monthlyRent: 15000,
+    monthlyUtilities: 3000,
+    initialInvestment: 500000,
+    locationFactor: 1.0,
+    competitionLevel: 0.8,
+    seasonalFactor: 1.0,
+  })
+
+  const [results, setResults] = useState<CalculationResults>({
+    monthlyRevenue: 0,
+    monthlyGrossProfit: 0,
+    monthlyNetProfit: 0,
+    paybackMonths: 0,
+    annualROI: 0,
+    breakEvenPoint: 0,
+    riskLevel: 'medium',
+    projectedYearlyProfit: 0,
+  })
+
+  const [scenarios, setScenarios] = useState<ScenarioComparison>({
+    conservative: {} as CalculationResults,
+    realistic: {} as CalculationResults,
+    optimistic: {} as CalculationResults,
+  })
+
+  const [activeTab, setActiveTab] = useState<'calculator' | 'scenarios' | 'analysis'>('calculator')
+
+  // 增強的計算邏輯
+  useEffect(() => {
+    const calculateResults = (multiplier: number = 1) => {
+      // 考慮地點、競爭和季節因素的調整銷量
+      const adjustedDailySales = inputs.dailySales * inputs.locationFactor * inputs.competitionLevel * inputs.seasonalFactor * multiplier
+
+      // 月營收 = 調整後日銷量 × 平均單價 × 30天
+      const monthlyRevenue = adjustedDailySales * inputs.averagePrice * 30
+
+      // 月毛利 = 月營收 × 30% (分潤比例)
+      const monthlyGrossProfit = monthlyRevenue * 0.3
+
+      // 月淨利 = 月毛利 - 月租金 - 月水電
+      const monthlyNetProfit = monthlyGrossProfit - inputs.monthlyRent - inputs.monthlyUtilities
+
+      // 回本月數 = 初始投資 ÷ 月淨利
+      const paybackMonths = monthlyNetProfit > 0 ? inputs.initialInvestment / monthlyNetProfit : 0
+
+      // 年投資報酬率 = (月淨利 × 12) ÷ 初始投資 × 100%
+      const annualROI = inputs.initialInvestment > 0 ? (monthlyNetProfit * 12) / inputs.initialInvestment * 100 : 0
+
+      // 損益平衡點 = 固定成本 ÷ (單價 × 毛利率)
+      const breakEvenPoint = (inputs.monthlyRent + inputs.monthlyUtilities) / (inputs.averagePrice * 0.3)
+
+      // 風險評估
+      const riskLevel = paybackMonths <= 8 && annualROI >= 20 ? 'low' : 
+                       paybackMonths <= 12 && annualROI >= 15 ? 'medium' : 'high'
+
+      // 預計年利潤
+      const projectedYearlyProfit = monthlyNetProfit * 12
+
+      return {
+        monthlyRevenue,
+        monthlyGrossProfit,
+        monthlyNetProfit,
+        paybackMonths,
+        annualROI,
+        breakEvenPoint,
+        riskLevel,
+        projectedYearlyProfit,
+      }
+    }
+
+    // 計算主要結果
+    const mainResults = calculateResults()
+    setResults(mainResults)
+
+    // 計算三種情境
+    setScenarios({
+      conservative: calculateResults(0.7), // 保守估計：70%
+      realistic: calculateResults(1.0),    // 現實估計：100%
+      optimistic: calculateResults(1.3),   // 樂觀估計：130%
+    })
+  }, [inputs])
+
+  const handleInputChange = (field: keyof CalculationInputs, value: string) => {
+    const numericValue = parseFloat(value) || 0
+    setInputs(prev => ({
+      ...prev,
+      [field]: numericValue,
+    }))
+  }
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('zh-TW', {
+      style: 'currency',
+      currency: 'TWD',
+      minimumFractionDigits: 0,
+    }).format(amount)
+  }
+
+  const formatNumber = (num: number, decimals: number = 1) => {
+    return num.toFixed(decimals)
+  }
+
+  const getRiskColor = (risk: string) => {
+    switch (risk) {
+      case 'low': return 'text-green-600 bg-green-50 border-green-200'
+      case 'medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200'
+      case 'high': return 'text-red-600 bg-red-50 border-red-200'
+      default: return 'text-gray-600 bg-gray-50 border-gray-200'
+    }
+  }
+
+  const getRiskText = (risk: string) => {
+    switch (risk) {
+      case 'low': return '低風險'
+      case 'medium': return '中等風險'
+      case 'high': return '高風險'
+      default: return '未知風險'
+    }
+  }
+
+  // 動畫數字組件
+  const AnimatedNumber = ({ value, prefix = '', suffix = '', decimals = 0 }: {
+    value: number
+    prefix?: string
+    suffix?: string
+    decimals?: number
+  }) => (
+    <motion.span
+      key={value}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="text-xl font-bold text-neutral-950"
+    >
+      {prefix}{decimals > 0 ? formatNumber(value, decimals) : Math.round(value).toLocaleString()}{suffix}
+    </motion.span>
+  )
+
+  return (
+    <FadeIn>
+      <div className="rounded-3xl bg-neutral-50 p-8">
+        <h3 className="text-2xl font-semibold text-neutral-950 text-center mb-8">
+          智能投資回報試算工具
+        </h3>
+        
+        {/* 標籤導航 */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-white rounded-lg p-1 shadow-sm">
+            {[
+              { key: 'calculator', label: '基礎計算' },
+              { key: 'scenarios', label: '情境分析' },
+              { key: 'analysis', label: '風險評估' },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key as any)}
+                className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+                  activeTab === tab.key
+                    ? 'bg-neutral-950 text-white'
+                    : 'text-neutral-600 hover:text-neutral-950'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {activeTab === 'calculator' && (
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {/* 基礎參數輸入 */}
+            <div className="rounded-2xl bg-white p-6">
+              <h4 className="text-lg font-semibold text-neutral-950 mb-6">基礎營運參數</h4>
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    日銷售數量 (件)
+                  </label>
+                  <input 
+                    type="number" 
+                    value={inputs.dailySales}
+                    onChange={(e) => handleInputChange('dailySales', e.target.value)}
+                    className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-lg p-3"
+                    placeholder="50"
+                    min="0"
+                  />
+                  <p className="text-xs text-neutral-500 mt-1">建議範圍：30-100 件/日</p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    平均單價 (元)
+                  </label>
+                  <input 
+                    type="number" 
+                    value={inputs.averagePrice}
+                    onChange={(e) => handleInputChange('averagePrice', e.target.value)}
+                    className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-lg p-3"
+                    placeholder="180"
+                    min="0"
+                  />
+                  <p className="text-xs text-neutral-500 mt-1">建議範圍：150-250 元</p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    月租金 (元)
+                  </label>
+                  <input 
+                    type="number" 
+                    value={inputs.monthlyRent}
+                    onChange={(e) => handleInputChange('monthlyRent', e.target.value)}
+                    className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-lg p-3"
+                    placeholder="15000"
+                    min="0"
+                  />
+                  <p className="text-xs text-neutral-500 mt-1">包含場地租金</p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    月水電費 (元)
+                  </label>
+                  <input 
+                    type="number" 
+                    value={inputs.monthlyUtilities}
+                    onChange={(e) => handleInputChange('monthlyUtilities', e.target.value)}
+                    className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-lg p-3"
+                    placeholder="3000"
+                    min="0"
+                  />
+                  <p className="text-xs text-neutral-500 mt-1">包含電費、網路費等</p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    初始投資 (元)
+                  </label>
+                  <input 
+                    type="number" 
+                    value={inputs.initialInvestment}
+                    onChange={(e) => handleInputChange('initialInvestment', e.target.value)}
+                    className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-lg p-3"
+                    placeholder="500000"
+                    min="0"
+                  />
+                  <p className="text-xs text-neutral-500 mt-1">包含機台、裝修、保證金等</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 計算結果顯示 */}
+            <div className="rounded-2xl bg-white p-6">
+              <h4 className="text-lg font-semibold text-neutral-950 mb-6">投資回報分析</h4>
+              <div className="space-y-4">
+                <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-neutral-600">月營收</span>
+                    <AnimatedNumber value={results.monthlyRevenue} prefix="NT$ " />
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-neutral-600">月毛利 (30%)</span>
+                    <AnimatedNumber value={results.monthlyGrossProfit} prefix="NT$ " />
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-neutral-600">月淨利</span>
+                    <AnimatedNumber value={results.monthlyNetProfit} prefix="NT$ " />
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-neutral-600">回本時間</span>
+                    <AnimatedNumber 
+                      value={results.paybackMonths} 
+                      suffix=" 個月" 
+                      decimals={1}
+                    />
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-neutral-600">年投資報酬率</span>
+                    <AnimatedNumber 
+                      value={results.annualROI} 
+                      suffix="%" 
+                      decimals={1}
+                    />
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-neutral-600">損益平衡點</span>
+                    <AnimatedNumber 
+                      value={results.breakEvenPoint} 
+                      suffix=" 件/月" 
+                      decimals={0}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* 風險評估 */}
+              <div className={`mt-6 p-4 rounded-lg border ${getRiskColor(results.riskLevel)}`}>
+                <div className="flex items-center justify-between">
+                  <span className="font-medium">風險評估</span>
+                  <span className="font-bold">{getRiskText(results.riskLevel)}</span>
+                </div>
+                <p className="text-sm mt-2">
+                  {results.paybackMonths <= 8 && results.annualROI >= 20 
+                    ? '✅ 優秀的投資機會！回本時間短且報酬率高。'
+                    : results.paybackMonths <= 12 && results.annualROI >= 15
+                    ? '⚠️ 可考慮的投資機會，建議評估風險。'
+                    : '❌ 投資風險較高，建議重新評估參數。'
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </FadeIn>
+  )
+}

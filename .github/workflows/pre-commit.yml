@@ -1,0 +1,148 @@
+name: Pre-commit Checks
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  pre-commit:
+    name: Pre-commit Checks
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Check file sizes
+      run: |
+        echo "檢查大文件..."
+        find . -type f -size +10M -not -path "./node_modules/*" -not -path "./.git/*" | while read file; do
+          echo "警告: 發現大文件 $file ($(du -h "$file" | cut -f1))"
+        done
+
+    - name: Check for sensitive files
+      run: |
+        echo "檢查敏感文件..."
+        sensitive_patterns=(
+          "*.key"
+          "*.pem"
+          "*.p12"
+          "*.pfx"
+          ".env"
+          ".env.local"
+          ".env.production"
+          "id_rsa"
+          "id_dsa"
+          "*.log"
+        )
+        
+        for pattern in "${sensitive_patterns[@]}"; do
+          if find . -name "$pattern" -not -path "./node_modules/*" -not -path "./.git/*" | grep -q .; then
+            echo "錯誤: 發現敏感文件匹配模式 $pattern"
+            find . -name "$pattern" -not -path "./node_modules/*" -not -path "./.git/*"
+            exit 1
+          fi
+        done
+
+    - name: Check for secrets in code
+      run: |
+        echo "檢查代碼中的秘密..."
+        secret_patterns=(
+          "password\s*=\s*['\"][^'\"]*['\"]"
+          "api[_-]?key\s*=\s*['\"][^'\"]*['\"]"
+          "secret\s*=\s*['\"][^'\"]*['\"]"
+          "token\s*=\s*['\"][^'\"]*['\"]"
+          "AKIA[0-9A-Z]{16}"
+          "sk_live_[0-9a-zA-Z]{24}"
+          "pk_live_[0-9a-zA-Z]{24}"
+        )
+        
+        for pattern in "${secret_patterns[@]}"; do
+          if grep -r -E "$pattern" src/ --exclude-dir=node_modules; then
+            echo "警告: 可能發現硬編碼的秘密"
+          fi
+        done
+
+    - name: Lint code
+      run: npm run lint
+
+    - name: Type check
+      run: npx tsc --noEmit
+
+    - name: Check code formatting
+      run: npx prettier --check .
+
+    - name: Test build
+      run: npm run build
+
+    - name: Check bundle size
+      run: |
+        echo "檢查打包大小..."
+        if [ -d ".next" ]; then
+          du -sh .next/static/chunks/*.js | sort -hr | head -10
+        fi
+
+    - name: Security audit
+      run: npm audit --audit-level=moderate
+      continue-on-error: true
+
+    - name: Check dependencies
+      run: |
+        echo "檢查過時的依賴..."
+        npx npm-check-updates --errorLevel 2
+      continue-on-error: true
+
+    - name: Validate package.json
+      run: |
+        echo "驗證 package.json..."
+        node -e "JSON.parse(require('fs').readFileSync('package.json', 'utf8'))"
+
+    - name: Check for TODO comments
+      run: |
+        echo "檢查 TODO 註釋..."
+        if grep -r "TODO\|FIXME\|HACK" src/ --exclude-dir=node_modules; then
+          echo "發現待辦事項註釋，請在提交前處理"
+        fi
+      continue-on-error: true
+
+    - name: Check commit message
+      if: github.event_name == 'push'
+      run: |
+        echo "檢查提交訊息格式..."
+        commit_msg=$(git log -1 --pretty=%B)
+        if ! echo "$commit_msg" | grep -qE "^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .+"; then
+          echo "警告: 提交訊息不符合 Conventional Commits 格式"
+          echo "當前訊息: $commit_msg"
+          echo "建議格式: type(scope): description"
+        fi
+      continue-on-error: true
+
+    - name: Generate summary
+      run: |
+        echo "## 🎉 Pre-commit 檢查完成" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### ✅ 通過的檢查" >> $GITHUB_STEP_SUMMARY
+        echo "- 代碼格式檢查" >> $GITHUB_STEP_SUMMARY
+        echo "- TypeScript 類型檢查" >> $GITHUB_STEP_SUMMARY
+        echo "- ESLint 代碼品質檢查" >> $GITHUB_STEP_SUMMARY
+        echo "- 構建測試" >> $GITHUB_STEP_SUMMARY
+        echo "- 敏感文件檢查" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 項目統計" >> $GITHUB_STEP_SUMMARY
+        echo "- 總文件數: $(find src/ -type f | wc -l)" >> $GITHUB_STEP_SUMMARY
+        echo "- TypeScript 文件: $(find src/ -name "*.ts" -o -name "*.tsx" | wc -l)" >> $GITHUB_STEP_SUMMARY
+        echo "- 組件數量: $(find src/components/ -name "*.tsx" 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
+        echo "- 頁面數量: $(find src/app/ -name "page.tsx" 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
