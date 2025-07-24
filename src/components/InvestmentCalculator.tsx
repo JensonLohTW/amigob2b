@@ -1,0 +1,240 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { FadeIn } from '@/components/FadeIn'
+
+interface CalculationInputs {
+  dailySales: number
+  averagePrice: number
+  monthlyRent: number
+  monthlyUtilities: number
+  initialInvestment: number
+}
+
+interface CalculationResults {
+  monthlyRevenue: number
+  monthlyGrossProfit: number
+  monthlyNetProfit: number
+  paybackMonths: number
+  annualROI: number
+}
+
+export function InvestmentCalculator() {
+  const [inputs, setInputs] = useState<CalculationInputs>({
+    dailySales: 50,
+    averagePrice: 180,
+    monthlyRent: 15000,
+    monthlyUtilities: 3000,
+    initialInvestment: 500000,
+  })
+
+  const [results, setResults] = useState<CalculationResults>({
+    monthlyRevenue: 0,
+    monthlyGrossProfit: 0,
+    monthlyNetProfit: 0,
+    paybackMonths: 0,
+    annualROI: 0,
+  })
+
+  // 實時計算邏輯
+  useEffect(() => {
+    const calculateResults = () => {
+      // 月營收 = 日銷量 × 平均單價 × 30天
+      const monthlyRevenue = inputs.dailySales * inputs.averagePrice * 30
+
+      // 月毛利 = 月營收 × 30% (分潤比例)
+      const monthlyGrossProfit = monthlyRevenue * 0.3
+
+      // 月淨利 = 月毛利 - 月租金 - 月水電
+      const monthlyNetProfit = monthlyGrossProfit - inputs.monthlyRent - inputs.monthlyUtilities
+
+      // 回本月數 = 初始投資 ÷ 月淨利
+      const paybackMonths = monthlyNetProfit > 0 ? inputs.initialInvestment / monthlyNetProfit : 0
+
+      // 年投資報酬率 = (月淨利 × 12) ÷ 初始投資 × 100%
+      const annualROI = inputs.initialInvestment > 0 ? (monthlyNetProfit * 12) / inputs.initialInvestment * 100 : 0
+
+      setResults({
+        monthlyRevenue,
+        monthlyGrossProfit,
+        monthlyNetProfit,
+        paybackMonths,
+        annualROI,
+      })
+    }
+
+    calculateResults()
+  }, [inputs])
+
+  const handleInputChange = (field: keyof CalculationInputs, value: string) => {
+    const numericValue = parseFloat(value) || 0
+    setInputs(prev => ({
+      ...prev,
+      [field]: numericValue,
+    }))
+  }
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('zh-TW', {
+      style: 'currency',
+      currency: 'TWD',
+      minimumFractionDigits: 0,
+    }).format(amount)
+  }
+
+  const formatNumber = (num: number, decimals: number = 1) => {
+    return num.toFixed(decimals)
+  }
+
+  return (
+    <FadeIn>
+      <div className="rounded-3xl bg-neutral-50 p-8">
+        <h3 className="text-2xl font-semibold text-neutral-950 text-center mb-8">
+          投資回報試算工具
+        </h3>
+        
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          {/* 輸入參數區域 */}
+          <div className="rounded-2xl bg-white p-6">
+            <h4 className="text-lg font-semibold text-neutral-950 mb-6">營運參數設定</h4>
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  日銷售數量 (件)
+                </label>
+                <input 
+                  type="number" 
+                  value={inputs.dailySales}
+                  onChange={(e) => handleInputChange('dailySales', e.target.value)}
+                  className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-lg p-3"
+                  placeholder="50"
+                  min="0"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  平均單價 (元)
+                </label>
+                <input 
+                  type="number" 
+                  value={inputs.averagePrice}
+                  onChange={(e) => handleInputChange('averagePrice', e.target.value)}
+                  className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-lg p-3"
+                  placeholder="180"
+                  min="0"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  月租金 (元)
+                </label>
+                <input 
+                  type="number" 
+                  value={inputs.monthlyRent}
+                  onChange={(e) => handleInputChange('monthlyRent', e.target.value)}
+                  className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-lg p-3"
+                  placeholder="15000"
+                  min="0"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  月水電費 (元)
+                </label>
+                <input 
+                  type="number" 
+                  value={inputs.monthlyUtilities}
+                  onChange={(e) => handleInputChange('monthlyUtilities', e.target.value)}
+                  className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-lg p-3"
+                  placeholder="3000"
+                  min="0"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  初始投資 (元)
+                </label>
+                <input 
+                  type="number" 
+                  value={inputs.initialInvestment}
+                  onChange={(e) => handleInputChange('initialInvestment', e.target.value)}
+                  className="w-full rounded-md border-neutral-300 shadow-sm focus:border-neutral-500 focus:ring-neutral-500 text-lg p-3"
+                  placeholder="500000"
+                  min="0"
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* 計算結果區域 */}
+          <div className="rounded-2xl bg-white p-6">
+            <h4 className="text-lg font-semibold text-neutral-950 mb-6">投資回報分析</h4>
+            <div className="space-y-6">
+              <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-600">月營收</span>
+                  <span className="text-xl font-bold text-neutral-950">
+                    {formatCurrency(results.monthlyRevenue)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-600">月毛利 (30%)</span>
+                  <span className="text-xl font-bold text-neutral-950">
+                    {formatCurrency(results.monthlyGrossProfit)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-600">月淨利</span>
+                  <span className="text-xl font-bold text-neutral-950">
+                    {formatCurrency(results.monthlyNetProfit)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-600">回本時間</span>
+                  <span className="text-xl font-bold text-neutral-950">
+                    {results.paybackMonths > 0 ? `${formatNumber(results.paybackMonths)} 個月` : '無法回本'}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-600">年投資報酬率</span>
+                  <span className="text-xl font-bold text-neutral-950">
+                    {formatNumber(results.annualROI)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            {/* 投資建議 */}
+            <div className="mt-6 p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+              <h5 className="font-medium text-neutral-950 mb-2">投資建議</h5>
+              <p className="text-sm text-neutral-600">
+                {results.paybackMonths <= 8 && results.annualROI >= 20 
+                  ? '✅ 優秀的投資機會！回本時間短且報酬率高。'
+                  : results.paybackMonths <= 12 && results.annualROI >= 15
+                  ? '⚠️ 可考慮的投資機會，建議評估風險。'
+                  : '❌ 投資風險較高，建議重新評估參數。'
+                }
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </FadeIn>
+  )
+}

@@ -1,0 +1,165 @@
+# AMIGO 寵物鮮食自動販賣機加盟平台
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing
+/coverage
+*.lcov
+.nyc_output
+test-results/
+playwright-report/
+playwright/.cache/
+cypress/videos/
+cypress/screenshots/
+
+# Next.js
+/.next/
+/out/
+/build
+/dist
+
+# Production builds
+build/
+dist/
+out/
+
+# Environment variables
+.env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Optional caches
+.npm
+.eslintcache
+.stylelintcache
+.cache
+.parcel-cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Certificates
+*.pem
+*.key
+*.crt
+
+# Compressed files
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.tgz
+
+# Yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Turbo
+.turbo
+
+# Sentry
+.sentryclirc
+
+# PWA files
+**/public/sw.js
+**/public/workbox-*.js
+**/public/worker-*.js
+**/public/sw.js.map
+**/public/workbox-*.js.map
+**/public/worker-*.js.map
+
+# Local development
+.netlify
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Content management
+.contentlayer
+.sanity
+
+# Documentation
+docs/build/
+docs/.docusaurus/
+
+# Storybook
+.out
+.storybook-out
+storybook-static
+
+# Generated files
+generated/
+auto-generated/
+
+# Backup files
+*.backup
+*.bak
+
+# Lock files (keep package-lock.json for consistency)
+# Uncomment the following lines if you want to ignore lock files
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
