@@ -4,6 +4,7 @@ import { FadeIn } from '@/components/FadeIn'
 import { PageIntro } from '@/components/PageIntro'
 import { RootLayout } from '@/components/RootLayout'
 import { VendingMachineDemo } from '@/components/VendingMachineDemo'
+import ProfessionalVendingMachine from '@/components/ProfessionalVendingMachine'
 
 export const metadata: Metadata = {
   title: '智能販賣機',
@@ -19,6 +20,8 @@ export default function VendingMachine() {
           讓您輕鬆經營寵物鮮食事業，手機即可查看營收和管理庫存。
         </p>
       </PageIntro>
+
+      <ProfessionalVendingMachine />
 
       <VendingMachineDemo />
     </RootLayout>

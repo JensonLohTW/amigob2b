@@ -2,294 +2,413 @@
 
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Suspense, useRef, useState, useEffect } from 'react'
-import { 
-  OrbitControls, 
-  Environment, 
-  useGLTF, 
-  Html, 
+import {
+  OrbitControls,
+  Environment,
+  useGLTF,
+  Html,
   useProgress,
-  ContactShadows
+  ContactShadows,
+  Text,
+  Float
 } from '@react-three/drei'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import * as THREE from 'three'
+import { Container } from '@/components/Container'
+import { FadeIn } from '@/components/FadeIn'
 
-// 專業載入組件
-function ProfessionalLoader() {
+// 現代化載入組件
+function ModernLoader() {
   const { progress } = useProgress()
   return (
     <Html center>
-      <div className="flex flex-col items-center space-y-4 p-6">
-        <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-        <div className="text-xl font-semibold text-blue-600">
-          載入中... {progress.toFixed(0)}%
+      <div className="flex flex-col items-center space-y-6 p-8">
+        <div className="relative">
+          <div className="w-20 h-20 border-4 border-blue-500/30 rounded-full"></div>
+          <div 
+            className="absolute inset-0 w-20 h-20 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+            style={{ borderTopColor: 'transparent' }}
+          ></div>
         </div>
-        <div className="text-sm text-gray-600">正在準備您的專業 3D 展示</div>
+        <div className="text-center space-y-2">
+          <div className="text-2xl font-bold text-blue-600">
+            {progress.toFixed(0)}%
+          </div>
+          <div className="text-sm text-gray-600 font-medium">
+            正在載入 3D 展示模型
+          </div>
+          <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        </div>
       </div>
     </Html>
   )
 }
 
-// 專業販賣機模型組件
-function ProfessionalVendingMachineModel(props: any) {
+// 增強的販賣機模型組件
+function EnhancedVendingMachineModel(props: any) {
   const { scene } = useGLTF('/models/vending-machine/狗狗販賣機_0724.gltf')
   const meshRef = useRef<THREE.Group>(null!)
   const [hovered, setHovered] = useState(false)
+  const [clicked, setClicked] = useState(false)
 
-  // 專業的微妙動畫
   useFrame((state: any) => {
     if (meshRef.current) {
-      // 非常輕微的浮動效果
-      meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.02
+      // 更自然的浮動動畫
+      meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.05
       
-      // 懸停時的輕微縮放
-      const targetScale = hovered ? 1.02 : 1
+      // 懸停和點擊效果
+      const targetScale = clicked ? 1.1 : hovered ? 1.05 : 1
       meshRef.current.scale.lerp(
         new THREE.Vector3(targetScale, targetScale, targetScale), 
-        0.1
+        0.15
       )
     }
   })
 
   return (
-    <primitive
-      ref={meshRef}
-      object={scene}
-      scale={1.2}
-      position={[0, -1, 0]}
-      rotation={[0, Math.PI * 0.1, 0]}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-      {...props}
-    />
+    <Float speed={1.4} rotationIntensity={0.3} floatIntensity={0.5}>
+      <primitive
+        ref={meshRef}
+        object={scene}
+        scale={1.4}
+        position={[0, -1.2, 0]}
+        rotation={[0, Math.PI * 0.15, 0]}
+        onPointerOver={() => setHovered(true)}
+        onPointerOut={() => setHovered(false)}
+        onClick={() => {
+          setClicked(!clicked)
+          setTimeout(() => setClicked(false), 200)
+        }}
+        {...props}
+      />
+    </Float>
   )
 }
 
-// 相機預設控制組件（在 Canvas 內部）
-function CameraControls() {
-  const [currentPreset, setCurrentPreset] = useState('全景視角')
-  
-  const presets = [
-    { name: '全景視角', position: [4, 2, 6] as [number, number, number] },
-    { name: '正面視角', position: [0, 1, 4] as [number, number, number] },
-    { name: '側面視角', position: [4, 1, 0] as [number, number, number] },
-    { name: '俯視視角', position: [0, 5, 0] as [number, number, number] },
-  ]
+// 互動式信息標籤
+function InfoHotspot({ position, title, description, onClick }: {
+  position: [number, number, number]
+  title: string
+  description: string
+  onClick: () => void
+}) {
+  const [hovered, setHovered] = useState(false)
 
   return (
-    <Html position={[3, 3, 0]} transform occlude>
-      <div className="bg-white/95 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-gray-200 min-w-[160px]">
-        <h3 className="text-sm font-semibold text-gray-800 mb-2">視角選擇</h3>
-        <div className="space-y-1">
-          {presets.map((preset, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentPreset(preset.name)}
-              className={`w-full text-left px-2 py-1 text-xs rounded transition-colors ${
-                currentPreset === preset.name 
-                  ? 'bg-blue-100 text-blue-800' 
-                  : 'hover:bg-gray-100 text-gray-600'
-              }`}
-            >
-              {preset.name}
-            </button>
-          ))}
-        </div>
+    <Html position={position} center>
+      <div 
+        className={`
+          relative cursor-pointer transition-all duration-300 transform
+          ${hovered ? 'scale-110' : 'scale-100'}
+        `}
+        onPointerOver={() => setHovered(true)}
+        onPointerOut={() => setHovered(false)}
+        onClick={onClick}
+      >
+        <div className="w-4 h-4 bg-blue-500 rounded-full animate-ping absolute"></div>
+        <div className="w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-lg"></div>
+        
+        {hovered && (
+          <div className="absolute left-6 top-0 bg-white p-3 rounded-lg shadow-xl min-w-48 z-10">
+            <h4 className="font-semibold text-gray-900 text-sm">{title}</h4>
+            <p className="text-xs text-gray-600 mt-1">{description}</p>
+          </div>
+        )}
       </div>
     </Html>
   )
 }
 
-// 產品信息熱點組件
-function ProductHotspots() {
-  const [activeHotspot, setActiveHotspot] = useState<string | null>(null)
-  
-  const hotspots = [
-    { 
-      position: [-0.8, 1.2, 0.5] as [number, number, number], 
-      label: "智能觸控螢幕", 
-      description: "7吋高清觸控螢幕，支援多語言操作介面",
-      specs: "解析度: 1024x600 | 觸控: 電容式多點觸控"
-    },
-    { 
-      position: [0.8, 0.3, 0.5] as [number, number, number], 
-      label: "安全出貨口", 
-      description: "防盜設計，確保產品安全取出",
-      specs: "材質: 304不鏽鋼 | 感應: 紅外線檢測"
-    },
-    { 
-      position: [0, -0.3, 0.5] as [number, number, number], 
-      label: "大容量儲存", 
-      description: "可容納120份寵物鮮食，智能溫控保鮮",
-      specs: "容量: 120份 | 溫度: 2-8°C | 濕度控制: 45-65%"
-    },
-  ]
-
+// 3D 場景組件
+function Enhanced3DScene({ onHotspotClick }: { onHotspotClick: (info: any) => void }) {
   return (
     <>
-      {hotspots.map((hotspot, index) => (
-        <group key={index} position={hotspot.position}>
-          <mesh
-            onPointerOver={() => setActiveHotspot(hotspot.label)}
-            onPointerOut={() => setActiveHotspot(null)}
-          >
-            <sphereGeometry args={[0.05, 16, 16]} />
-            <meshStandardMaterial 
-              color={activeHotspot === hotspot.label ? "#3b82f6" : "#6b7280"}
-              emissive={activeHotspot === hotspot.label ? "#1d4ed8" : "#374151"}
-              emissiveIntensity={0.2}
-            />
-          </mesh>
-          
-          {activeHotspot === hotspot.label && (
-            <Html position={[0, 0.2, 0]} center>
-              <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-xl border border-gray-200 max-w-xs">
-                <div className="font-semibold text-gray-900 mb-1">{hotspot.label}</div>
-                <div className="text-sm text-gray-600 mb-2">{hotspot.description}</div>
-                <div className="text-xs text-gray-500 border-t pt-2">{hotspot.specs}</div>
-              </div>
-            </Html>
-          )}
-        </group>
-      ))}
+      {/* 專業光照設置 */}
+      <Environment preset="city" />
+      <ambientLight intensity={0.4} />
+      <directionalLight 
+        position={[10, 10, 5]} 
+        intensity={1.2} 
+        castShadow 
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-far={50}
+        shadow-camera-left={-10}
+        shadow-camera-right={10}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
+      />
+      <pointLight position={[-10, -10, -5]} intensity={0.3} color="#4F9FFF" />
+
+      {/* 主要模型 */}
+      <EnhancedVendingMachineModel />
+
+      {/* 增強的地面效果 */}
+      <ContactShadows
+        position={[0, -2.2, 0]}
+        opacity={0.4}
+        scale={12}
+        blur={2}
+        far={4}
+        color="#1e293b"
+      />
+
+      {/* 互動式熱點 */}
+      <InfoHotspot 
+        position={[1.5, 0.5, 0]}
+        title="智能觸控面板"
+        description="7吋高清觸控螢幕，支援多語言介面"
+        onClick={() => onHotspotClick({
+          title: "智能觸控面板",
+          features: ["7吋 IPS 高清螢幕", "多點觸控技術", "防刮防水設計", "多語言支援", "無障礙操作介面"]
+        })}
+      />
+      
+      <InfoHotspot 
+        position={[-1.2, -0.5, 0]}
+        title="溫控系統"
+        description="智能溫控，確保食品新鮮"
+        onClick={() => onHotspotClick({
+          title: "智能溫控系統",
+          features: ["±1°C 精準控溫", "6層獨立溫控", "節能變頻技術", "溫度異常警報", "自動除霜功能"]
+        })}
+      />
+
+      <InfoHotspot 
+        position={[0, 1.8, 0]}
+        title="AI 監控系統"
+        description="24小時智能監控管理"
+        onClick={() => onHotspotClick({
+          title: "AI 智能監控",
+          features: ["HD 攝影機監控", "異常行為檢測", "庫存自動統計", "遠程實時監控", "數據分析報告"]
+        })}
+      />
+
+             {/* 高級控制器設置 */}
+       <OrbitControls
+         autoRotate={false}
+         enablePan={false}
+         maxPolarAngle={Math.PI / 1.4}
+         minPolarAngle={Math.PI / 6}
+         minDistance={4}
+         maxDistance={12}
+         enableDamping
+         dampingFactor={0.08}
+         rotateSpeed={0.5}
+         zoomSpeed={0.8}
+       />
     </>
   )
 }
 
-// 主要 3D 場景組件
-function VendingMachineScene() {
+// 功能展示卡片
+function FeatureModal({ isOpen, onClose, feature }: {
+  isOpen: boolean
+  onClose: () => void
+  feature: any
+}) {
   return (
-    <>
-      {/* 專業光照設置 */}
-      <Environment preset="studio" />
-      <ambientLight intensity={0.3} />
-      <directionalLight position={[10, 10, 5]} intensity={0.7} castShadow />
-      <directionalLight position={[-10, -10, -5]} intensity={0.2} />
-      
-      {/* 主要模型 */}
-      <ProfessionalVendingMachineModel />
-      
-      {/* 產品信息熱點 */}
-      <ProductHotspots />
-      
-      {/* 相機控制 */}
-      <CameraControls />
-      
-      {/* 地面陰影 */}
-      <ContactShadows 
-        position={[0, -2, 0]} 
-        opacity={0.3} 
-        scale={8} 
-        blur={1.5} 
-        far={4} 
-      />
-      
-      {/* 專業控制器 */}
-      <OrbitControls 
-        autoRotate
-        autoRotateSpeed={0.2}
-        enablePan={false}
-        maxPolarAngle={Math.PI / 1.6}
-        minPolarAngle={Math.PI / 4}
-        minDistance={3}
-        maxDistance={8}
-        enableDamping
-        dampingFactor={0.05}
-      />
-    </>
+    <AnimatePresence>
+      {isOpen && feature && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">{feature.title}</h3>
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              {feature.features?.map((item: string, index: number) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-gray-700">{item}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+// 控制面板
+function ControlPanel({ onReset }: { onReset: () => void }) {
+  return (
+    <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+      <div className="space-y-3">
+        <div className="text-sm font-medium text-gray-700">3D 控制</div>
+        <div className="space-y-2 text-xs text-gray-600">
+          <div>🖱️ 滑鼠拖拽：旋轉視角</div>
+          <div>🔍 滾輪：縮放</div>
+          <div>📍 點擊熱點：查看詳情</div>
+        </div>
+        <button
+          onClick={onReset}
+          className="w-full px-3 py-2 bg-blue-500 text-white text-xs rounded-lg hover:bg-blue-600 transition-colors"
+        >
+          重置視角
+        </button>
+      </div>
+    </div>
   )
 }
 
 export default function ProfessionalVendingMachine() {
-  const [showInstructions, setShowInstructions] = useState(true)
   const [isClient, setIsClient] = useState(false)
+  const [selectedFeature, setSelectedFeature] = useState<any>(null)
+  const canvasRef = useRef<any>(null)
 
   useEffect(() => {
     setIsClient(true)
-    const timer = setTimeout(() => setShowInstructions(false), 8000)
-    return () => clearTimeout(timer)
   }, [])
+
+  const handleReset = () => {
+    if (canvasRef.current) {
+      // 重置相機位置的邏輯
+      console.log('重置相機視角')
+    }
+  }
 
   if (!isClient) {
     return (
-      <div className="relative mt-24 sm:mt-32 lg:mt-40">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            AMIGO 智能寵物販賣機
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            專業級 3D 產品展示，了解每個細節和技術規格
-          </p>
-        </div>
-        
-        <div className="w-full h-[600px] rounded-xl shadow-2xl bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <div className="text-lg font-medium text-blue-600">載入專業 3D 展示中...</div>
+      <Container className="mt-24 sm:mt-32 lg:mt-40">
+        <FadeIn>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              AMIGO 智能寵物販賣機
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              專業級 3D 互動展示，探索每個細節和創新技術
+            </p>
           </div>
-        </div>
-      </div>
+          
+          <div className="relative w-full h-[70vh] min-h-[500px] max-h-[800px] rounded-2xl shadow-2xl bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center overflow-hidden">
+            <div className="text-center space-y-4">
+              <div className="w-20 h-20 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+              <div className="text-xl font-semibold text-blue-600">載入 3D 展示中...</div>
+              <div className="text-sm text-gray-500">準備您的專業體驗</div>
+            </div>
+          </div>
+        </FadeIn>
+      </Container>
     )
   }
 
   return (
-    <div className="relative mt-24 sm:mt-32 lg:mt-40">
-      {/* 標題區塊 */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-8"
-      >
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          AMIGO 智能寵物販賣機
-        </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          專業級 3D 產品展示，了解每個細節和技術規格
-        </p>
-      </motion.div>
-
-      {/* 3D Canvas */}
-      <div className="relative">
-        <Canvas
-          frameloop="always"
-          dpr={[1, 2]}
-          camera={{ position: [4, 2, 6], fov: 50 }}
-          className="w-full h-[600px] rounded-xl shadow-2xl bg-gradient-to-b from-gray-50 to-gray-100"
-          gl={{ 
-            antialias: true,
-            alpha: true,
-            powerPreference: "high-performance"
-          }}
+    <Container className="mt-24 sm:mt-32 lg:mt-40">
+      <FadeIn>
+        {/* 標題區塊 */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
         >
-          <Suspense fallback={<ProfessionalLoader />}>
-            <VendingMachineScene />
-          </Suspense>
-        </Canvas>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            AMIGO 智能寵物販賣機
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            專業級 3D 互動展示，探索每個細節和創新技術
+          </p>
+                     <div className="mt-6 flex justify-center space-x-4 text-sm text-gray-500">
+             <span className="flex items-center">
+               <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+               點擊藍色標籤查看詳情
+             </span>
+             <span className="flex items-center">
+               <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+               拖拽旋轉視角
+             </span>
+           </div>
+        </motion.div>
 
-        {/* 操作指南 */}
-        {showInstructions && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg max-w-xs z-10 border border-gray-200"
+        {/* 3D Canvas 容器 */}
+        <div className="relative w-full h-[70vh] min-h-[500px] max-h-[800px] rounded-2xl shadow-2xl bg-gradient-to-br from-blue-50 via-white to-blue-50 overflow-hidden">
+          <Canvas
+            ref={canvasRef}
+            frameloop="always"
+            dpr={[1, 2]}
+            camera={{ position: [5, 3, 8], fov: 45 }}
+            className="w-full h-full"
+            gl={{ 
+              antialias: true,
+              alpha: true,
+              powerPreference: "high-performance",
+              stencil: false,
+              depth: true
+            }}
+                         onCreated={({ gl }: { gl: THREE.WebGLRenderer }) => {
+               gl.setClearColor('#f8fafc', 1)
+             }}
           >
-            <h3 className="font-semibold text-gray-900 mb-2">💼 專業展示</h3>
-            <ul className="text-sm text-gray-700 space-y-1">
-              <li>• 拖拽旋轉查看各角度</li>
-              <li>• 滾輪縮放調整距離</li>
-              <li>• 點擊灰色圓點查看規格</li>
-              <li>• 自動旋轉展示產品細節</li>
-            </ul>
-            <button 
-              onClick={() => setShowInstructions(false)}
-              className="mt-3 text-xs text-blue-600 hover:text-blue-800 font-medium"
-            >
-              我知道了 ×
-            </button>
-          </motion.div>
-        )}
-      </div>
-    </div>
+            <Suspense fallback={<ModernLoader />}>
+              <Enhanced3DScene onHotspotClick={setSelectedFeature} />
+            </Suspense>
+          </Canvas>
+
+          {/* 控制面板 */}
+          <ControlPanel onReset={handleReset} />
+
+          {/* 品質標籤 */}
+          <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
+            <div className="flex items-center space-x-2 text-sm">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-gray-700 font-medium">高品質 3D 展示</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 技術亮點 */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+                     {[
+             { icon: "🎯", title: "互動式探索", description: "點擊藍色標籤深入了解各項功能" },
+             { icon: "🔄", title: "手動旋轉", description: "拖拽滑鼠，從各個角度檢視產品" },
+             { icon: "📱", title: "響應式設計", description: "支援各種裝置，完美適配螢幕" }
+           ].map((item, index) => (
+            <div key={index} className="text-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+              <div className="text-3xl mb-3">{item.icon}</div>
+              <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
+              <p className="text-sm text-gray-600">{item.description}</p>
+            </div>
+          ))}
+        </motion.div>
+      </FadeIn>
+
+      {/* 功能詳情彈窗 */}
+      <FeatureModal 
+        isOpen={!!selectedFeature}
+        onClose={() => setSelectedFeature(null)}
+        feature={selectedFeature}
+      />
+    </Container>
   )
 }
 
