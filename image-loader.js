@@ -3,7 +3,7 @@
  * Optimized for GitHub Pages deployment
  */
 
-export default function customImageLoader({ src, width, quality }) {
+function customImageLoader({ src, width, quality }) {
   // For GitHub Pages deployment, we need to handle the base path
   const isGithubPages = process.env.GITHUB_PAGES === 'true'
   const basePath = isGithubPages ? '/amigob2b' : ''
@@ -20,4 +20,6 @@ export default function customImageLoader({ src, width, quality }) {
   
   // Handle relative paths
   return `${basePath}/${src}`
-} 
+}
+
+module.exports = customImageLoader 
