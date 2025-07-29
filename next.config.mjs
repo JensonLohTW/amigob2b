@@ -8,24 +8,10 @@ import { recmaImportImages } from 'recma-import-images'
 import remarkGfm from 'remark-gfm'
 import { remarkRehypeWrap } from 'remark-rehype-wrap'
 import remarkUnwrapImages from 'remark-unwrap-images'
-import shiki from 'shiki'
 import { unifiedConditional } from 'unified-conditional'
 
 // Check if we're in GitHub Pages deployment mode
 const isGithubPages = process.env.GITHUB_PAGES === 'true'
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
-  output: 'export',
-  // Set base path for GitHub Pages
-  basePath: isGithubPages ? '/amigob2b' : '',
-  assetPrefix: isGithubPages ? '/amigob2b/' : '',
-  trailingSlash: true,
-  images: {
-    unoptimized: true, // Required for static export
-  },
-}
 
 function remarkMDXLayout(source, metaName) {
   let parser = Parser.extend(jsx())
@@ -52,43 +38,54 @@ function remarkMDXLayout(source, metaName) {
   }
 }
 
-export default async function config() {
-  let highlighter = await shiki.getHighlighter({
-    theme: 'css-variables',
-  })
-
-  let withMDX = nextMDX({
-    extension: /\.mdx$/,
-    options: {
-      recmaPlugins: [recmaImportImages],
-      rehypePlugins: [
-        [rehypeShiki, { highlighter }],
-        [
-          remarkRehypeWrap,
-          {
-            node: { type: 'mdxJsxFlowElement', name: 'Typography' },
-            start: ':root > :not(mdxJsxFlowElement)',
-            end: ':root > mdxJsxFlowElement',
-          },
-        ],
-      ],
-      remarkPlugins: [
-        remarkGfm,
-        remarkUnwrapImages,
-        [
-          unifiedConditional,
-          [
-            new RegExp(`^${escapeStringRegexp(path.resolve('src/app/blog'))}`),
-            [[remarkMDXLayout, '@/app/blog/wrapper', 'article']],
-          ],
-          [
-            new RegExp(`^${escapeStringRegexp(path.resolve('src/app/work'))}`),
-            [[remarkMDXLayout, '@/app/work/wrapper', 'caseStudy']],
-          ],
-        ],
-      ],
-    },
-  })
-
-  return withMDX(nextConfig)
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
+  output: 'export',
+  // Set base path for GitHub Pages
+  basePath: isGithubPages ? '/amigob2b' : '',
+  assetPrefix: isGithubPages ? '/amigob2b/' : '',
+  trailingSlash: true,
+  images: {
+    unoptimized: true, // Required for static export
+  },
+  // Disable server-side features for static export
+  experimental: {
+    mdxRs: false,
+  },
 }
+
+const withMDX = nextMDX({
+  extension: /\.mdx$/,
+  options: {
+    recmaPlugins: [recmaImportImages],
+    rehypePlugins: [
+      // Simplify rehype plugins for static export
+      [
+        remarkRehypeWrap,
+        {
+          node: { type: 'mdxJsxFlowElement', name: 'Typography' },
+          start: ':root > :not(mdxJsxFlowElement)',
+          end: ':root > mdxJsxFlowElement',
+        },
+      ],
+    ],
+    remarkPlugins: [
+      remarkGfm,
+      remarkUnwrapImages,
+      [
+        unifiedConditional,
+        [
+          new RegExp(`^${escapeStringRegexp(path.resolve('src/app/blog'))}`),
+          [[remarkMDXLayout, '@/app/blog/wrapper', 'article']],
+        ],
+        [
+          new RegExp(`^${escapeStringRegexp(path.resolve('src/app/work'))}`),
+          [[remarkMDXLayout, '@/app/work/wrapper', 'caseStudy']],
+        ],
+      ],
+    ],
+  },
+})
+
+export default withMDX(nextConfig)
