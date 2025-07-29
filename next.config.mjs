@@ -41,16 +41,36 @@ function remarkMDXLayout(source, metaName) {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
+  
+  // Enable static export for GitHub Pages
   output: 'export',
-  // Set base path for GitHub Pages
+  
+  // GitHub Pages configuration
   basePath: isGithubPages ? '/amigob2b' : '',
   assetPrefix: isGithubPages ? '/amigob2b/' : '',
+  
+  // Use trailing slashes for better compatibility with static hosting
   trailingSlash: true,
+  
+  // Skip automatic `/me` -> `/me/`, preserve href for GitHub Pages
+  skipTrailingSlashRedirect: true,
+  
+  // Images configuration for static export
   images: {
     unoptimized: true, // Required for static export
+    loader: 'custom',
+    loaderFile: './image-loader.js', // Custom loader for GitHub Pages
   },
-  // Disable server-side features for static export
+  
+  // Optimize for production builds
+  compiler: {
+    // Remove console.log in production
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  
+  // Experimental features for better performance
   experimental: {
+    // Disable MDX RS for compatibility with static export
     mdxRs: false,
   },
 }
@@ -58,9 +78,12 @@ const nextConfig = {
 const withMDX = nextMDX({
   extension: /\.mdx$/,
   options: {
+    development: process.env.NODE_ENV === 'development',
+    
     recmaPlugins: [recmaImportImages],
+    
     rehypePlugins: [
-      // Simplify rehype plugins for static export
+      // Optimized rehype plugins for static export
       [
         remarkRehypeWrap,
         {
@@ -70,6 +93,7 @@ const withMDX = nextMDX({
         },
       ],
     ],
+    
     remarkPlugins: [
       remarkGfm,
       remarkUnwrapImages,
