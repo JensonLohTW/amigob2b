@@ -11,9 +11,20 @@ import remarkUnwrapImages from 'remark-unwrap-images'
 import shiki from 'shiki'
 import { unifiedConditional } from 'unified-conditional'
 
+// Check if we're in GitHub Pages deployment mode
+const isGithubPages = process.env.GITHUB_PAGES === 'true'
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
+  output: 'export',
+  // Set base path for GitHub Pages
+  basePath: isGithubPages ? '/amigob2b' : '',
+  assetPrefix: isGithubPages ? '/amigob2b/' : '',
+  trailingSlash: true,
+  images: {
+    unoptimized: true, // Required for static export
+  },
 }
 
 function remarkMDXLayout(source, metaName) {
