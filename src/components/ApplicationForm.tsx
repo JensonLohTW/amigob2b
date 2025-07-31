@@ -32,7 +32,7 @@ export function ApplicationForm() {
     expectedLocation: '',
     businessBackground: '',
     motivation: '',
-    timeline: ''
+    timeline: '',
   })
 
   const [errors, setErrors] = useState<FormErrors>({})
@@ -79,23 +79,23 @@ export function ApplicationForm() {
   }
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }))
-    
+
     // 清除該欄位的錯誤訊息
     if (errors[field]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [field]: ''
+        [field]: '',
       }))
     }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!validateForm()) {
       return
     }
@@ -104,11 +104,11 @@ export function ApplicationForm() {
 
     try {
       // 模擬API調用
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+
       // 這裡應該調用實際的API
       console.log('表單數據:', formData)
-      
+
       setIsSubmitted(true)
     } catch (error) {
       console.error('提交失敗:', error)
@@ -121,22 +121,35 @@ export function ApplicationForm() {
   if (isSubmitted) {
     return (
       <FadeIn>
-        <div className="text-center py-16">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        <div className="py-16 text-center">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+            <svg
+              className="h-8 w-8 text-green-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-neutral-950 mb-4">申請已成功提交！</h2>
-          <p className="text-neutral-600 mb-8 max-w-md mx-auto">
+          <h2 className="mb-4 text-2xl font-bold text-neutral-950">
+            申請已成功提交！
+          </h2>
+          <p className="mx-auto mb-8 max-w-md text-neutral-600">
             感謝您的申請，我們的專業團隊將在24小時內與您聯繫，
             為您提供詳細的加盟說明和個人化的投資建議。
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/calculator">
-              試算投資回報
-            </Button>
-            <Button href="/franchise" className="border border-neutral-300 bg-white text-neutral-950 hover:bg-neutral-50">
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Button href="/calculator">試算投資回報</Button>
+            <Button
+              href="/franchise"
+              className="border border-neutral-300 bg-white text-neutral-950 hover:bg-neutral-50"
+            >
               了解更多詳情
             </Button>
           </div>
@@ -150,87 +163,103 @@ export function ApplicationForm() {
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* 基本資料 */}
         <div className="rounded-3xl bg-neutral-50 p-8">
-          <h3 className="text-xl font-semibold text-neutral-950 mb-6">基本資料</h3>
+          <h3 className="mb-6 text-xl font-semibold text-neutral-950">
+            基本資料
+          </h3>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-neutral-700">
                 姓名 *
               </label>
               <input
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className={`w-full rounded-md border shadow-sm focus:ring-2 focus:ring-blue-500 p-3 ${
+                className={`w-full rounded-md border p-3 shadow-sm focus:ring-2 focus:ring-blue-500 ${
                   errors.name ? 'border-red-300' : 'border-neutral-300'
                 }`}
                 placeholder="請輸入您的姓名"
               />
-              {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-neutral-700">
                 聯絡電話 *
               </label>
               <input
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
-                className={`w-full rounded-md border shadow-sm focus:ring-2 focus:ring-blue-500 p-3 ${
+                className={`w-full rounded-md border p-3 shadow-sm focus:ring-2 focus:ring-blue-500 ${
                   errors.phone ? 'border-red-300' : 'border-neutral-300'
                 }`}
                 placeholder="請輸入您的聯絡電話"
               />
-              {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
+              {errors.phone && (
+                <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-neutral-700">
                 Email *
               </label>
               <input
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className={`w-full rounded-md border shadow-sm focus:ring-2 focus:ring-blue-500 p-3 ${
+                className={`w-full rounded-md border p-3 shadow-sm focus:ring-2 focus:ring-blue-500 ${
                   errors.email ? 'border-red-300' : 'border-neutral-300'
                 }`}
                 placeholder="請輸入您的Email"
               />
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-neutral-700">
                 所在地區 *
               </label>
               <input
                 type="text"
                 value={formData.location}
                 onChange={(e) => handleInputChange('location', e.target.value)}
-                className={`w-full rounded-md border shadow-sm focus:ring-2 focus:ring-blue-500 p-3 ${
+                className={`w-full rounded-md border p-3 shadow-sm focus:ring-2 focus:ring-blue-500 ${
                   errors.location ? 'border-red-300' : 'border-neutral-300'
                 }`}
                 placeholder="例：高雄市左營區"
               />
-              {errors.location && <p className="mt-1 text-sm text-red-600">{errors.location}</p>}
+              {errors.location && (
+                <p className="mt-1 text-sm text-red-600">{errors.location}</p>
+              )}
             </div>
           </div>
         </div>
 
         {/* 投資意向 */}
         <div className="rounded-3xl bg-neutral-50 p-8">
-          <h3 className="text-xl font-semibold text-neutral-950 mb-6">投資意向</h3>
+          <h3 className="mb-6 text-xl font-semibold text-neutral-950">
+            投資意向
+          </h3>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-neutral-700">
                 投資預算 *
               </label>
               <select
                 value={formData.investmentBudget}
-                onChange={(e) => handleInputChange('investmentBudget', e.target.value)}
-                className={`w-full rounded-md border shadow-sm focus:ring-2 focus:ring-blue-500 p-3 ${
-                  errors.investmentBudget ? 'border-red-300' : 'border-neutral-300'
+                onChange={(e) =>
+                  handleInputChange('investmentBudget', e.target.value)
+                }
+                className={`w-full rounded-md border p-3 shadow-sm focus:ring-2 focus:ring-blue-500 ${
+                  errors.investmentBudget
+                    ? 'border-red-300'
+                    : 'border-neutral-300'
                 }`}
               >
                 <option value="">請選擇投資預算</option>
@@ -238,17 +267,21 @@ export function ApplicationForm() {
                 <option value="70-100萬">70-100萬</option>
                 <option value="100萬以上">100萬以上</option>
               </select>
-              {errors.investmentBudget && <p className="mt-1 text-sm text-red-600">{errors.investmentBudget}</p>}
+              {errors.investmentBudget && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.investmentBudget}
+                </p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-neutral-700">
                 預計開始時間 *
               </label>
               <select
                 value={formData.timeline}
                 onChange={(e) => handleInputChange('timeline', e.target.value)}
-                className={`w-full rounded-md border shadow-sm focus:ring-2 focus:ring-blue-500 p-3 ${
+                className={`w-full rounded-md border p-3 shadow-sm focus:ring-2 focus:ring-blue-500 ${
                   errors.timeline ? 'border-red-300' : 'border-neutral-300'
                 }`}
               >
@@ -258,66 +291,84 @@ export function ApplicationForm() {
                 <option value="3-6個月">3-6個月</option>
                 <option value="6個月以上">6個月以上</option>
               </select>
-              {errors.timeline && <p className="mt-1 text-sm text-red-600">{errors.timeline}</p>}
+              {errors.timeline && (
+                <p className="mt-1 text-sm text-red-600">{errors.timeline}</p>
+              )}
             </div>
 
             <div className="lg:col-span-2">
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-neutral-700">
                 預計設置地點 *
               </label>
               <input
                 type="text"
                 value={formData.expectedLocation}
-                onChange={(e) => handleInputChange('expectedLocation', e.target.value)}
-                className={`w-full rounded-md border shadow-sm focus:ring-2 focus:ring-blue-500 p-3 ${
-                  errors.expectedLocation ? 'border-red-300' : 'border-neutral-300'
+                onChange={(e) =>
+                  handleInputChange('expectedLocation', e.target.value)
+                }
+                className={`w-full rounded-md border p-3 shadow-sm focus:ring-2 focus:ring-blue-500 ${
+                  errors.expectedLocation
+                    ? 'border-red-300'
+                    : 'border-neutral-300'
                 }`}
                 placeholder="例：高雄市左營區博愛路附近，靠近寵物醫院"
               />
-              {errors.expectedLocation && <p className="mt-1 text-sm text-red-600">{errors.expectedLocation}</p>}
+              {errors.expectedLocation && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.expectedLocation}
+                </p>
+              )}
             </div>
           </div>
         </div>
 
         {/* 背景資訊 */}
         <div className="rounded-3xl bg-neutral-50 p-8">
-          <h3 className="text-xl font-semibold text-neutral-950 mb-6">背景資訊</h3>
+          <h3 className="mb-6 text-xl font-semibold text-neutral-950">
+            背景資訊
+          </h3>
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-neutral-700">
                 相關經驗
               </label>
               <textarea
                 rows={3}
                 value={formData.experience}
-                onChange={(e) => handleInputChange('experience', e.target.value)}
-                className="w-full rounded-md border-neutral-300 shadow-sm focus:ring-2 focus:ring-blue-500 p-3"
+                onChange={(e) =>
+                  handleInputChange('experience', e.target.value)
+                }
+                className="w-full rounded-md border-neutral-300 p-3 shadow-sm focus:ring-2 focus:ring-blue-500"
                 placeholder="請簡述您的創業或相關行業經驗（選填）"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-neutral-700">
                 商業背景
               </label>
               <textarea
                 rows={3}
                 value={formData.businessBackground}
-                onChange={(e) => handleInputChange('businessBackground', e.target.value)}
-                className="w-full rounded-md border-neutral-300 shadow-sm focus:ring-2 focus:ring-blue-500 p-3"
+                onChange={(e) =>
+                  handleInputChange('businessBackground', e.target.value)
+                }
+                className="w-full rounded-md border-neutral-300 p-3 shadow-sm focus:ring-2 focus:ring-blue-500"
                 placeholder="請簡述您的商業背景或投資經驗（選填）"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-neutral-700">
                 加盟動機
               </label>
               <textarea
                 rows={3}
                 value={formData.motivation}
-                onChange={(e) => handleInputChange('motivation', e.target.value)}
-                className="w-full rounded-md border-neutral-300 shadow-sm focus:ring-2 focus:ring-blue-500 p-3"
+                onChange={(e) =>
+                  handleInputChange('motivation', e.target.value)
+                }
+                className="w-full rounded-md border-neutral-300 p-3 shadow-sm focus:ring-2 focus:ring-blue-500"
                 placeholder="請分享您選擇加盟的動機和期望（選填）"
               />
             </div>
@@ -329,7 +380,7 @@ export function ApplicationForm() {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className={`px-12 py-4 text-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`px-12 py-4 text-lg ${isSubmitting ? 'cursor-not-allowed opacity-50' : ''}`}
           >
             {isSubmitting ? '提交中...' : '提交申請'}
           </Button>

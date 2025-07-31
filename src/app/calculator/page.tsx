@@ -7,7 +7,8 @@ import { InvestmentCalculator } from '@/components/InvestmentCalculator'
 
 export const metadata: Metadata = {
   title: '智能投資試算 - AMIGO 寵物鮮食自動販賣機',
-  description: '使用我們的智能投資試算工具，包含情境分析、風險評估和詳細的投資回報計算，幫助您做出明智的投資決策。',
+  description:
+    '使用我們的智能投資試算工具，包含情境分析、風險評估和詳細的投資回報計算，幫助您做出明智的投資決策。',
 }
 
 export default function Calculator() {
@@ -28,35 +29,41 @@ export default function Calculator() {
       <Container className="mt-24 sm:mt-32 lg:mt-40">
         <FadeIn>
           <div className="rounded-3xl bg-neutral-50 p-8">
-            <h3 className="text-xl font-semibold text-neutral-950 text-center mb-6">
+            <h3 className="mb-6 text-center text-xl font-semibold text-neutral-950">
               如何使用投資試算工具
             </h3>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
               <div className="text-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-blue-600 font-bold text-lg">1</span>
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+                  <span className="text-lg font-bold text-blue-600">1</span>
                 </div>
-                <h4 className="font-semibold text-neutral-950 mb-2">輸入營運參數</h4>
+                <h4 className="mb-2 font-semibold text-neutral-950">
+                  輸入營運參數
+                </h4>
                 <p className="text-sm text-neutral-600">
                   根據您的實際情況調整日銷量、租金、水電等參數
                 </p>
               </div>
 
               <div className="text-center">
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-green-600 font-bold text-lg">2</span>
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                  <span className="text-lg font-bold text-green-600">2</span>
                 </div>
-                <h4 className="font-semibold text-neutral-950 mb-2">即時查看結果</h4>
+                <h4 className="mb-2 font-semibold text-neutral-950">
+                  即時查看結果
+                </h4>
                 <p className="text-sm text-neutral-600">
                   系統會即時計算月營收、淨利、回本時間等關鍵指標
                 </p>
               </div>
 
               <div className="text-center">
-                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-purple-600 font-bold text-lg">3</span>
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
+                  <span className="text-lg font-bold text-purple-600">3</span>
                 </div>
-                <h4 className="font-semibold text-neutral-950 mb-2">評估投資決策</h4>
+                <h4 className="mb-2 font-semibold text-neutral-950">
+                  評估投資決策
+                </h4>
                 <p className="text-sm text-neutral-600">
                   參考系統建議，做出最適合的投資決策
                 </p>

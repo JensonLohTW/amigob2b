@@ -31,13 +31,17 @@ export default function Apply() {
           {/* 聯絡資訊 */}
           <div className="lg:col-span-1">
             <FadeIn>
-              <div className="rounded-3xl bg-neutral-50 p-8 sticky top-8">
-                <h3 className="text-xl font-semibold text-neutral-950">聯絡我們</h3>
+              <div className="sticky top-8 rounded-3xl bg-neutral-50 p-8">
+                <h3 className="text-xl font-semibold text-neutral-950">
+                  聯絡我們
+                </h3>
                 <div className="mt-6 space-y-4">
                   <div>
                     <h4 className="font-medium text-neutral-950">客服專線</h4>
                     <p className="text-neutral-600">0800-123-456</p>
-                    <p className="text-sm text-neutral-500">服務時間：週一至週五 9:00-18:00</p>
+                    <p className="text-sm text-neutral-500">
+                      服務時間：週一至週五 9:00-18:00
+                    </p>
                   </div>
 
                   <div>
@@ -47,28 +51,42 @@ export default function Apply() {
 
                   <div>
                     <h4 className="font-medium text-neutral-950">地址</h4>
-                    <p className="text-neutral-600">高雄市前鎮區中山二路123號</p>
+                    <p className="text-neutral-600">
+                      高雄市前鎮區中山二路123號
+                    </p>
                   </div>
 
-                  <div className="pt-4 border-t border-neutral-200">
+                  <div className="border-t border-neutral-200 pt-4">
                     <h4 className="font-medium text-neutral-950">下載資源</h4>
                     <div className="mt-2 space-y-2">
-                      <Button href="#" className="w-full border border-neutral-300 bg-white text-neutral-950 hover:bg-neutral-50">
+                      <Button
+                        href="#"
+                        className="w-full border border-neutral-300 bg-white text-neutral-950 hover:bg-neutral-50"
+                      >
                         下載招商簡報
                       </Button>
-                      <Button href="#" className="w-full border border-neutral-300 bg-white text-neutral-950 hover:bg-neutral-50">
+                      <Button
+                        href="#"
+                        className="w-full border border-neutral-300 bg-white text-neutral-950 hover:bg-neutral-50"
+                      >
                         下載加盟意願表
                       </Button>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-neutral-200">
+                  <div className="border-t border-neutral-200 pt-4">
                     <h4 className="font-medium text-neutral-950">快速連結</h4>
                     <div className="mt-2 space-y-2">
-                      <Button href="/calculator" className="w-full border border-neutral-300 bg-white text-neutral-950 hover:bg-neutral-50">
+                      <Button
+                        href="/calculator"
+                        className="w-full border border-neutral-300 bg-white text-neutral-950 hover:bg-neutral-50"
+                      >
                         投資試算工具
                       </Button>
-                      <Button href="/franchise" className="w-full border border-neutral-300 bg-white text-neutral-950 hover:bg-neutral-50">
+                      <Button
+                        href="/franchise"
+                        className="w-full border border-neutral-300 bg-white text-neutral-950 hover:bg-neutral-50"
+                      >
                         加盟詳細資訊
                       </Button>
                     </div>

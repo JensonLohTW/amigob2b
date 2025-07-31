@@ -8,7 +8,8 @@ import ProfessionalVendingMachine from '@/components/ProfessionalVendingMachine'
 
 export const metadata: Metadata = {
   title: '智能販賣機',
-  description: 'AI自動販賣機的優勢與應用場景，無人商店、自動化管理、手機後台查看營收。',
+  description:
+    'AI自動販賣機的優勢與應用場景，無人商店、自動化管理、手機後台查看營收。',
 }
 
 export default function VendingMachine() {

@@ -7,7 +7,8 @@ import { ExpertTeam } from '@/components/ExpertTeam'
 
 export const metadata: Metadata = {
   title: '專家團隊',
-  description: '我們的專業顧問團隊包括獸醫博士、農學博士等專家，確保產品安全與專業性。',
+  description:
+    '我們的專業顧問團隊包括獸醫博士、農學博士等專家，確保產品安全與專業性。',
 }
 
 export default function Experts() {

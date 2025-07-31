@@ -15,6 +15,7 @@ declare module '@react-three/drei' {
   export const Environment: any
   export const ContactShadows: any
   export const Float: any
+  export const Center: any
   export const Text: any
   export function useGLTF(path: string): any
   export namespace useGLTF {

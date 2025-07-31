@@ -67,8 +67,8 @@ export function Logo({
         x="40"
         y="20"
         className={clsx(
-          'font-bold text-lg',
-          invert ? 'fill-white' : 'fill-neutral-950'
+          'text-lg font-bold',
+          invert ? 'fill-white' : 'fill-neutral-950',
         )}
         style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
       >

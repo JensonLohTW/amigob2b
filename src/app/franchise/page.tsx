@@ -9,7 +9,8 @@ import { FranchiseFAQ } from '@/components/FranchiseFAQ'
 
 export const metadata: Metadata = {
   title: '加盟流程',
-  description: '詳細的加盟條件、分潤機制與操作模式說明，8個月回本，月毛利超過7萬元。',
+  description:
+    '詳細的加盟條件、分潤機制與操作模式說明，8個月回本，月毛利超過7萬元。',
 }
 
 export default function Franchise() {
@@ -25,7 +26,7 @@ export default function Franchise() {
       {/* 投資回報數據 */}
       <Container className="mt-24 sm:mt-32 lg:mt-40">
         <FadeIn>
-          <h2 className="font-display text-2xl font-semibold text-neutral-950 text-center">
+          <h2 className="text-center font-display text-2xl font-semibold text-neutral-950">
             投資回報一目了然
           </h2>
           <StatList className="mt-16">

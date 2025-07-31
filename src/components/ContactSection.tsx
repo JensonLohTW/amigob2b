@@ -15,11 +15,14 @@ export function ContactSection() {
             <p className="mt-6 text-lg text-white/80">
               立即聯繫我們，獲得專業的加盟諮詢和個人化的投資建議。
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Button href="/apply" invert>
                 立即申請加盟
               </Button>
-              <Button href="/calculator" className="border border-white/20 bg-transparent text-white hover:bg-white/10">
+              <Button
+                href="/calculator"
+                className="border border-white/20 bg-transparent text-white hover:bg-white/10"
+              >
                 投資試算
               </Button>
             </div>
@@ -29,15 +32,15 @@ export function ContactSection() {
               </h3>
               <div className="mt-6 space-y-4">
                 <div>
-                  <p className="text-white font-medium">客服專線</p>
+                  <p className="font-medium text-white">客服專線</p>
                   <p className="text-white/80">0800-123-456</p>
                 </div>
                 <div>
-                  <p className="text-white font-medium">Email</p>
+                  <p className="font-medium text-white">Email</p>
                   <p className="text-white/80">franchise@amigo.com.tw</p>
                 </div>
                 <div>
-                  <p className="text-white font-medium">總公司地址</p>
+                  <p className="font-medium text-white">總公司地址</p>
                   <p className="text-white/80">高雄市前鎮區中山二路123號</p>
                 </div>
               </div>

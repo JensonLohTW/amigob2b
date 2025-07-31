@@ -5,7 +5,10 @@ import { useEffect } from 'react'
 export default function StagewiseLoader() {
   useEffect(() => {
     // 只在開發模式和瀏覽器環境中執行
-    if (process.env.NODE_ENV !== 'development' || typeof window === 'undefined') {
+    if (
+      process.env.NODE_ENV !== 'development' ||
+      typeof window === 'undefined'
+    ) {
       return
     }
 
@@ -13,7 +16,7 @@ export default function StagewiseLoader() {
     const initializeStagewise = async () => {
       try {
         const { initToolbar } = await import('@stagewise/toolbar')
-        
+
         initToolbar({
           plugins: [],
         })
@@ -26,4 +29,4 @@ export default function StagewiseLoader() {
   }, [])
 
   return null // 這個組件不渲染任何內容
-} 
+}
