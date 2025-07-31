@@ -158,7 +158,7 @@ function Enhanced3DScene({
       <group scale={1.4} rotation={[0, Math.PI * 0.15, 0]}>
         <Center
           position={modelPosition}
-          onCentered={({ container }) => {
+          onCentered={({ container }: { container: THREE.Group }) => {
             if (centeredRef.current) return
             centeredRef.current = true
             const box = new THREE.Box3().setFromObject(container)
