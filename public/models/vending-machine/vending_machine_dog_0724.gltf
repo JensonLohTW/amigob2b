@@ -437,17 +437,17 @@
 		{
 			"mimeType":"image/png",
 			"name":"\u672c\u9ad4\u8cbc\u5716_01",
-			"uri":"texture/%E6%9C%AC%E9%AB%94%E8%B2%BC%E5%9C%96_01.png"
+			"uri": "texture/body_texture_01.png"
 		},
 		{
 			"mimeType":"image/png",
 			"name":"\u72d7\u72d7\u8cbc\u5716_01",
-			"uri":"texture/%E7%8B%97%E7%8B%97%E8%B2%BC%E5%9C%96_01.png"
+			"uri": "texture/dog_texture_01.png"
 		},
 		{
 			"mimeType":"image/png",
 			"name":"\u914d\u4ef6\u8cbc\u5716_01",
-			"uri":"texture/%E9%85%8D%E4%BB%B6%E8%B2%BC%E5%9C%96_01.png"
+			"uri": "texture/parts_texture_01.png"
 		}
 	],
 	"accessors":[
