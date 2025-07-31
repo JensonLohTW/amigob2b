@@ -75,8 +75,6 @@ function EnhancedVendingMachineModel(props: any) {
     <primitive
       ref={meshRef}
       object={scene}
-      scale={1.4}
-      rotation={[0, Math.PI * 0.15, 0]}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
       onClick={() => {
@@ -134,30 +132,9 @@ function Enhanced3DScene({
   onHotspotClick: (info: any) => void
   controlsRef: any
 }) {
-  // 儲存模型的位置和尺寸
   const [modelPosition, setModelPosition] = useState(new THREE.Vector3(0, 0, 0))
   const [modelSize, setModelSize] = useState(new THREE.Vector3(0, 0, 0))
-
   const centeredRef = useRef(false)
-  const handleCentered = ({
-    container,
-    width,
-    height,
-    depth,
-  }: {
-    container: THREE.Group
-    width: number
-    height: number
-    depth: number
-  }) => {
-    if (centeredRef.current) return
-    centeredRef.current = true
-
-    const boundingBox = new THREE.Box3().setFromObject(container)
-    setModelSize(new THREE.Vector3(width, height, depth))
-    // 將模型向上移動其高度的一半，使其底部接觸 y=0 平面
-    setModelPosition(new THREE.Vector3(0, -boundingBox.min.y, 0))
-  }
 
   return (
     <>
@@ -178,9 +155,21 @@ function Enhanced3DScene({
       <pointLight position={[-10, -10, -5]} intensity={0.5} color="#4F9FFF" />
 
       {/* 主要模型，穩固放置在地面上 */}
-      <Center onCentered={handleCentered} position={modelPosition}>
-        <EnhancedVendingMachineModel />
-      </Center>
+      <group scale={1.4} rotation={[0, Math.PI * 0.15, 0]}>
+        <Center
+          position={modelPosition}
+          onCentered={({ container }) => {
+            if (centeredRef.current) return
+            centeredRef.current = true
+            const box = new THREE.Box3().setFromObject(container)
+            const size = box.getSize(new THREE.Vector3())
+            setModelSize(size)
+            setModelPosition(new THREE.Vector3(0, -box.min.y, 0))
+          }}
+        >
+          <EnhancedVendingMachineModel />
+        </Center>
+      </group>
 
       {/* 增強的地面效果 */}
       <ContactShadows
