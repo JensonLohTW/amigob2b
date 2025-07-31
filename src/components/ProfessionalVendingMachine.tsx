@@ -134,16 +134,39 @@ function Enhanced3DScene({
   onHotspotClick: (info: any) => void
   controlsRef: any
 }) {
-  const [shadowY, setShadowY] = useState(-2.2)
+  // 儲存模型的位置和尺寸
+  const [modelPosition, setModelPosition] = useState(new THREE.Vector3(0, 0, 0))
+  const [modelSize, setModelSize] = useState(new THREE.Vector3(0, 0, 0))
+
+  const centeredRef = useRef(false)
+  const handleCentered = ({
+    container,
+    width,
+    height,
+    depth,
+  }: {
+    container: THREE.Group
+    width: number
+    height: number
+    depth: number
+  }) => {
+    if (centeredRef.current) return
+    centeredRef.current = true
+
+    const boundingBox = new THREE.Box3().setFromObject(container)
+    setModelSize(new THREE.Vector3(width, height, depth))
+    // 將模型向上移動其高度的一半，使其底部接觸 y=0 平面
+    setModelPosition(new THREE.Vector3(0, -boundingBox.min.y, 0))
+  }
 
   return (
     <>
       {/* 專業光照設置 */}
       <Environment preset="city" />
-      <ambientLight intensity={0.4} />
+      <ambientLight intensity={0.7} />
       <directionalLight
-        position={[10, 10, 5]}
-        intensity={1.2}
+        position={[10, 15, 5]}
+        intensity={1.5}
         castShadow
         shadow-mapSize={[2048, 2048]}
         shadow-camera-far={50}
@@ -152,27 +175,26 @@ function Enhanced3DScene({
         shadow-camera-top={10}
         shadow-camera-bottom={-10}
       />
-      <pointLight position={[-10, -10, -5]} intensity={0.3} color="#4F9FFF" />
+      <pointLight position={[-10, -10, -5]} intensity={0.5} color="#4F9FFF" />
 
-      {/* 主要模型 */}
-      <Float speed={1.4} rotationIntensity={0.3} floatIntensity={0.5}>
-        <Center
-          onCentered={({ boundingBox }: { boundingBox: THREE.Box3 }) =>
-            setShadowY(boundingBox.min.y)
-          }
-        >
-          <EnhancedVendingMachineModel />
-        </Center>
-      </Float>
+      {/* 主要模型，穩固放置在地面上 */}
+      <Center onCentered={handleCentered} position={modelPosition}>
+        <EnhancedVendingMachineModel />
+      </Center>
 
       {/* 增強的地面效果 */}
       <ContactShadows
-        position={[0, shadowY, 0]}
-        opacity={0.6}
-        scale={12}
-        blur={1.5}
-        far={4}
+        position={[0, 0.001, 0]} // 固定在地面，輕微偏移以避免Z-fighting
+        opacity={0.75}
+        scale={15}
+        blur={1.2}
+        far={5}
+        resolution={512}
         color="#1e293b"
+      />
+      <gridHelper
+        args={[20, 20, '#555', '#bbb']}
+        position={[0, 0, 0]}
       />
 
       {/* 互動式熱點 */}
@@ -187,16 +209,15 @@ function Enhanced3DScene({
         ref={controlsRef}
         enableDamping
         dampingFactor={0.1}
-        autoRotate
-        autoRotateSpeed={0.6}
-        enablePan={false}
-        rotateSpeed={0.7}
-        zoomSpeed={0.9}
-        minDistance={5}
-        maxDistance={12}
-        minPolarAngle={Math.PI / 8}
-        maxPolarAngle={Math.PI / 2.2}
-        target={[0, 0, 0]}
+        autoRotate={false} // 預設關閉自動旋轉
+        enablePan={true} // 重新啟用平移以便更好地觀察地面
+        rotateSpeed={0.6}
+        zoomSpeed={0.8}
+        minDistance={3}
+        maxDistance={15}
+        minPolarAngle={0} // 允許從頂部查看
+        maxPolarAngle={Math.PI / 2.1} // 防止視角穿到地下
+        target={[0, modelSize.y / 2, 0]} // 將目標設置為模型的幾何中心
       />
     </>
   )
