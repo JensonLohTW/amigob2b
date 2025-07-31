@@ -50,9 +50,12 @@ function ModernLoader() {
   )
 }
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+const modelPath = `${basePath}/models/vending-machine/vending_machine_dog_0724.gltf`
+
 // 增強的販賣機模型組件
 function EnhancedVendingMachineModel(props: any) {
-  const { scene } = useGLTF('/models/vending-machine/狗狗販賣機_0724.gltf')
+  const { scene } = useGLTF(modelPath)
   const meshRef = useRef<THREE.Group>(null!)
   const [hovered, setHovered] = useState(false)
   const [clicked, setClicked] = useState(false)
@@ -418,4 +421,4 @@ export default function ProfessionalVendingMachine() {
 }
 
 // 預載入模型
-useGLTF.preload('/models/vending-machine/狗狗販賣機_0724.gltf')
+useGLTF.preload(modelPath)

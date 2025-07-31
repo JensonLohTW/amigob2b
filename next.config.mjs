@@ -55,6 +55,11 @@ const nextConfig = {
   // Skip automatic `/me` -> `/me/`, preserve href for GitHub Pages
   skipTrailingSlashRedirect: true,
   
+  // Pass basePath to the client side
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isGithubPages ? '/amigob2b' : '',
+  },
+
   // Images configuration for static export
   images: {
     unoptimized: true, // Required for static export
