@@ -144,15 +144,19 @@ function Navigation() {
     <nav className="mt-px font-display text-5xl font-medium tracking-tight text-white">
       <NavigationRow>
         <NavigationItem href="/products">產品系列</NavigationItem>
+        <NavigationItem href="/comparison">鮮食對比</NavigationItem>
+      </NavigationRow>
+      <NavigationRow>
         <NavigationItem href="/experts">專家團隊</NavigationItem>
-      </NavigationRow>
-      <NavigationRow>
         <NavigationItem href="/franchise">加盟流程</NavigationItem>
-        <NavigationItem href="/calculator">投資試算</NavigationItem>
       </NavigationRow>
       <NavigationRow>
+        <NavigationItem href="/calculator">投資試算</NavigationItem>
         <NavigationItem href="/vending-machine">智能販賣機</NavigationItem>
+      </NavigationRow>
+      <NavigationRow>
         <NavigationItem href="/apply">合作申請</NavigationItem>
+        <NavigationItem href="/blog">營養知識</NavigationItem>
       </NavigationRow>
     </nav>
   )

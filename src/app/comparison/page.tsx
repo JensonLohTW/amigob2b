@@ -20,31 +20,49 @@ export default function ComparisonPage() {
   return (
     <RootLayout>
       {/* 1. 首屏 Hero */}
-      <ComparisonHero />
-      
+      <div id="hero">
+        <ComparisonHero />
+      </div>
+
       {/* 2. 快速對比表 */}
-      <QuickComparisonTable />
-      
+      <div id="comparison-table">
+        <QuickComparisonTable />
+      </div>
+
       {/* 3. 營養科學證據 */}
-      <NutritionScience />
-      
+      <div id="nutrition-science">
+        <NutritionScience />
+      </div>
+
       {/* 4. 健康成效案例 */}
-      <HealthCaseStudies />
-      
+      <div id="health-cases">
+        <HealthCaseStudies />
+      </div>
+
       {/* 5. 成分可視化 */}
-      <IngredientVisualization />
-      
+      <div id="ingredients">
+        <IngredientVisualization />
+      </div>
+
       {/* 6. 安全與標準 */}
-      <SafetyStandards />
-      
+      <div id="safety">
+        <SafetyStandards />
+      </div>
+
       {/* 7. 成本與便利性 */}
-      <CostConvenience />
-      
+      <div id="cost">
+        <CostConvenience />
+      </div>
+
       {/* 8. FAQ */}
-      <ComparisonFAQ />
-      
+      <div id="faq">
+        <ComparisonFAQ />
+      </div>
+
       {/* 9. 行動召喚 CTA */}
-      <ComparisonCTA />
+      <div id="cta">
+        <ComparisonCTA />
+      </div>
     </RootLayout>
   )
 }

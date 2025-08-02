@@ -38,7 +38,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 37,
       protein: 23,
       benefits: ['優質完全蛋白質', '必需胺基酸完整', '易消化吸收'],
-      color: '#f87171'
+      color: '#f87171',
     },
     {
       name: '鮭魚肉',
@@ -46,7 +46,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 15,
       protein: 6,
       benefits: ['Omega-3 脂肪酸', '促進毛髮光澤', '抗發炎'],
-      color: '#fb923c'
+      color: '#fb923c',
     },
     {
       name: '地瓜',
@@ -54,7 +54,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 20,
       protein: 1.6,
       benefits: ['複合碳水化合物', '膳食纖維', '維生素A'],
-      color: '#fbbf24'
+      color: '#fbbf24',
     },
     {
       name: '胡蘿蔔',
@@ -62,7 +62,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 10,
       protein: 0.9,
       benefits: ['β-胡蘿蔔素', '維生素K', '抗氧化'],
-      color: '#f97316'
+      color: '#f97316',
     },
     {
       name: '菠菜',
@@ -70,7 +70,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 8,
       protein: 2.9,
       benefits: ['葉酸', '鐵質', '維生素K'],
-      color: '#22c55e'
+      color: '#22c55e',
     },
     {
       name: '亞麻籽油',
@@ -78,7 +78,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 3,
       protein: 0,
       benefits: ['植物性Omega-3', '維生素E', '必需脂肪酸'],
-      color: '#eab308'
+      color: '#eab308',
     },
     {
       name: '綜合維生素',
@@ -86,48 +86,49 @@ const freshFoodRecipe: Recipe = {
       percentage: 7,
       protein: 0,
       benefits: ['維生素B群', '礦物質', '營養平衡'],
-      color: '#8b5cf6'
-    }
+      color: '#8b5cf6',
+    },
   ],
   nutritionSummary: {
     protein: 32,
     fat: 12,
     carbs: 8,
     fiber: 4,
-    moisture: 72
-  }
+    moisture: 72,
+  },
 }
 
 const PieChart = ({ ingredients }: { ingredients: Ingredient[] }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  
+
   let cumulativePercentage = 0
-  
+
   return (
     <div className="relative">
-      <svg className="w-80 h-80" viewBox="0 0 200 200">
+      <svg className="h-80 w-80" viewBox="0 0 200 200">
         {ingredients.map((ingredient, index) => {
           const startAngle = (cumulativePercentage / 100) * 360
-          const endAngle = ((cumulativePercentage + ingredient.percentage) / 100) * 360
+          const endAngle =
+            ((cumulativePercentage + ingredient.percentage) / 100) * 360
           const largeArcFlag = ingredient.percentage > 50 ? 1 : 0
-          
+
           const startAngleRad = (startAngle - 90) * (Math.PI / 180)
           const endAngleRad = (endAngle - 90) * (Math.PI / 180)
-          
+
           const x1 = 100 + 80 * Math.cos(startAngleRad)
           const y1 = 100 + 80 * Math.sin(startAngleRad)
           const x2 = 100 + 80 * Math.cos(endAngleRad)
           const y2 = 100 + 80 * Math.sin(endAngleRad)
-          
+
           const pathData = [
             `M 100 100`,
             `L ${x1} ${y1}`,
             `A 80 80 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-            'Z'
+            'Z',
           ].join(' ')
-          
+
           cumulativePercentage += ingredient.percentage
-          
+
           return (
             <motion.path
               key={ingredient.name}
@@ -137,9 +138,10 @@ const PieChart = ({ ingredients }: { ingredients: Ingredient[] }) => {
               strokeWidth="2"
               className="cursor-pointer"
               initial={{ scale: 0 }}
-              animate={{ 
+              animate={{
                 scale: hoveredIndex === index ? 1.05 : 1,
-                opacity: hoveredIndex !== null && hoveredIndex !== index ? 0.7 : 1
+                opacity:
+                  hoveredIndex !== null && hoveredIndex !== index ? 0.7 : 1,
               }}
               transition={{ duration: 0.3 }}
               onHoverStart={() => setHoveredIndex(index)}
@@ -147,37 +149,52 @@ const PieChart = ({ ingredients }: { ingredients: Ingredient[] }) => {
             />
           )
         })}
-        
+
         {/* 中心文字 */}
-        <text x="100" y="95" textAnchor="middle" className="text-sm font-semibold fill-neutral-950">
+        <text
+          x="100"
+          y="95"
+          textAnchor="middle"
+          className="fill-neutral-950 text-sm font-semibold"
+        >
           總重量
         </text>
-        <text x="100" y="110" textAnchor="middle" className="text-lg font-bold fill-neutral-950">
+        <text
+          x="100"
+          y="110"
+          textAnchor="middle"
+          className="fill-neutral-950 text-lg font-bold"
+        >
           {freshFoodRecipe.totalWeight}g
         </text>
       </svg>
-      
+
       {/* 懸停信息 */}
       {hoveredIndex !== null && (
         <motion.div
-          className="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-4 max-w-xs"
+          className="absolute top-4 right-4 max-w-xs rounded-lg bg-white p-4 shadow-lg"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.2 }}
         >
-          <h4 className="font-semibold text-neutral-950 mb-2">
+          <h4 className="mb-2 font-semibold text-neutral-950">
             {ingredients[hoveredIndex].name}
           </h4>
           <div className="space-y-1 text-sm text-neutral-600">
-            <div>重量: {ingredients[hoveredIndex].weight}g ({ingredients[hoveredIndex].percentage}%)</div>
+            <div>
+              重量: {ingredients[hoveredIndex].weight}g (
+              {ingredients[hoveredIndex].percentage}%)
+            </div>
             <div>蛋白質: {ingredients[hoveredIndex].protein}g</div>
           </div>
           <div className="mt-2">
-            <div className="text-xs font-medium text-neutral-950 mb-1">營養益處:</div>
-            <ul className="text-xs text-neutral-600 space-y-1">
+            <div className="mb-1 text-xs font-medium text-neutral-950">
+              營養益處:
+            </div>
+            <ul className="space-y-1 text-xs text-neutral-600">
               {ingredients[hoveredIndex].benefits.map((benefit, idx) => (
                 <li key={idx} className="flex items-center">
-                  <div className="w-1 h-1 bg-neutral-400 rounded-full mr-2"></div>
+                  <div className="mr-2 h-1 w-1 rounded-full bg-neutral-400"></div>
                   {benefit}
                 </li>
               ))}
@@ -195,18 +212,20 @@ const IngredientList = ({ ingredients }: { ingredients: Ingredient[] }) => {
       {ingredients.map((ingredient, index) => (
         <motion.div
           key={ingredient.name}
-          className="flex items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+          className="flex items-center rounded-lg bg-white p-3 shadow-sm transition-shadow hover:shadow-md"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: index * 0.1 }}
         >
           <div
-            className="w-4 h-4 rounded-full mr-3"
+            className="mr-3 h-4 w-4 rounded-full"
             style={{ backgroundColor: ingredient.color }}
           ></div>
           <div className="flex-1">
-            <div className="flex items-center justify-between mb-1">
-              <h4 className="font-medium text-neutral-950">{ingredient.name}</h4>
+            <div className="mb-1 flex items-center justify-between">
+              <h4 className="font-medium text-neutral-950">
+                {ingredient.name}
+              </h4>
               <div className="text-sm text-neutral-600">
                 {ingredient.weight}g ({ingredient.percentage}%)
               </div>
@@ -221,26 +240,37 @@ const IngredientList = ({ ingredients }: { ingredients: Ingredient[] }) => {
   )
 }
 
-const NutritionBreakdown = ({ nutrition }: { nutrition: Recipe['nutritionSummary'] }) => {
+const NutritionBreakdown = ({
+  nutrition,
+}: {
+  nutrition: Recipe['nutritionSummary']
+}) => {
   const nutrients = [
     { name: '蛋白質', value: nutrition.protein, color: '#ef4444', unit: '%' },
     { name: '脂肪', value: nutrition.fat, color: '#f97316', unit: '%' },
     { name: '碳水化合物', value: nutrition.carbs, color: '#eab308', unit: '%' },
     { name: '纖維', value: nutrition.fiber, color: '#22c55e', unit: '%' },
-    { name: '水分', value: nutrition.moisture, color: '#3b82f6', unit: '%' }
+    { name: '水分', value: nutrition.moisture, color: '#3b82f6', unit: '%' },
   ]
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg">
-      <h3 className="text-lg font-semibold text-neutral-950 mb-6">營養成分分析</h3>
+    <div className="rounded-2xl bg-white p-6 shadow-lg">
+      <h3 className="mb-6 text-lg font-semibold text-neutral-950">
+        營養成分分析
+      </h3>
       <div className="space-y-4">
         {nutrients.map((nutrient, index) => (
           <div key={nutrient.name} className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-neutral-950">{nutrient.name}</span>
-              <span className="text-sm text-neutral-600">{nutrient.value}{nutrient.unit}</span>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-neutral-950">
+                {nutrient.name}
+              </span>
+              <span className="text-sm text-neutral-600">
+                {nutrient.value}
+                {nutrient.unit}
+              </span>
             </div>
-            <div className="w-full bg-neutral-200 rounded-full h-2">
+            <div className="h-2 w-full rounded-full bg-neutral-200">
               <motion.div
                 className="h-2 rounded-full"
                 style={{ backgroundColor: nutrient.color }}
@@ -252,10 +282,10 @@ const NutritionBreakdown = ({ nutrition }: { nutrition: Recipe['nutritionSummary
           </div>
         ))}
       </div>
-      
-      <div className="mt-6 p-4 bg-green-50 rounded-lg">
-        <h4 className="font-medium text-green-800 mb-2">營養特色</h4>
-        <ul className="text-sm text-green-700 space-y-1">
+
+      <div className="mt-6 rounded-lg bg-green-50 p-4">
+        <h4 className="mb-2 font-medium text-green-800">營養特色</h4>
+        <ul className="space-y-1 text-sm text-green-700">
           <li>• 高蛋白質含量，支持肌肉發育</li>
           <li>• 適量脂肪，提供必需脂肪酸</li>
           <li>• 高水分含量，促進腎臟健康</li>
@@ -266,12 +296,18 @@ const NutritionBreakdown = ({ nutrition }: { nutrition: Recipe['nutritionSummary
   )
 }
 
-const InteractiveIngredientCard = ({ ingredient, index }: { ingredient: Ingredient; index: number }) => {
+const InteractiveIngredientCard = ({
+  ingredient,
+  index,
+}: {
+  ingredient: Ingredient
+  index: number
+}) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <motion.div
-      className="bg-white rounded-xl p-4 shadow-lg cursor-pointer"
+      className="cursor-pointer rounded-xl bg-white p-4 shadow-lg"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => setIsExpanded(!isExpanded)}
@@ -279,23 +315,27 @@ const InteractiveIngredientCard = ({ ingredient, index }: { ingredient: Ingredie
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
     >
-      <div className="flex items-center justify-between mb-3">
+      <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center">
           <div
-            className="w-6 h-6 rounded-full mr-3"
+            className="mr-3 h-6 w-6 rounded-full"
             style={{ backgroundColor: ingredient.color }}
           ></div>
           <h3 className="font-semibold text-neutral-950">{ingredient.name}</h3>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold text-neutral-950">{ingredient.weight}g</div>
-          <div className="text-sm text-neutral-600">{ingredient.percentage}%</div>
+          <div className="text-lg font-bold text-neutral-950">
+            {ingredient.weight}g
+          </div>
+          <div className="text-sm text-neutral-600">
+            {ingredient.percentage}%
+          </div>
         </div>
       </div>
-      
+
       <div className="mb-3">
-        <div className="text-sm text-neutral-600 mb-1">蛋白質含量</div>
-        <div className="w-full bg-neutral-200 rounded-full h-2">
+        <div className="mb-1 text-sm text-neutral-600">蛋白質含量</div>
+        <div className="h-2 w-full rounded-full bg-neutral-200">
           <motion.div
             className="h-2 rounded-full bg-blue-500"
             initial={{ width: 0 }}
@@ -303,22 +343,40 @@ const InteractiveIngredientCard = ({ ingredient, index }: { ingredient: Ingredie
             transition={{ duration: 0.8, delay: index * 0.1 }}
           />
         </div>
-        <div className="text-xs text-neutral-500 mt-1">{ingredient.protein}g</div>
+        <div className="mt-1 text-xs text-neutral-500">
+          {ingredient.protein}g
+        </div>
       </div>
-      
+
       <motion.div
         initial={false}
-        animate={{ height: isExpanded ? 'auto' : 0, opacity: isExpanded ? 1 : 0 }}
+        animate={{
+          height: isExpanded ? 'auto' : 0,
+          opacity: isExpanded ? 1 : 0,
+        }}
         transition={{ duration: 0.3 }}
         className="overflow-hidden"
       >
-        <div className="pt-3 border-t border-neutral-200">
-          <h4 className="text-sm font-medium text-neutral-950 mb-2">營養益處</h4>
+        <div className="border-t border-neutral-200 pt-3">
+          <h4 className="mb-2 text-sm font-medium text-neutral-950">
+            營養益處
+          </h4>
           <ul className="space-y-1">
             {ingredient.benefits.map((benefit, idx) => (
-              <li key={idx} className="text-xs text-neutral-600 flex items-center">
-                <svg className="w-3 h-3 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              <li
+                key={idx}
+                className="flex items-center text-xs text-neutral-600"
+              >
+                <svg
+                  className="mr-2 h-3 w-3 text-green-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 {benefit}
               </li>
@@ -326,14 +384,24 @@ const InteractiveIngredientCard = ({ ingredient, index }: { ingredient: Ingredie
           </ul>
         </div>
       </motion.div>
-      
+
       <div className="mt-3 text-center">
         <motion.div
           animate={{ rotate: isExpanded ? 180 : 0 }}
           transition={{ duration: 0.3 }}
         >
-          <svg className="w-4 h-4 text-neutral-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <svg
+            className="mx-auto h-4 w-4 text-neutral-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </motion.div>
       </div>
@@ -360,10 +428,10 @@ export function IngredientVisualization() {
       {/* 視圖切換 */}
       <FadeIn className="mb-8">
         <div className="flex justify-center">
-          <div className="bg-neutral-100 rounded-lg p-1">
+          <div className="rounded-lg bg-neutral-100 p-1">
             <button
               onClick={() => setActiveView('pie')}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`rounded-md px-6 py-2 text-sm font-medium transition-colors ${
                 activeView === 'pie'
                   ? 'bg-white text-neutral-950 shadow-sm'
                   : 'text-neutral-600 hover:text-neutral-950'
@@ -373,7 +441,7 @@ export function IngredientVisualization() {
             </button>
             <button
               onClick={() => setActiveView('list')}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`rounded-md px-6 py-2 text-sm font-medium transition-colors ${
                 activeView === 'list'
                   ? 'bg-white text-neutral-950 shadow-sm'
                   : 'text-neutral-600 hover:text-neutral-950'
@@ -383,7 +451,7 @@ export function IngredientVisualization() {
             </button>
             <button
               onClick={() => setActiveView('cards')}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`rounded-md px-6 py-2 text-sm font-medium transition-colors ${
                 activeView === 'cards'
                   ? 'bg-white text-neutral-950 shadow-sm'
                   : 'text-neutral-600 hover:text-neutral-950'
@@ -410,8 +478,10 @@ export function IngredientVisualization() {
       {activeView === 'list' && (
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <FadeIn>
-            <div className="bg-neutral-50 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-neutral-950 mb-6">食材清單</h3>
+            <div className="rounded-2xl bg-neutral-50 p-6">
+              <h3 className="mb-6 text-lg font-semibold text-neutral-950">
+                食材清單
+              </h3>
               <IngredientList ingredients={freshFoodRecipe.ingredients} />
             </div>
           </FadeIn>
@@ -425,7 +495,10 @@ export function IngredientVisualization() {
         <FadeInStagger className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {freshFoodRecipe.ingredients.map((ingredient, index) => (
             <FadeIn key={ingredient.name}>
-              <InteractiveIngredientCard ingredient={ingredient} index={index} />
+              <InteractiveIngredientCard
+                ingredient={ingredient}
+                index={index}
+              />
             </FadeIn>
           ))}
         </FadeInStagger>
@@ -433,45 +506,72 @@ export function IngredientVisualization() {
 
       {/* 品質保證 */}
       <FadeIn className="mt-16">
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8">
-          <h3 className="text-xl font-semibold text-neutral-950 mb-6 text-center">
+        <div className="rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 p-8">
+          <h3 className="mb-6 text-center text-xl font-semibold text-neutral-950">
             食材品質保證
           </h3>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                <svg
+                  className="h-8 w-8 text-green-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
-              <h4 className="font-semibold text-neutral-950 mb-2">人食等級</h4>
+              <h4 className="mb-2 font-semibold text-neutral-950">人食等級</h4>
               <p className="text-sm text-neutral-600">
-                所有食材均符合人類食品安全標準，
-                可追溯來源，品質有保障
+                所有食材均符合人類食品安全標準， 可追溯來源，品質有保障
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
+                <svg
+                  className="h-8 w-8 text-blue-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
                 </svg>
               </div>
-              <h4 className="font-semibold text-neutral-950 mb-2">新鮮直送</h4>
+              <h4 className="mb-2 font-semibold text-neutral-950">新鮮直送</h4>
               <p className="text-sm text-neutral-600">
-                當日製作，冷鏈配送，
-                確保食材新鮮度和營養價值
+                當日製作，冷鏈配送， 確保食材新鮮度和營養價值
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
+                <svg
+                  className="h-8 w-8 text-purple-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                  />
                 </svg>
               </div>
-              <h4 className="font-semibold text-neutral-950 mb-2">科學配方</h4>
+              <h4 className="mb-2 font-semibold text-neutral-950">科學配方</h4>
               <p className="text-sm text-neutral-600">
-                獸醫師和營養師聯合調配，
-                確保營養均衡和適口性
+                獸醫師和營養師聯合調配， 確保營養均衡和適口性
               </p>
             </div>
           </div>

@@ -44,7 +44,7 @@ const caseStudies: CaseStudy[] = [
         week4: 72,
         week12: 45,
         improvement: -47,
-        status: 'excellent'
+        status: 'excellent',
       },
       {
         name: '血糖',
@@ -53,7 +53,7 @@ const caseStudies: CaseStudy[] = [
         week4: 115,
         week12: 95,
         improvement: -26,
-        status: 'excellent'
+        status: 'excellent',
       },
       {
         name: '體脂率',
@@ -62,7 +62,7 @@ const caseStudies: CaseStudy[] = [
         week4: 25,
         week12: 22,
         improvement: -21,
-        status: 'good'
+        status: 'good',
       },
       {
         name: '皮膚炎症指數',
@@ -71,11 +71,13 @@ const caseStudies: CaseStudy[] = [
         week4: 5,
         week12: 2,
         improvement: -75,
-        status: 'excellent'
-      }
+        status: 'excellent',
+      },
     ],
-    ownerTestimonial: '小白的皮膚問題明顯改善，毛髮變得柔順有光澤，精神狀態也比以前好很多！',
-    vetRecommendation: '血檢數值顯示肝功能和血糖都回到正常範圍，建議繼續使用鮮食。'
+    ownerTestimonial:
+      '小白的皮膚問題明顯改善，毛髮變得柔順有光澤，精神狀態也比以前好很多！',
+    vetRecommendation:
+      '血檢數值顯示肝功能和血糖都回到正常範圍，建議繼續使用鮮食。',
   },
   {
     id: 'case2',
@@ -92,7 +94,7 @@ const caseStudies: CaseStudy[] = [
         week4: 28,
         week12: 22,
         improvement: -31,
-        status: 'excellent'
+        status: 'excellent',
       },
       {
         name: '肌酸酐',
@@ -101,7 +103,7 @@ const caseStudies: CaseStudy[] = [
         week4: 1.6,
         week12: 1.3,
         improvement: -28,
-        status: 'good'
+        status: 'good',
       },
       {
         name: '食慾評分',
@@ -110,7 +112,7 @@ const caseStudies: CaseStudy[] = [
         week4: 7,
         week12: 9,
         improvement: 125,
-        status: 'excellent'
+        status: 'excellent',
       },
       {
         name: '活動力',
@@ -119,12 +121,14 @@ const caseStudies: CaseStudy[] = [
         week4: 7,
         week12: 8,
         improvement: 60,
-        status: 'good'
-      }
+        status: 'good',
+      },
     ],
-    ownerTestimonial: '咪咪現在每餐都吃得很香，腎功能指數也穩定下降，獸醫說恢復得很好。',
-    vetRecommendation: '腎功能指標明顯改善，低磷配方對腎臟負擔較小，建議長期使用。'
-  }
+    ownerTestimonial:
+      '咪咪現在每餐都吃得很香，腎功能指數也穩定下降，獸醫說恢復得很好。',
+    vetRecommendation:
+      '腎功能指標明顯改善，低磷配方對腎臟負擔較小，建議長期使用。',
+  },
 ]
 
 const LineChart = ({ metrics }: { metrics: HealthMetric[] }) => {
@@ -142,14 +146,16 @@ const LineChart = ({ metrics }: { metrics: HealthMetric[] }) => {
     return 80 - ((value - minValue) / range) * 60
   }
 
-  const pathData = weeks.map((week, index) => {
-    const x = 20 + (week / 12) * 160
-    const y = getY(values[index])
-    return `${index === 0 ? 'M' : 'L'} ${x} ${y}`
-  }).join(' ')
+  const pathData = weeks
+    .map((week, index) => {
+      const x = 20 + (week / 12) * 160
+      const y = getY(values[index])
+      return `${index === 0 ? 'M' : 'L'} ${x} ${y}`
+    })
+    .join(' ')
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg">
+    <div className="rounded-2xl bg-white p-6 shadow-lg">
       <div className="mb-4">
         <select
           value={selectedMetric}
@@ -165,15 +171,25 @@ const LineChart = ({ metrics }: { metrics: HealthMetric[] }) => {
       </div>
 
       <div className="relative">
-        <svg className="w-full h-40" viewBox="0 0 200 100">
+        <svg className="h-40 w-full" viewBox="0 0 200 100">
           {/* 網格線 */}
           <defs>
-            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f3f4f6" strokeWidth="1"/>
+            <pattern
+              id="grid"
+              width="20"
+              height="20"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M 20 0 L 0 0 0 20"
+                fill="none"
+                stroke="#f3f4f6"
+                strokeWidth="1"
+              />
             </pattern>
           </defs>
           <rect width="200" height="100" fill="url(#grid)" />
-          
+
           {/* 數據線 */}
           <motion.path
             d={pathData}
@@ -184,9 +200,9 @@ const LineChart = ({ metrics }: { metrics: HealthMetric[] }) => {
             strokeLinejoin="round"
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
+            transition={{ duration: 2, ease: 'easeInOut' }}
           />
-          
+
           {/* 數據點 */}
           {weeks.map((week, index) => {
             const x = 20 + (week / 12) * 160
@@ -204,7 +220,7 @@ const LineChart = ({ metrics }: { metrics: HealthMetric[] }) => {
               />
             )
           })}
-          
+
           {/* X軸標籤 */}
           {weeks.map((week, index) => {
             const x = 20 + (week / 12) * 160
@@ -214,34 +230,38 @@ const LineChart = ({ metrics }: { metrics: HealthMetric[] }) => {
                 x={x}
                 y="95"
                 textAnchor="middle"
-                className="text-xs fill-neutral-600"
+                className="fill-neutral-600 text-xs"
               >
                 {week}週
               </text>
             )
           })}
         </svg>
-        
+
         {/* 數值標籤 */}
-        <div className="flex justify-between mt-2 text-sm">
+        <div className="mt-2 flex justify-between text-sm">
           {values.map((value, index) => (
             <div key={index} className="text-center">
               <div className="font-medium text-neutral-950">
-                {value}{metric.unit}
+                {value}
+                {metric.unit}
               </div>
             </div>
           ))}
         </div>
       </div>
-      
+
       {/* 改善指標 */}
-      <div className="mt-4 p-3 bg-neutral-50 rounded-lg">
+      <div className="mt-4 rounded-lg bg-neutral-50 p-3">
         <div className="flex items-center justify-between">
           <span className="text-sm text-neutral-600">總改善幅度</span>
-          <span className={`text-sm font-medium ${
-            metric.improvement > 0 ? 'text-green-600' : 'text-blue-600'
-          }`}>
-            {metric.improvement > 0 ? '+' : ''}{metric.improvement}%
+          <span
+            className={`text-sm font-medium ${
+              metric.improvement > 0 ? 'text-green-600' : 'text-blue-600'
+            }`}
+          >
+            {metric.improvement > 0 ? '+' : ''}
+            {metric.improvement}%
           </span>
         </div>
       </div>
@@ -251,34 +271,48 @@ const LineChart = ({ metrics }: { metrics: HealthMetric[] }) => {
 
 const BeforeAfterCard = ({ caseStudy }: { caseStudy: CaseStudy }) => {
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg">
+    <div className="rounded-2xl bg-white p-6 shadow-lg">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-neutral-950">{caseStudy.petName}</h3>
-        <p className="text-sm text-neutral-600">{caseStudy.breed} • {caseStudy.age}</p>
+        <h3 className="text-lg font-semibold text-neutral-950">
+          {caseStudy.petName}
+        </h3>
+        <p className="text-sm text-neutral-600">
+          {caseStudy.breed} • {caseStudy.age}
+        </p>
       </div>
-      
+
       <div className="space-y-4">
         <div>
-          <h4 className="text-sm font-medium text-neutral-950 mb-2">初始狀況</h4>
-          <p className="text-sm text-neutral-600">{caseStudy.initialCondition}</p>
+          <h4 className="mb-2 text-sm font-medium text-neutral-950">
+            初始狀況
+          </h4>
+          <p className="text-sm text-neutral-600">
+            {caseStudy.initialCondition}
+          </p>
         </div>
-        
+
         <div>
-          <h4 className="text-sm font-medium text-neutral-950 mb-2">轉食期間</h4>
+          <h4 className="mb-2 text-sm font-medium text-neutral-950">
+            轉食期間
+          </h4>
           <p className="text-sm text-neutral-600">{caseStudy.duration}</p>
         </div>
-        
+
         <div>
-          <h4 className="text-sm font-medium text-neutral-950 mb-2">飼主見證</h4>
-          <blockquote className="text-sm text-neutral-600 italic border-l-4 border-blue-500 pl-3">
+          <h4 className="mb-2 text-sm font-medium text-neutral-950">
+            飼主見證
+          </h4>
+          <blockquote className="border-l-4 border-blue-500 pl-3 text-sm text-neutral-600 italic">
             "{caseStudy.ownerTestimonial}"
           </blockquote>
         </div>
-        
+
         {caseStudy.vetRecommendation && (
           <div>
-            <h4 className="text-sm font-medium text-neutral-950 mb-2">獸醫建議</h4>
-            <p className="text-sm text-green-700 bg-green-50 p-3 rounded-lg">
+            <h4 className="mb-2 text-sm font-medium text-neutral-950">
+              獸醫建議
+            </h4>
+            <p className="rounded-lg bg-green-50 p-3 text-sm text-green-700">
               {caseStudy.vetRecommendation}
             </p>
           </div>
@@ -308,12 +342,12 @@ export function HealthCaseStudies() {
       {/* 案例選擇 */}
       <FadeIn className="mb-8">
         <div className="flex justify-center">
-          <div className="bg-neutral-100 rounded-lg p-1">
+          <div className="rounded-lg bg-neutral-100 p-1">
             {caseStudies.map((caseStudy, index) => (
               <button
                 key={caseStudy.id}
                 onClick={() => setSelectedCase(index)}
-                className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`rounded-md px-6 py-2 text-sm font-medium transition-colors ${
                   selectedCase === index
                     ? 'bg-white text-neutral-950 shadow-sm'
                     : 'text-neutral-600 hover:text-neutral-950'
@@ -331,7 +365,7 @@ export function HealthCaseStudies() {
         <FadeIn>
           <BeforeAfterCard caseStudy={currentCase} />
         </FadeIn>
-        
+
         <FadeIn>
           <LineChart metrics={currentCase.metrics} />
         </FadeIn>
@@ -339,39 +373,40 @@ export function HealthCaseStudies() {
 
       {/* 統計摘要 */}
       <FadeIn className="mt-16">
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8">
-          <h3 className="text-xl font-semibold text-neutral-950 mb-6 text-center">
+        <div className="rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 p-8">
+          <h3 className="mb-6 text-center text-xl font-semibold text-neutral-950">
             整體健康改善統計
           </h3>
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">89%</div>
-              <div className="text-sm text-neutral-600 mt-1">肝功能改善</div>
-              <div className="text-xs text-neutral-500 mt-1">平均 ALT 下降</div>
+              <div className="mt-1 text-sm text-neutral-600">肝功能改善</div>
+              <div className="mt-1 text-xs text-neutral-500">平均 ALT 下降</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-green-600">76%</div>
-              <div className="text-sm text-neutral-600 mt-1">皮膚狀況改善</div>
-              <div className="text-xs text-neutral-500 mt-1">炎症指數下降</div>
+              <div className="mt-1 text-sm text-neutral-600">皮膚狀況改善</div>
+              <div className="mt-1 text-xs text-neutral-500">炎症指數下降</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-600">65%</div>
-              <div className="text-sm text-neutral-600 mt-1">腎功能改善</div>
-              <div className="text-xs text-neutral-500 mt-1">BUN 指標下降</div>
+              <div className="mt-1 text-sm text-neutral-600">腎功能改善</div>
+              <div className="mt-1 text-xs text-neutral-500">BUN 指標下降</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-orange-600">92%</div>
-              <div className="text-sm text-neutral-600 mt-1">食慾提升</div>
-              <div className="text-xs text-neutral-500 mt-1">飼主滿意度</div>
+              <div className="mt-1 text-sm text-neutral-600">食慾提升</div>
+              <div className="mt-1 text-xs text-neutral-500">飼主滿意度</div>
             </div>
           </div>
-          
+
           <div className="mt-8 text-center">
             <p className="text-sm text-neutral-600">
               * 數據基於 50+ 個轉食案例的 12 週追蹤研究
             </p>
-            <p className="text-xs text-neutral-500 mt-1">
-              研究期間：2023年1月 - 2024年1月 | 合作獸醫院：台大動物醫院、中興大學獸醫院
+            <p className="mt-1 text-xs text-neutral-500">
+              研究期間：2023年1月 - 2024年1月 |
+              合作獸醫院：台大動物醫院、中興大學獸醫院
             </p>
           </div>
         </div>
