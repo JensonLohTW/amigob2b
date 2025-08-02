@@ -38,7 +38,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 37,
       protein: 23,
       benefits: ['優質完全蛋白質', '必需胺基酸完整', '易消化吸收'],
-      color: '#f87171',
+      color: '#3b82f6',
     },
     {
       name: '鮭魚肉',
@@ -46,7 +46,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 15,
       protein: 6,
       benefits: ['Omega-3 脂肪酸', '促進毛髮光澤', '抗發炎'],
-      color: '#fb923c',
+      color: '#60a5fa',
     },
     {
       name: '地瓜',
@@ -54,7 +54,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 20,
       protein: 1.6,
       benefits: ['複合碳水化合物', '膳食纖維', '維生素A'],
-      color: '#fbbf24',
+      color: '#93c5fd',
     },
     {
       name: '胡蘿蔔',
@@ -62,7 +62,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 10,
       protein: 0.9,
       benefits: ['β-胡蘿蔔素', '維生素K', '抗氧化'],
-      color: '#f97316',
+      color: '#c3dafe',
     },
     {
       name: '菠菜',
@@ -70,7 +70,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 8,
       protein: 2.9,
       benefits: ['葉酸', '鐵質', '維生素K'],
-      color: '#22c55e',
+      color: '#6b7280',
     },
     {
       name: '亞麻籽油',
@@ -78,7 +78,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 3,
       protein: 0,
       benefits: ['植物性Omega-3', '維生素E', '必需脂肪酸'],
-      color: '#eab308',
+      color: '#9ca3af',
     },
     {
       name: '綜合維生素',
@@ -86,7 +86,7 @@ const freshFoodRecipe: Recipe = {
       percentage: 7,
       protein: 0,
       benefits: ['維生素B群', '礦物質', '營養平衡'],
-      color: '#8b5cf6',
+      color: '#d1d5db',
     },
   ],
   nutritionSummary: {
@@ -137,13 +137,16 @@ const PieChart = ({ ingredients }: { ingredients: Ingredient[] }) => {
               stroke="white"
               strokeWidth="2"
               className="cursor-pointer"
-              initial={{ scale: 0 }}
+              initial={{ scale: 0, opacity: 0 }}
               animate={{
-                scale: hoveredIndex === index ? 1.05 : 1,
+                scale: hoveredIndex === index ? 1.02 : 1,
                 opacity:
-                  hoveredIndex !== null && hoveredIndex !== index ? 0.7 : 1,
+                  hoveredIndex !== null && hoveredIndex !== index ? 0.8 : 1,
               }}
-              transition={{ duration: 0.3 }}
+              transition={{
+                duration: 0.4,
+                ease: 'easeOut',
+              }}
               onHoverStart={() => setHoveredIndex(index)}
               onHoverEnd={() => setHoveredIndex(null)}
             />
@@ -246,11 +249,11 @@ const NutritionBreakdown = ({
   nutrition: Recipe['nutritionSummary']
 }) => {
   const nutrients = [
-    { name: '蛋白質', value: nutrition.protein, color: '#ef4444', unit: '%' },
-    { name: '脂肪', value: nutrition.fat, color: '#f97316', unit: '%' },
-    { name: '碳水化合物', value: nutrition.carbs, color: '#eab308', unit: '%' },
-    { name: '纖維', value: nutrition.fiber, color: '#22c55e', unit: '%' },
-    { name: '水分', value: nutrition.moisture, color: '#3b82f6', unit: '%' },
+    { name: '蛋白質', value: nutrition.protein, color: '#3b82f6', unit: '%' },
+    { name: '脂肪', value: nutrition.fat, color: '#60a5fa', unit: '%' },
+    { name: '碳水化合物', value: nutrition.carbs, color: '#93c5fd', unit: '%' },
+    { name: '纖維', value: nutrition.fiber, color: '#c3dafe', unit: '%' },
+    { name: '水分', value: nutrition.moisture, color: '#6b7280', unit: '%' },
   ]
 
   return (
@@ -274,9 +277,13 @@ const NutritionBreakdown = ({
               <motion.div
                 className="h-2 rounded-full"
                 style={{ backgroundColor: nutrient.color }}
-                initial={{ width: 0 }}
-                animate={{ width: `${nutrient.value}%` }}
-                transition={{ duration: 1, delay: index * 0.2 }}
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: `${nutrient.value}%`, opacity: 1 }}
+                transition={{
+                  duration: 1.2,
+                  delay: index * 0.15,
+                  ease: 'easeOut',
+                }}
               />
             </div>
           </div>
@@ -307,13 +314,17 @@ const InteractiveIngredientCard = ({
 
   return (
     <motion.div
-      className="cursor-pointer rounded-xl bg-white p-4 shadow-lg"
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      className="cursor-pointer rounded-xl border bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-md"
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
       onClick={() => setIsExpanded(!isExpanded)}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
+      transition={{
+        delay: index * 0.08,
+        duration: 0.5,
+        ease: 'easeOut',
+      }}
     >
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center">
@@ -512,9 +523,9 @@ export function IngredientVisualization() {
           </h3>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div className="text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
                 <svg
-                  className="h-8 w-8 text-green-600"
+                  className="h-8 w-8 text-blue-600"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -554,9 +565,9 @@ export function IngredientVisualization() {
               </p>
             </div>
             <div className="text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
                 <svg
-                  className="h-8 w-8 text-purple-600"
+                  className="h-8 w-8 text-blue-600"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"

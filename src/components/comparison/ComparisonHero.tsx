@@ -31,6 +31,7 @@ const navigationItems = [
 
 const QuickNavigation = () => {
   const [activeSection, setActiveSection] = useState('hero')
+  const [isExpanded, setIsExpanded] = useState(false)
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
@@ -106,36 +107,84 @@ const QuickNavigation = () => {
     }
   }, [])
 
+  // 動畫變體定義
+  const containerVariants = {
+    collapsed: {
+      width: 56,
+      transition: {
+        duration: 0.3,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
+    expanded: {
+      width: 200,
+      transition: {
+        duration: 0.3,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
+  }
+
   return (
     <motion.div
       className="fixed top-1/2 right-6 z-50 hidden -translate-y-1/2 transform lg:block"
       initial={{ opacity: 0, x: 100 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 1, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+      onHoverStart={() => setIsExpanded(true)}
+      onHoverEnd={() => setIsExpanded(false)}
     >
-      <div className="max-w-xs rounded-2xl border border-neutral-200/60 bg-white/95 p-2 shadow-xl backdrop-blur-sm">
-        <div className="space-y-1">
-          {navigationItems.map((item, index) => (
-            <motion.button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className={`flex w-full items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
-                activeSection === item.id
-                  ? 'bg-neutral-900 text-white shadow-sm'
-                  : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900'
-              }`}
-              whileHover={{ scale: 1.02, x: -2 }}
-              whileTap={{ scale: 0.98 }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.2 + index * 0.05, duration: 0.4 }}
-            >
-              <item.icon className="mr-3 h-4 w-4" />
-              <span className="truncate">{item.label}</span>
-            </motion.button>
-          ))}
+      <motion.div
+        className="overflow-hidden rounded-2xl border border-neutral-200/60 bg-white/95 shadow-xl backdrop-blur-sm"
+        variants={containerVariants}
+        animate={isExpanded ? 'expanded' : 'collapsed'}
+        initial="collapsed"
+      >
+        <div className="p-2">
+          <div className="space-y-1">
+            {navigationItems.map((item, index) => (
+              <motion.button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`flex w-full items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                  activeSection === item.id
+                    ? 'bg-neutral-900 text-white shadow-sm'
+                    : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900'
+                }`}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  delay: 1.2 + index * 0.05,
+                  duration: 0.4,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
+                whileHover={{
+                  scale: 1.02,
+                  x: -2,
+                  transition: { duration: 0.2 },
+                }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <item.icon className="h-4 w-4 flex-shrink-0" />
+                <motion.span
+                  className="ml-3 overflow-hidden whitespace-nowrap"
+                  initial={{ width: 0, opacity: 0 }}
+                  animate={{
+                    width: isExpanded ? 'auto' : 0,
+                    opacity: isExpanded ? 1 : 0,
+                  }}
+                  transition={{
+                    duration: 0.3,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                  }}
+                >
+                  {item.label}
+                </motion.span>
+              </motion.button>
+            ))}
+          </div>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   )
 }
