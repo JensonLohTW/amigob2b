@@ -543,7 +543,7 @@ const BeforeAfterCard = ({ caseStudy }: { caseStudy: CaseStudy }) => {
           <blockquote className="border-primary bg-muted/50 relative rounded-lg border-l-4 p-4">
             <div className="bg-primary/20 absolute -top-2 -left-2 h-4 w-4 rounded-full"></div>
             <p className="text-muted-foreground text-sm italic">
-              "{caseStudy.ownerTestimonial}"
+              &ldquo;{caseStudy.ownerTestimonial}&rdquo;
             </p>
           </blockquote>
         </motion.div>

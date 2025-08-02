@@ -88,7 +88,7 @@ const QuickNavigation = () => {
 
         // 如果有可見的元素，設置為活躍狀態
         if (mostVisibleEntry) {
-          setActiveSection(mostVisibleEntry.target.id)
+          setActiveSection((mostVisibleEntry as IntersectionObserverEntry).target.id)
         }
       }, 100) // 100ms 防抖延遲
     }, observerOptions)

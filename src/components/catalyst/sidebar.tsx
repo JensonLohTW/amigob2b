@@ -72,17 +72,10 @@ export function SidebarHeading({ className, ...props }: React.ComponentPropsWith
 }
 
 export const SidebarItem = forwardRef(function SidebarItem(
-  {
-    current,
-    className,
-    children,
-    ...props
-  }: { current?: boolean; className?: string; children: React.ReactNode } & (
-    | Omit<Headless.ButtonProps, 'as' | 'className'>
-    | Omit<Headless.ButtonProps<typeof Link>, 'as' | 'className'>
-  ),
+  props: any,
   ref: React.ForwardedRef<HTMLAnchorElement | HTMLButtonElement>
 ) {
+  const { current, className, children, ...restProps } = props;
   let classes = clsx(
     // Base
     'flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-left text-base/6 font-medium text-zinc-950 sm:py-2 sm:text-sm/5',
@@ -113,10 +106,10 @@ export const SidebarItem = forwardRef(function SidebarItem(
           className="absolute inset-y-2 -left-4 w-0.5 rounded-full bg-zinc-950 dark:bg-white"
         />
       )}
-      {'href' in props ? (
+      {'href' in restProps ? (
         <Headless.CloseButton
           as={Link}
-          {...props}
+          {...(restProps as any)}
           className={classes}
           data-current={current ? 'true' : undefined}
           ref={ref}
@@ -125,7 +118,7 @@ export const SidebarItem = forwardRef(function SidebarItem(
         </Headless.CloseButton>
       ) : (
         <Headless.Button
-          {...props}
+          {...restProps}
           className={clsx('cursor-default', classes)}
           data-current={current ? 'true' : undefined}
           ref={ref}

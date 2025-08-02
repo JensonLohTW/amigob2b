@@ -1,5 +1,6 @@
 import * as Headless from '@headlessui/react'
 import clsx from 'clsx'
+import Image from 'next/image'
 import React, { forwardRef } from 'react'
 import { TouchTarget } from './button'
 import { Link } from './link'
@@ -45,7 +46,16 @@ export function Avatar({
           </text>
         </svg>
       )}
-      {src && <img className="size-full" src={src} alt={alt} />}
+      {src && (
+        <Image
+          className="size-full"
+          src={src}
+          alt={alt}
+          width={40}
+          height={40}
+          unoptimized
+        />
+      )}
     </span>
   )
 }
@@ -69,7 +79,7 @@ export const AvatarButton = forwardRef(function AvatarButton(
   )
 
   return 'href' in props ? (
-    <Link {...props} className={classes} ref={ref as React.ForwardedRef<HTMLAnchorElement>}>
+    <Link {...(props as any)} className={classes} ref={ref as React.ForwardedRef<HTMLAnchorElement>}>
       <TouchTarget>
         <Avatar src={src} square={square} initials={initials} alt={alt} />
       </TouchTarget>

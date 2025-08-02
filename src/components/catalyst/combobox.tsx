@@ -59,7 +59,7 @@ export function Combobox<T>({
           data-slot="control"
           aria-label={ariaLabel}
           displayValue={(option: T) => displayValue(option) ?? ''}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)}
           placeholder={placeholder}
           className={clsx([
             className,
@@ -115,7 +115,7 @@ export function Combobox<T>({
           'transition-opacity duration-100 ease-in data-closed:data-leave:opacity-0 data-transition:pointer-events-none'
         )}
       >
-        {({ option }) => children(option)}
+        {({ option }: { option: T }) => children(option as NonNullable<T>)}
       </Headless.ComboboxOptions>
     </Headless.Combobox>
   )

@@ -301,7 +301,7 @@ const TestimonialSlider = () => {
         </div>
 
         <blockquote className="mb-3 text-neutral-700 italic">
-          "{testimonials[currentIndex].content}"
+          &ldquo;{testimonials[currentIndex].content}&rdquo;
         </blockquote>
 
         <div className="text-sm text-neutral-600">
