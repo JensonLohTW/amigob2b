@@ -444,11 +444,19 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     function onClick(event: MouseEvent) {
       if (
-        event.target instanceof HTMLElement &&
-        event.target.closest('a')?.href === window.location.href
+        event.target instanceof HTMLElement
       ) {
-        setIsTransitioning(false)
-        setExpanded(false)
+        const link = event.target.closest('a')
+        if (link) {
+          // 檢查是否為內部連結且指向當前頁面
+          const linkUrl = new URL(link.href, window.location.origin)
+          const currentUrl = new URL(window.location.href)
+
+          if (linkUrl.pathname === currentUrl.pathname) {
+            setIsTransitioning(false)
+            setExpanded(false)
+          }
+        }
       }
     }
 
