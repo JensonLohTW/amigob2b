@@ -16,6 +16,13 @@ import {
   ProgressBar,
   CircularProgress,
 } from '@/components/AnimatedCounter'
+import {
+  generateSEOMetadata,
+  generatePageKeywords,
+  generatePageDescription,
+} from '@/components/SEO'
+import { OrganizationStructuredData } from '@/components/StructuredData'
+
 // 暫時保留原有的 logo 圖片，後續會替換為合作夥伴 logo
 import logoBrightPath from '@/images/clients/bright-path/logo-light.svg'
 import logoFamilyFund from '@/images/clients/family-fund/logo-light.svg'
@@ -41,6 +48,162 @@ const partners = [
   ['寵物訓練 G', logoBrightPath],
   ['寵物保險 H', logoNorthAdventures],
 ]
+
+// 用戶類型選擇器 - 讓用戶選擇身份（寵物主人或加盟商）
+function UserTypeSelector() {
+  const userTypes = [
+    {
+      type: 'consumer',
+      title: '我是寵物主人',
+      description: '為毛孩尋找最優質的營養方案',
+      features: ['產品瀏覽', '門店查找', '營養知識', '健康工具'],
+      href: '/consumer',
+      icon: (
+        <svg
+          className="h-8 w-8"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.5}
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+          />
+        </svg>
+      ),
+      gradientBg: 'bg-gradient-to-br from-pink-500 to-rose-500',
+      hoverGradient: 'from-pink-50 to-rose-50',
+      borderColor: 'border-pink-200',
+      iconBg: 'bg-gradient-to-br from-pink-500 to-rose-500',
+    },
+    {
+      type: 'business',
+      title: '我要加盟合作',
+      description: '開啟寵物鮮食事業新商機',
+      features: ['投資試算', '加盟流程', '營運支援', '成功案例'],
+      href: '/franchise',
+      icon: (
+        <svg
+          className="h-8 w-8"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.5}
+            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+          />
+        </svg>
+      ),
+      gradientBg: 'bg-gradient-to-br from-blue-500 to-indigo-500',
+      hoverGradient: 'from-blue-50 to-indigo-50',
+      borderColor: 'border-blue-200',
+      iconBg: 'bg-gradient-to-br from-blue-500 to-indigo-500',
+    },
+  ]
+
+  return (
+    <div className="mt-24 sm:mt-32 lg:mt-40">
+      <Container>
+        <FadeIn>
+          <h2 className="text-center font-display text-3xl font-medium tracking-tight text-neutral-950 sm:text-4xl">
+            選擇您的身份
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-center text-xl text-neutral-600">
+            無論您是寵物主人還是有意加盟的夥伴，我們都為您準備了專屬的服務體驗
+          </p>
+        </FadeIn>
+
+        <FadeInStagger className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-2">
+          {userTypes.map((userType) => (
+            <FadeIn key={userType.type}>
+              <Link
+                href={userType.href}
+                className={`group relative block overflow-hidden rounded-3xl bg-white p-6 ring-1 ring-neutral-950/5 transition-all duration-500 hover:shadow-xl hover:ring-2 hover:shadow-neutral-950/10 hover:${userType.borderColor} sm:p-8`}
+              >
+                {/* 主要 hover 背景效果 */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${userType.hoverGradient} opacity-0 transition-all duration-500 group-hover:opacity-100`}
+                />
+
+                {/* 微妙的光暈效果 */}
+                <div
+                  className={`absolute -inset-1 bg-gradient-to-br ${userType.gradientBg} opacity-0 blur-xl transition-all duration-500 group-hover:opacity-20`}
+                />
+
+                <div className="relative z-10">
+                  {/* 圖標區域 */}
+                  <div
+                    className={`inline-flex rounded-2xl ${userType.iconBg} p-2.5 text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl sm:p-3`}
+                  >
+                    {userType.icon}
+                  </div>
+
+                  {/* 標題和描述 */}
+                  <h3 className="mt-4 text-xl font-semibold text-neutral-950 transition-colors duration-300 group-hover:text-neutral-800 sm:mt-6 sm:text-2xl">
+                    {userType.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-neutral-600 transition-colors duration-300 group-hover:text-neutral-700 sm:text-base">
+                    {userType.description}
+                  </p>
+
+                  {/* 功能列表 */}
+                  <ul className="mt-4 space-y-1.5 sm:mt-6 sm:space-y-2">
+                    {userType.features.map((feature, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center gap-2.5 text-xs text-neutral-700 transition-all duration-300 group-hover:text-neutral-800 sm:gap-3 sm:text-sm"
+                      >
+                        <svg
+                          className="h-3.5 w-3.5 text-green-500 transition-all duration-300 group-hover:scale-110 group-hover:text-green-600 sm:h-4 sm:w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        <span className="transition-all duration-300 group-hover:translate-x-1">
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* 行動按鈕 */}
+                  <div className="mt-6 flex items-center gap-2 text-xs font-medium text-neutral-950 transition-all duration-300 group-hover:translate-x-2 group-hover:text-neutral-800 sm:mt-8 sm:text-sm">
+                    <span>立即開始</span>
+                    <svg
+                      className="h-3.5 w-3.5 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110 sm:h-4 sm:w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+            </FadeIn>
+          ))}
+        </FadeInStagger>
+      </Container>
+    </div>
+  )
+}
 
 // 合作夥伴展示區塊 - 展示已合作的寵物相關企業
 function Partners() {
@@ -181,16 +344,20 @@ function FranchiseAdvantages() {
   )
 }
 
-export const metadata: Metadata = {
-  description:
-    'AMIGO 是專業的寵物鮮食自動販賣機加盟平台，提供AI智能管理系統、完整加盟支援，讓您輕鬆開啟寵物鮮食事業。',
-}
+export const metadata: Metadata = generateSEOMetadata({
+  title: '專業寵物鮮食自動販賣機 | 加盟創業 | 寵物營養專家',
+  description: generatePageDescription('home'),
+  keywords: generatePageKeywords('home'),
+  url: '/',
+  type: 'website',
+})
 
 export default async function Home() {
   let caseStudies = (await loadCaseStudies()).slice(0, 3)
 
   return (
     <RootLayout>
+      <OrganizationStructuredData />
       <Container className="mt-24 sm:mt-32 md:mt-56">
         <FadeIn className="max-w-3xl">
           <h1 className="font-display text-5xl font-medium tracking-tight text-balance text-neutral-950 sm:text-7xl">
@@ -202,6 +369,8 @@ export default async function Home() {
           </p>
         </FadeIn>
       </Container>
+
+      <UserTypeSelector />
 
       <Partners />
 

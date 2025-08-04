@@ -7,30 +7,42 @@ import { socialMediaProfiles } from '@/components/SocialMedia'
 
 const navigation = [
   {
-    title: '產品與服務',
+    title: '寵物主人',
     links: [
+      { title: '消費者首頁', href: '/consumer' },
       { title: '產品系列', href: '/products' },
-      { title: '智能販賣機', href: '/vending-machine' },
-      { title: '專家團隊', href: '/experts' },
-      { title: '投資試算', href: '/calculator' },
+      { title: '門店查找', href: '/store-locator' },
+      { title: '營養知識', href: '/blog' },
+      { title: '健康工具', href: '/pet-health-tools' },
     ],
   },
   {
-    title: '加盟合作',
+    title: '加盟商',
     links: [
       { title: '加盟流程', href: '/franchise' },
+      { title: '投資試算', href: '/calculator' },
+      { title: '智能販賣機', href: '/vending-machine' },
       { title: '合作申請', href: '/apply' },
-      { title: '常見問題', href: '/franchise#faq' },
-      { title: '聯絡我們', href: '/apply' },
+      { title: '成功案例', href: '/work' },
     ],
   },
   {
     title: '關於 AMIGO',
     links: [
-      { title: '公司簡介', href: '/experts' },
-      { title: '品質認證', href: '/experts' },
-      { title: '營養科學', href: '/experts' },
-      { title: '客服中心', href: '/apply' },
+      { title: '專家團隊', href: '/experts' },
+      { title: '品質認證', href: '/experts#certifications' },
+      { title: '營養科學', href: '/experts#nutrition' },
+      { title: '聯絡我們', href: '/contact' },
+      { title: '客服中心', href: '/support' },
+    ],
+  },
+  {
+    title: '法律條款',
+    links: [
+      { title: '隱私政策', href: '/privacy-policy' },
+      { title: '服務條款', href: '/terms-of-service' },
+      { title: '退換貨政策', href: '/return-policy' },
+      { title: '常見問題', href: '/faq' },
     ],
   },
 ]
@@ -38,7 +50,10 @@ const navigation = [
 function Navigation() {
   return (
     <nav>
-      <ul role="list" className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+      <ul
+        role="list"
+        className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-4"
+      >
         {navigation.map((section, sectionIndex) => (
           <li key={sectionIndex}>
             <div className="font-display text-sm font-semibold tracking-wider text-neutral-950">

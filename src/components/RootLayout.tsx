@@ -12,6 +12,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import { motion, MotionConfig, useReducedMotion } from 'framer-motion'
+import {
+  HeartIcon,
+  BuildingOfficeIcon,
+  ChevronRightIcon,
+} from '@heroicons/react/24/outline'
 
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
@@ -50,15 +55,36 @@ function Header({
   onToggle,
   toggleRef,
   invert = false,
+  onUserTypeChange,
+  activeUserType,
 }: {
   panelId: string
   icon: React.ComponentType<{ className?: string }>
   expanded: boolean
   onToggle: () => void
-  toggleRef: React.RefObject<HTMLButtonElement>
+  toggleRef: React.RefObject<HTMLButtonElement | null>
   invert?: boolean
+  onUserTypeChange?: (type: 'consumer' | 'business') => void
+  activeUserType?: 'consumer' | 'business'
 }) {
   let { logoHovered, setLogoHovered } = useContext(RootLayoutContext)!
+  const pathname = usePathname()
+
+  // 判斷當前頁面類型
+  const isConsumerPage =
+    pathname?.startsWith('/consumer') ||
+    pathname === '/products' ||
+    pathname === '/store-locator' ||
+    pathname === '/blog' ||
+    pathname === '/pet-health-tools' ||
+    pathname === '/comparison'
+  const isBusinessPage =
+    pathname?.startsWith('/franchise') ||
+    pathname === '/calculator' ||
+    pathname === '/vending-machine' ||
+    pathname === '/experts' ||
+    pathname === '/apply' ||
+    pathname === '/work'
 
   return (
     <Container>
@@ -80,10 +106,103 @@ function Header({
             filled={logoHovered}
           />
         </Link>
-        <div className="flex items-center gap-x-8">
-          <Button href="/apply" invert={invert}>
-            立即加盟
-          </Button>
+        <div className="flex items-center gap-x-4">
+          {/* 用戶類型快速切換 - 優雅不等寬設計 */}
+          <div className="relative hidden h-8 items-center rounded-full bg-neutral-800 border border-neutral-700 p-0.5 sm:flex">
+            <motion.div
+              className="absolute top-0.5 bottom-0.5 rounded-full bg-white shadow-sm"
+              layoutId="active-nav-item"
+              initial={false}
+              animate={{
+                left: (() => {
+                  if (expanded) {
+                    // 菜單展開時，使用 activeUserType 狀態
+                    return activeUserType === 'consumer' ? '2px' : activeUserType === 'business' ? '56px' : '2px'
+                  } else {
+                    // 菜單未展開時，使用頁面路徑判斷
+                    return isConsumerPage ? '2px' : isBusinessPage ? '56px' : '2px'
+                  }
+                })(),
+                width: (() => {
+                  if (expanded) {
+                    // 菜單展開時，使用 activeUserType 狀態
+                    return activeUserType === 'consumer' ? '50px' : activeUserType === 'business' ? 'calc(100% - 58px)' : '50px'
+                  } else {
+                    // 菜單未展開時，使用頁面路徑判斷
+                    return isConsumerPage ? '50px' : isBusinessPage ? 'calc(100% - 58px)' : '50px'
+                  }
+                })(),
+              }}
+              transition={{
+                type: 'spring',
+                stiffness: 500,
+                damping: 32,
+                duration: 0.25,
+              }}
+            />
+
+            <button
+              onClick={() => {
+                if (expanded && onUserTypeChange) {
+                  // 菜單展開時，切換導航內容
+                  onUserTypeChange('consumer')
+                } else {
+                  // 菜單未展開時，跳轉頁面
+                  window.location.href = '/consumer'
+                }
+              }}
+              className={clsx(
+                'relative z-10 h-7 w-14 rounded-full px-3 text-xs font-medium transition-all duration-200',
+                'flex items-center justify-center shrink-0',
+                (() => {
+                  if (expanded) {
+                    // 菜單展開時，使用 activeUserType 狀態
+                    return activeUserType === 'consumer'
+                      ? 'text-neutral-900'
+                      : 'text-neutral-300 hover:text-white'
+                  } else {
+                    // 菜單未展開時，使用頁面路徑判斷
+                    return isConsumerPage
+                      ? 'text-neutral-900'
+                      : 'text-neutral-300 hover:text-white'
+                  }
+                })(),
+              )}
+            >
+              顧客
+            </button>
+            <button
+              onClick={() => {
+                if (expanded && onUserTypeChange) {
+                  // 菜單展開時，切換導航內容
+                  onUserTypeChange('business')
+                } else {
+                  // 菜單未展開時，跳轉頁面
+                  window.location.href = '/franchise'
+                }
+              }}
+              className={clsx(
+                'relative z-10 h-7 flex-1 rounded-full px-4 text-xs font-medium transition-all duration-200',
+                'flex items-center justify-center min-w-0 whitespace-nowrap',
+                (() => {
+                  if (expanded) {
+                    // 菜單展開時，使用 activeUserType 狀態
+                    return activeUserType === 'business'
+                      ? 'text-neutral-900'
+                      : 'text-neutral-300 hover:text-white'
+                  } else {
+                    // 菜單未展開時，使用頁面路徑判斷
+                    return isBusinessPage
+                      ? 'text-neutral-900'
+                      : 'text-neutral-300 hover:text-white'
+                  }
+                })(),
+              )}
+            >
+              商業夥伴
+            </button>
+          </div>
+
           <button
             ref={toggleRef}
             type="button"
@@ -111,54 +230,198 @@ function Header({
   )
 }
 
-function NavigationRow({ children }: { children: React.ReactNode }) {
+// 導航數據結構
+const navigationData = {
+  consumer: {
+    title: '顧客',
+    description: '為您的毛孩找到最適合的營養方案',
+    items: [
+      {
+        href: '/consumer',
+        title: '消費者首頁',
+        description: '專為寵物主人設計的產品與服務',
+      },
+      {
+        href: '/products',
+        title: '產品系列',
+        description: '營養均衡的寵物鮮食產品',
+      },
+      {
+        href: '/store-locator',
+        title: '門店查找',
+        description: '找到離您最近的AMIGO販賣機',
+      },
+      {
+        href: '/blog',
+        title: '營養知識',
+        description: '專業的寵物營養與健康資訊',
+      },
+      {
+        href: '/pet-health-tools',
+        title: '健康工具',
+        description: '營養計算器與健康評估工具',
+      },
+      {
+        href: '/comparison',
+        title: '鮮食對比',
+        description: '了解鮮食與傳統飼料的差異',
+      },
+    ],
+  },
+  business: {
+    title: '商業夥伴',
+    description: '開啟您的寵物鮮食事業之路',
+    items: [
+      {
+        href: '/franchise',
+        title: '加盟流程',
+        description: '詳細的加盟申請與審核流程',
+      },
+      {
+        href: '/calculator',
+        title: '投資試算',
+        description: '計算投資回報與獲利預估',
+      },
+      {
+        href: '/vending-machine',
+        title: '智能販賣機',
+        description: 'AI智能管理系統介紹',
+      },
+      {
+        href: '/experts',
+        title: '專家團隊',
+        description: '專業的研發與支援團隊',
+      },
+      { href: '/apply', title: '合作申請', description: '立即申請加盟合作' },
+      {
+        href: '/work',
+        title: '成功案例',
+        description: '加盟商成功經營案例分享',
+      },
+    ],
+  },
+}
+
+function UserTypeSelector({
+  activeType,
+  onTypeChange,
+}: {
+  activeType: 'consumer' | 'business'
+  onTypeChange: (type: 'consumer' | 'business') => void
+}) {
   return (
-    <div className="even:mt-px sm:bg-neutral-950">
+    <div className="border-b border-neutral-700 bg-neutral-900 py-6">
       <Container>
-        <div className="grid grid-cols-1 sm:grid-cols-2">{children}</div>
+        <div className="text-center">
+          <h3 className="mb-4 text-lg font-semibold text-white">
+            選擇您的身份
+          </h3>
+          <div className="flex justify-center">
+            <div className="inline-flex rounded-lg border border-neutral-700 bg-neutral-800 p-1">
+              {Object.entries(navigationData).map(([key, data]) => (
+                <button
+                  key={key}
+                  onClick={() => onTypeChange(key as 'consumer' | 'business')}
+                  className={clsx(
+                    'flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-all duration-200',
+                    activeType === key
+                      ? 'bg-white text-neutral-900 shadow-sm'
+                      : 'text-neutral-300 hover:bg-neutral-700 hover:text-white',
+                  )}
+                >
+                  {key === 'consumer' ? (
+                    <HeartIcon className="h-4 w-4" />
+                  ) : (
+                    <BuildingOfficeIcon className="h-4 w-4" />
+                  )}
+                  {data.title}
+                </button>
+              ))}
+            </div>
+          </div>
+          <p className="mt-3 text-sm text-neutral-400">
+            選擇身份以查看相關的服務和功能
+          </p>
+        </div>
       </Container>
     </div>
   )
 }
 
-function NavigationItem({
-  href,
-  children,
+function NavigationSection({
+  type,
+  isActive,
 }: {
-  href: string
-  children: React.ReactNode
+  type: 'consumer' | 'business'
+  isActive: boolean
 }) {
+  const data = navigationData[type]
+
   return (
-    <Link
-      href={href}
-      className="group relative isolate -mx-6 bg-neutral-950 px-6 py-10 even:mt-px sm:mx-0 sm:px-0 sm:py-16 sm:odd:pr-16 sm:even:mt-0 sm:even:border-l sm:even:border-neutral-800 sm:even:pl-16"
+    <motion.div
+      initial={false}
+      animate={{
+        opacity: isActive ? 1 : 0,
+        height: isActive ? 'auto' : 0,
+      }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+      className="overflow-hidden"
     >
-      {children}
-      <span className="absolute inset-y-0 -z-10 w-screen bg-neutral-900 opacity-0 transition group-odd:right-0 group-even:left-0 group-hover:opacity-100" />
-    </Link>
+      <Container>
+        <nav className="font-display text-white">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
+            {data.items.map((item, index) => (
+              <motion.div
+                key={item.href}
+                initial={false}
+                animate={{
+                  opacity: isActive ? 1 : 0,
+                  y: isActive ? 0 : 10,
+                }}
+                transition={{
+                  duration: 0.2,
+                  delay: isActive ? index * 0.05 : 0,
+                  ease: 'easeOut',
+                }}
+              >
+                <Link
+                  href={item.href}
+                  className="group block rounded-2xl p-6 transition-all duration-200 hover:bg-white/10"
+                >
+                  <div className="text-xl font-medium tracking-tight text-white group-hover:text-blue-200 sm:text-2xl">
+                    {item.title}
+                  </div>
+                  <div className="mt-2 text-sm text-neutral-400 group-hover:text-neutral-300">
+                    {item.description}
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </nav>
+      </Container>
+    </motion.div>
   )
 }
 
-function Navigation() {
+function Navigation({
+  activeUserType,
+}: {
+  activeUserType: 'consumer' | 'business'
+}) {
   return (
-    <nav className="mt-px font-display text-5xl font-medium tracking-tight text-white">
-      <NavigationRow>
-        <NavigationItem href="/products">產品系列</NavigationItem>
-        <NavigationItem href="/comparison">鮮食對比</NavigationItem>
-      </NavigationRow>
-      <NavigationRow>
-        <NavigationItem href="/experts">專家團隊</NavigationItem>
-        <NavigationItem href="/franchise">加盟流程</NavigationItem>
-      </NavigationRow>
-      <NavigationRow>
-        <NavigationItem href="/calculator">投資試算</NavigationItem>
-        <NavigationItem href="/vending-machine">智能販賣機</NavigationItem>
-      </NavigationRow>
-      <NavigationRow>
-        <NavigationItem href="/apply">合作申請</NavigationItem>
-        <NavigationItem href="/blog">營養知識</NavigationItem>
-      </NavigationRow>
-    </nav>
+    <div className="mt-px">
+      <div className="pt-8">
+        <NavigationSection
+          type="consumer"
+          isActive={activeUserType === 'consumer'}
+        />
+        <NavigationSection
+          type="business"
+          isActive={activeUserType === 'business'}
+        />
+      </div>
+    </div>
   )
 }
 
@@ -166,6 +429,9 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
   let panelId = useId()
   let [expanded, setExpanded] = useState(false)
   let [isTransitioning, setIsTransitioning] = useState(false)
+  let [activeUserType, setActiveUserType] = useState<'consumer' | 'business'>(
+    'consumer',
+  )
   let openRef = useRef<React.ElementRef<'button'>>(null)
   let closeRef = useRef<React.ElementRef<'button'>>(null)
   let navRef = useRef<React.ElementRef<'div'>>(null)
@@ -200,7 +466,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
           className="absolute top-2 right-0 left-0 z-40 pt-14"
           aria-hidden={expanded ? 'true' : undefined}
           // @ts-ignore (https://github.com/facebook/react/issues/17157)
-          inert={expanded ? '' : undefined}
+          inert={expanded ? true : undefined}
         >
           <Header
             panelId={panelId}
@@ -214,6 +480,8 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
                 closeRef.current?.focus({ preventScroll: true }),
               )
             }}
+            onUserTypeChange={setActiveUserType}
+            activeUserType={activeUserType}
           />
         </div>
 
@@ -224,9 +492,9 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
           className="relative z-50 overflow-hidden bg-neutral-950 pt-2"
           aria-hidden={expanded ? undefined : 'true'}
           // @ts-ignore (https://github.com/facebook/react/issues/17157)
-          inert={expanded ? undefined : ''}
+          inert={expanded ? undefined : true}
         >
-          <motion.div layout className="bg-neutral-800">
+          <motion.div layout className="bg-neutral-950">
             <div ref={navRef} className="bg-neutral-950 pt-14 pb-16">
               <Header
                 invert
@@ -241,9 +509,11 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
                     openRef.current?.focus({ preventScroll: true }),
                   )
                 }}
+                onUserTypeChange={setActiveUserType}
+                activeUserType={activeUserType}
               />
             </div>
-            <Navigation />
+            <Navigation activeUserType={activeUserType} />
             <div className="relative bg-neutral-950 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-neutral-800">
               <Container>
                 <div className="grid grid-cols-1 gap-y-10 pt-10 pb-16 sm:grid-cols-2 sm:pt-16">

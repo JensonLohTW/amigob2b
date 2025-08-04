@@ -6,16 +6,30 @@ import { RootLayout } from '@/components/RootLayout'
 import { ProductCatalog } from '@/components/ProductCatalog'
 import { SectionIntro } from '@/components/SectionIntro'
 import { CentralKitchenJourney } from '@/components/CentralKitchenJourney'
+import {
+  generateSEOMetadata,
+  generatePageKeywords,
+  generatePageDescription,
+} from '@/components/SEO'
+import { BreadcrumbStructuredData } from '@/components/StructuredData'
 
-export const metadata: Metadata = {
-  title: '產品系列',
-  description:
-    '專業寵物鮮食產品系列，從幼齡到樂齡，從日常營養到功能性需求，每一款都經過專業獸醫師和營養師精心調配。',
-}
+export const metadata: Metadata = generateSEOMetadata({
+  title: '寵物鮮食產品系列 | 幼齡成年樂齡營養配方',
+  description: generatePageDescription('products'),
+  keywords: generatePageKeywords('products'),
+  url: '/products',
+  type: 'website',
+})
 
 export default function Products() {
   return (
     <RootLayout>
+      <BreadcrumbStructuredData
+        items={[
+          { name: '首頁', url: 'https://amigo-pet.com' },
+          { name: '產品系列', url: 'https://amigo-pet.com/products' },
+        ]}
+      />
       <PageIntro eyebrow="產品系列" title="專業寵物鮮食產品">
         <p>
           我們提供全方位的寵物鮮食產品，從幼齡到樂齡，從日常營養到功能性需求，

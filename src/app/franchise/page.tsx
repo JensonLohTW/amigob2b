@@ -1,4 +1,6 @@
-import { type Metadata } from 'next'
+'use client'
+
+import { motion } from 'framer-motion'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
 import { PageIntro } from '@/components/PageIntro'
@@ -7,21 +9,21 @@ import { StatList, StatListItem } from '@/components/StatList'
 import { InvestmentAnalysis } from '@/components/InvestmentAnalysis'
 import { FranchiseFAQ } from '@/components/FranchiseFAQ'
 
-export const metadata: Metadata = {
-  title: '加盟流程',
-  description:
-    '詳細的加盟條件、分潤機制與操作模式說明，8個月回本，月毛利超過7萬元。',
-}
-
 export default function Franchise() {
   return (
     <RootLayout>
-      <PageIntro eyebrow="加盟流程" title="招商加盟說明">
-        <p>
-          革命性的寵物鮮食自動販賣機加盟機會，詳細的加盟條件、分潤機制與操作模式，
-          讓您輕鬆開啟寵物鮮食事業，8個月回本，月毛利超過7萬元。
-        </p>
-      </PageIntro>
+      <motion.div
+        initial={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <PageIntro eyebrow="加盟流程" title="招商加盟說明">
+          <p>
+            革命性的寵物鮮食自動販賣機加盟機會，詳細的加盟條件、分潤機制與操作模式，
+            讓您輕鬆開啟寵物鮮食事業，8個月回本，月毛利超過7萬元。
+          </p>
+        </PageIntro>
+      </motion.div>
 
       {/* 投資回報數據 */}
       <Container className="mt-24 sm:mt-32 lg:mt-40">

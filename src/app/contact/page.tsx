@@ -57,31 +57,52 @@ function ContactForm() {
     <FadeIn className="lg:order-last">
       <form>
         <h2 className="font-display text-base font-semibold text-neutral-950">
-          Work inquiries
+          聯絡諮詢
         </h2>
         <div className="isolate mt-6 -space-y-px rounded-2xl bg-white/50">
-          <TextInput label="Name" name="name" autoComplete="name" />
+          <TextInput label="姓名" name="name" autoComplete="name" />
           <TextInput
-            label="Email"
+            label="電子郵件"
             type="email"
             name="email"
             autoComplete="email"
           />
           <TextInput
-            label="Company"
+            label="公司/機構"
             name="company"
             autoComplete="organization"
           />
-          <TextInput label="Phone" type="tel" name="phone" autoComplete="tel" />
-          <TextInput label="Message" name="message" />
+          <TextInput
+            label="聯絡電話"
+            type="tel"
+            name="phone"
+            autoComplete="tel"
+          />
+          <TextInput label="訊息內容" name="message" />
           <div className="border border-neutral-300 px-6 py-8 first:rounded-t-2xl last:rounded-b-2xl">
             <fieldset>
-              <legend className="text-base/6 text-neutral-500">Budget</legend>
+              <legend className="text-base/6 text-neutral-500">諮詢類型</legend>
               <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2">
-                <RadioInput label="$25K – $50K" name="budget" value="25" />
-                <RadioInput label="$50K – $100K" name="budget" value="50" />
-                <RadioInput label="$100K – $150K" name="budget" value="100" />
-                <RadioInput label="More than $150K" name="budget" value="150" />
+                <RadioInput
+                  label="產品諮詢"
+                  name="inquiry_type"
+                  value="product"
+                />
+                <RadioInput
+                  label="加盟合作"
+                  name="inquiry_type"
+                  value="franchise"
+                />
+                <RadioInput
+                  label="營養諮詢"
+                  name="inquiry_type"
+                  value="nutrition"
+                />
+                <RadioInput
+                  label="其他問題"
+                  name="inquiry_type"
+                  value="other"
+                />
               </div>
             </fieldset>
           </div>

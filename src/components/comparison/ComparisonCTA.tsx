@@ -221,7 +221,7 @@ const UrgencyTimer = () => {
   return (
     <div className="rounded-lg border border-red-200 bg-red-50 p-4">
       <div className="text-center">
-        <h4 className="mb-2 font-semibold text-red-800">⏰ 限時優惠即將結束</h4>
+        <h4 className="mb-2 font-semibold text-red-800">限時優惠即將結束</h4>
         <div className="mb-2 flex justify-center space-x-4">
           <div className="text-center">
             <div className="rounded bg-red-600 px-2 py-1 font-bold text-white">
