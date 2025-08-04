@@ -71,9 +71,6 @@ function Header({
   const pathname = usePathname()
   const router = useRouter()
 
-  // 獲取 basePath 前綴
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
-
   // 判斷當前頁面類型
   const isConsumerPage =
     pathname?.startsWith('/consumer') ||
@@ -152,7 +149,7 @@ function Header({
                   onUserTypeChange('consumer')
                 } else {
                   // 菜單未展開時，跳轉頁面
-                  router.push(`${basePath}/consumer`)
+                  router.push('/consumer')
                 }
               }}
               className={clsx(
@@ -182,7 +179,7 @@ function Header({
                   onUserTypeChange('business')
                 } else {
                   // 菜單未展開時，跳轉頁面
-                  router.push(`${basePath}/franchise`)
+                  router.push('/franchise')
                 }
               }}
               className={clsx(
