@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "GITHUB_PAGES=true next build",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
+    "export": "npm run generate-sitemap && GITHUB_PAGES=true next build",
     "deploy": "npm run export"
   },
   "browserslist": "defaults, not ie <= 11",

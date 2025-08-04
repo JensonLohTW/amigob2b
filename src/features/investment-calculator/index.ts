@@ -9,7 +9,7 @@ export { InvestmentCalculator } from './components/InvestmentCalculator'
 // 子组件
 export { CalculatorInputForm } from './components/CalculatorInputForm'
 export { CalculatorResults } from './components/CalculatorResults'
-export { ScenarioComparison } from './components/ScenarioComparison'
+export { ScenarioComparison as ScenarioComparisonComponent } from './components/ScenarioComparison'
 
 // 自定义 Hooks
 export { useInvestmentCalculator } from './hooks/useInvestmentCalculator'
@@ -28,7 +28,7 @@ export {
 export type {
   CalculationInputs,
   CalculationResults,
-  ScenarioComparison,
+  ScenarioComparisonData,
   TabType,
   AnimatedNumberProps,
 } from './types/investment'

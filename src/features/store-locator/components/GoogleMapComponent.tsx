@@ -5,6 +5,56 @@ import { Loader } from '@googlemaps/js-api-loader'
 import { motion } from 'framer-motion'
 import { MapComponentProps, Store } from '../types'
 
+// 添加 Google Maps 型別定義
+declare global {
+  namespace google {
+    namespace maps {
+      class Map {
+        constructor(element: HTMLElement, options?: any)
+        fitBounds(bounds: LatLngBounds): void
+        setCenter(center: LatLng): void
+        setZoom(zoom: number): void
+      }
+      class Marker {
+        constructor(options?: any)
+        setMap(map: Map | null): void
+        getPosition(): any
+        addListener(event: string, handler: Function): void
+      }
+      class InfoWindow {
+        constructor(options?: any)
+        open(map?: Map, marker?: Marker): void
+        close(): void
+        setContent(content: string): void
+      }
+      class Size {
+        constructor(width: number, height: number)
+      }
+      class Point {
+        constructor(x: number, y: number)
+      }
+      class LatLngBounds {
+        constructor()
+        extend(point: any): void
+        getCenter(): any
+        isEmpty(): boolean
+      }
+      class LatLng {
+        constructor(lat: number, lng: number)
+        lat(): number
+        lng(): number
+      }
+      enum MapTypeId {
+        ROADMAP
+      }
+      enum Animation {
+        BOUNCE,
+        DROP
+      }
+    }
+  }
+}
+
 /**
  * Google Maps 地圖組件
  * 使用真實的Google Maps API展示門店位置和用戶位置
@@ -212,7 +262,7 @@ export function GoogleMapComponent({
     `
 
     infoWindowRef.current.setContent(content)
-    infoWindowRef.current.open(mapInstanceRef.current, marker)
+    infoWindowRef.current.open(mapInstanceRef.current || undefined, marker)
   }
 
   // 調整地圖視野以包含所有標記
@@ -254,7 +304,7 @@ export function GoogleMapComponent({
 
       // 如果有選中的門店，居中顯示
       if (selectedStore) {
-        mapInstanceRef.current.setCenter(selectedStore.coordinates)
+        mapInstanceRef.current.setCenter(new google.maps.LatLng(selectedStore.coordinates.lat, selectedStore.coordinates.lng))
         mapInstanceRef.current.setZoom(15)
       } else {
         fitMapBounds()

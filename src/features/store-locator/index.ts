@@ -8,7 +8,7 @@ export { StoreLocatorContent } from './components/StoreLocatorContent'
 
 // 子組件
 export { StoreCard, StoreCardSkeleton } from './components/StoreCard'
-export { SearchFilters } from './components/SearchFilters'
+export { SearchFilters as SearchFiltersComponent } from './components/SearchFilters'
 export { StoreList, StoreStats } from './components/StoreList'
 export { MapComponent, MapSkeleton } from './components/MapComponent'
 export { GoogleMapComponent, GoogleMapSkeleton } from './components/GoogleMapComponent'

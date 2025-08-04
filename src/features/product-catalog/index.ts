@@ -8,7 +8,7 @@ export { ProductCatalog } from './components/ProductCatalog'
 
 // 子组件
 export { ProductCard } from './components/ProductCard'
-export { ProductFilters, QuickFilters } from './components/ProductFilters'
+export { ProductFilters as ProductFiltersComponent, QuickFilters } from './components/ProductFilters'
 export { ProductGrid, ProductStats, ProductGridSkeleton } from './components/ProductGrid'
 export { ProductModal } from './components/ProductModal'
 

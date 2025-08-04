@@ -24,7 +24,7 @@ export interface CalculationResults {
   projectedYearlyProfit: number
 }
 
-export interface ScenarioComparison {
+export interface ScenarioComparisonData {
   conservative: CalculationResults
   realistic: CalculationResults
   optimistic: CalculationResults

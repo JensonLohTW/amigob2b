@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   CalculationInputs,
   CalculationResults,
-  ScenarioComparison,
+  ScenarioComparisonData,
 } from '../types/investment'
 import {
   calculateResults,
@@ -44,7 +44,7 @@ export function useInvestmentCalculator() {
   })
 
   // 情景对比状态
-  const [scenarios, setScenarios] = useState<ScenarioComparison>({
+  const [scenarios, setScenarios] = useState<ScenarioComparisonData>({
     conservative: {} as CalculationResults,
     realistic: {} as CalculationResults,
     optimistic: {} as CalculationResults,

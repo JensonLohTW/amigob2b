@@ -76,17 +76,18 @@ export function InteractiveIngredientCard({
       whileHover={{ y: -2 }}
     >
       {/* 卡片头部 */}
-      <div className={`bg-gradient-to-r ${getCategoryColor(ingredient.category)} p-4 text-white`}>
+      <div className={`bg-gradient-to-r ${getCategoryColor(ingredient.category || 'other')} p-4 text-white`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">{getCategoryIcon(ingredient.category)}</span>
+            <span className="text-2xl">{getCategoryIcon(ingredient.category || 'other')}</span>
             <div>
               <h3 className="font-bold text-lg">{ingredient.name}</h3>
               <div className="flex items-center gap-2 text-sm opacity-90">
-                <span>{getFreshnessIcon(ingredient.freshness)}</span>
+                <span>{getFreshnessIcon(ingredient.freshness || 'unknown')}</span>
                 <span>
                   {ingredient.freshness === 'fresh' ? '新鲜' :
-                   ingredient.freshness === 'frozen' ? '冷冻' : '干燥'}
+                   ingredient.freshness === 'frozen' ? '冷冻' : 
+                   ingredient.freshness === 'dried' ? '干燥' : '未知'}
                 </span>
               </div>
             </div>
@@ -194,7 +195,7 @@ export function InteractiveIngredientCard({
                 <div className="flex items-center gap-2">
                   <div className="flex-1 bg-gray-200 rounded-full h-2">
                     <motion.div
-                      className={`h-2 rounded-full bg-gradient-to-r ${getCategoryColor(ingredient.category)}`}
+                      className={`h-2 rounded-full bg-gradient-to-r ${getCategoryColor(ingredient.category || 'other')}`}
                       initial={{ width: 0 }}
                       animate={{ width: `${Math.min((ingredient.protein / ingredient.weight) * 100 * 5, 100)}%` }}
                       transition={{ duration: 0.8, delay: 0.2 }}

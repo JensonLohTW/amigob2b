@@ -3,7 +3,7 @@ import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
 import { PageIntro } from '@/components/PageIntro'
 import { RootLayout } from '@/components/RootLayout'
-import { InvestmentCalculator } from '@/components/InvestmentCalculator'
+import { InvestmentCalculator } from '@/features/investment-calculator'
 
 export const metadata: Metadata = {
   title: '智能投資試算 - AMIGO 寵物鮮食自動販賣機',

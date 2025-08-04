@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /_next/
+Disallow: /static/
+Disallow: *.json
+Disallow: *.xml
+Disallow: /search
+Disallow: /404
+Disallow: /500
+
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /search
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /search
+
+Sitemap: https://amigo-pet.com/sitemap.xml
+Host: https://amigo-pet.com 

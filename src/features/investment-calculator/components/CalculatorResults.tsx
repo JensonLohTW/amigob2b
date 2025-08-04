@@ -209,7 +209,7 @@ export function CalculatorResults({
             value={card.value}
             formatter={card.formatter}
             icon={card.icon}
-            trend={card.trend}
+            trend={['up', 'down', 'neutral'].includes(card.trend) ? (card.trend as 'up' | 'down' | 'neutral') : 'neutral'}
           />
         ))}
       </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { AnimatedNumberProps } from '@/types/investment'
+import { AnimatedNumberProps } from '@/features/investment-calculator/types/investment'
 
 /**
  * 动画数字组件

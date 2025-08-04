@@ -209,7 +209,6 @@ export function StoreLocatorContent({
         <PageIntro
           eyebrow="門店定位"
           title="找到離您最近的 AMIGO 門店"
-          className="mb-16"
         >
           <p>
             我們在全台各地設有多家門店，為您提供便利的取餐服務。

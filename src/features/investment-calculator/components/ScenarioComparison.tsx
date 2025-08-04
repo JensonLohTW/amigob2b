@@ -1,6 +1,6 @@
 'use client'
 
-import { ScenarioComparison as ScenarioComparisonType } from '../types/investment'
+import { ScenarioComparisonData } from '../types/investment'
 import {
   formatCurrency,
   formatNumber,
@@ -8,7 +8,7 @@ import {
 } from '../services/investment-calculator'
 
 interface ScenarioComparisonProps {
-  scenarios: ScenarioComparisonType
+  scenarios: ScenarioComparisonData
   isCalculating: boolean
 }
 

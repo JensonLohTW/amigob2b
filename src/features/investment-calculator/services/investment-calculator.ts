@@ -2,7 +2,7 @@
  * 投资计算核心逻辑
  */
 
-import { CalculationInputs, CalculationResults, ScenarioComparison } from '@/types/investment'
+import { CalculationInputs, CalculationResults, ScenarioComparisonData } from '../types/investment'
 import { createLogger } from '@/lib/logger'
 
 const logger = createLogger('InvestmentCalculator')
@@ -78,10 +78,10 @@ export function calculateResults(
 /**
  * 计算多种情景对比
  */
-export function calculateScenarios(inputs: CalculationInputs): ScenarioComparison {
+export function calculateScenarios(inputs: CalculationInputs): ScenarioComparisonData {
   logger.debug('开始计算情景对比', { inputs })
 
-  const scenarios: ScenarioComparison = {
+  const scenarios: ScenarioComparisonData = {
     conservative: calculateResults(inputs, 0.7), // 保守估计：70%
     realistic: calculateResults(inputs, 1.0),    // 现实估计：100%
     optimistic: calculateResults(inputs, 1.3),   // 乐观估计：130%

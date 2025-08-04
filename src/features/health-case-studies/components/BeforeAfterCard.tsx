@@ -176,7 +176,7 @@ export function BeforeAfterCard({ caseStudy }: BeforeAfterCardProps) {
                 主人见证
               </div>
               <p className="text-sm text-blue-800 italic">
-                "{caseStudy.ownerTestimonial}"
+                &ldquo;{caseStudy.ownerTestimonial}&rdquo;
               </p>
             </div>
           </div>

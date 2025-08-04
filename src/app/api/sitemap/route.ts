@@ -1,7 +1,9 @@
-import { MetadataRoute } from 'next'
 import { loadArticles } from '@/lib/mdx'
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export const dynamic = 'force-static'
+export const revalidate = 0
+
+export async function GET(): Promise<Response> {
   const baseUrl = 'https://amigo-pet.com'
 
   // 載入所有文章
@@ -96,20 +98,51 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'kaohsiung', // 高雄
     'taoyuan', // 桃園
     'tainan', // 台南
-    'new-taipei', // 新北
+    'hsinchu', // 新竹
+    'keelung', // 基隆
+    'chiayi', // 嘉義
+    'pingtung', // 屏東
+    'yilan', // 宜蘭
+    'hualien', // 花蓮
+    'taitung', // 台東
+    'penghu', // 澎湖
+    'kinmen', // 金門
+    'matsu', // 馬祖
   ]
 
   const regionPages = regions.map((region) => ({
-    url: `${baseUrl}/stores/${region}`,
+    url: `${baseUrl}/store-locator/${region}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
-    priority: 0.5,
+    priority: 0.6,
   }))
 
-  return [
+  // 合併所有頁面
+  const allPages = [
     ...staticPages,
     ...articlePages,
     ...productCategoryPages,
     ...regionPages,
   ]
-}
+
+  // 生成 XML
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${allPages
+  .map(
+    (page) => `  <url>
+    <loc>${page.url}</loc>
+    <lastmod>${page.lastModified.toISOString()}</lastmod>
+    <changefreq>${page.changeFrequency}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>`
+  )
+  .join('\n')}
+</urlset>`
+
+  return new Response(xml, {
+    headers: {
+      'Content-Type': 'application/xml',
+    },
+  })
+} 

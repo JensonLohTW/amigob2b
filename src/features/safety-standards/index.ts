@@ -11,7 +11,7 @@ export { CertificationCard, CertificationGrid } from './components/Certification
 export { TestReportCard, TestReportGrid } from './components/TestReportCard'
 export { SafetyTimeline } from './components/SafetyTimeline'
 export { TabSelector, CompactTabSelector } from './components/TabSelector'
-export { SafetyStats } from './components/SafetyStats'
+export { SafetyStats as SafetyStatsComponent } from './components/SafetyStats'
 
 // 数据和服务
 export {

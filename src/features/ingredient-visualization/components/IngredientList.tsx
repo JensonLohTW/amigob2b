@@ -228,7 +228,7 @@ export function IngredientList({
               <div className="col-span-2 text-center">
                 <div className="flex items-center justify-center gap-2">
                   <span className="text-lg">
-                    {getCategoryIcon(ingredient.category)}
+                    {getCategoryIcon(ingredient.category || 'other')}
                   </span>
                   {showDetails && ingredient.freshness && (
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${getFreshnessColor(ingredient.freshness)}`}>
