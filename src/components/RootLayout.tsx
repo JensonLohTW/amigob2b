@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import clsx from 'clsx'
 import { motion, MotionConfig, useReducedMotion } from 'framer-motion'
 import {
@@ -69,6 +69,10 @@ function Header({
 }) {
   let { logoHovered, setLogoHovered } = useContext(RootLayoutContext)!
   const pathname = usePathname()
+  const router = useRouter()
+
+  // 獲取 basePath 前綴
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 
   // 判斷當前頁面類型
   const isConsumerPage =
@@ -148,7 +152,7 @@ function Header({
                   onUserTypeChange('consumer')
                 } else {
                   // 菜單未展開時，跳轉頁面
-                  window.location.href = '/consumer'
+                  router.push(`${basePath}/consumer`)
                 }
               }}
               className={clsx(
@@ -178,7 +182,7 @@ function Header({
                   onUserTypeChange('business')
                 } else {
                   // 菜單未展開時，跳轉頁面
-                  window.location.href = '/franchise'
+                  router.push(`${basePath}/franchise`)
                 }
               }}
               className={clsx(
