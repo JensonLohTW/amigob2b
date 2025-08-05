@@ -52,10 +52,14 @@ export function Logo({
   filled?: boolean
   fillOnHover?: boolean
 }) {
+  // 獲取正確的圖片路徑，考慮 GitHub Pages 的 basePath
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+  const iconSrc = `${basePath}/icon.svg`
+
   return (
     <div className={clsx('flex items-center justify-center', className)}>
       <Image
-        src="/icon.svg"
+        src={iconSrc}
         alt="AMIGO"
         width={160}
         height={64}
