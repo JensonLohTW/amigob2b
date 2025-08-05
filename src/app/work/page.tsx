@@ -10,6 +10,7 @@ import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { PageIntro } from '@/components/PageIntro'
 import { Testimonial } from '@/components/Testimonial'
+import { SafeImage } from '@/components/SafeImage'
 import logoBrightPath from '@/images/clients/bright-path/logo-dark.svg'
 import logoFamilyFund from '@/images/clients/family-fund/logo-dark.svg'
 import logoGreenLife from '@/images/clients/green-life/logo-dark.svg'
@@ -41,12 +42,17 @@ function CaseStudies({
               <Border className="grid grid-cols-3 gap-x-8 gap-y-8 pt-16">
                 <div className="col-span-full sm:flex sm:items-center sm:justify-between sm:gap-x-8 lg:col-span-1 lg:block">
                   <div className="sm:flex sm:items-center sm:gap-x-6 lg:block">
-                    <Image
-                      src={caseStudy.logo}
-                      alt=""
-                      className="h-16 w-16 flex-none"
-                      unoptimized
-                    />
+                    {caseStudy.logo && caseStudy.logo !== '' && (
+                      <SafeImage
+                        src={caseStudy.logo}
+                        alt=""
+                        className="h-16 w-16 flex-none"
+                        width={64}
+                        height={64}
+                        unoptimized
+                        fallbackBehavior="hide"
+                      />
+                    )}
                     <h3 className="mt-6 text-sm font-semibold text-neutral-950 sm:mt-0 lg:mt-8">
                       {caseStudy.client}
                     </h3>

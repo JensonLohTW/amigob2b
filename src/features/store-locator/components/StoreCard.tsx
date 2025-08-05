@@ -87,7 +87,7 @@ export function StoreCard({
       whileHover={{ y: -2 }}
     >
       {/* 門店圖片 */}
-      {store.image && (
+      {store.image && store.image !== '' && (
         <div className="relative aspect-video w-full overflow-hidden">
           <Image
             src={store.image}
@@ -95,6 +95,13 @@ export function StoreCard({
             fill
             className="object-cover transition-transform duration-300 hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            onError={(e) => {
+              // 當圖片載入失敗時，隱藏圖片容器
+              const target = e.target as HTMLImageElement
+              if (target.parentElement) {
+                target.parentElement.style.display = 'none'
+              }
+            }}
           />
         </div>
       )}

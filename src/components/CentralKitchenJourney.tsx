@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { SectionIntro } from '@/components/SectionIntro'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
 
 interface JourneyStep {
   id: string
@@ -140,6 +140,96 @@ const journeySteps: JourneyStep[] = [
   },
 ]
 
+// 動畫數字組件
+function AnimatedStatNumber({ value, label }: { value: string; label: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, margin: "-50px" })
+  const [displayValue, setDisplayValue] = useState('0')
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  useEffect(() => {
+    if (isInView && !isAnimating) {
+      setIsAnimating(true)
+      
+      // 解析數字和單位
+      const numericMatch = value.match(/^(\d+(?:\.\d+)?)(.*)$/)
+      if (!numericMatch) {
+        setDisplayValue(value)
+        return
+      }
+
+      const [, numericPart, unit] = numericMatch
+      const targetNumber = parseFloat(numericPart)
+      const startNumber = 0
+      const duration = 2500 // 2.5秒動畫
+      const startTime = Date.now()
+
+      const animate = () => {
+        const elapsed = Date.now() - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        
+        // 使用 easeOutQuart 緩動函數
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+        const currentNumber = startNumber + (targetNumber - startNumber) * easeOutQuart
+        
+        // 格式化數字
+        let formattedNumber
+        if (unit === '%') {
+          formattedNumber = Math.round(currentNumber) + unit
+        } else if (unit === '+') {
+          formattedNumber = Math.round(currentNumber) + unit
+        } else if (unit === '小時') {
+          formattedNumber = Math.round(currentNumber) + unit
+        } else {
+          // 對於大數字，添加千位分隔符
+          const numStr = Math.round(currentNumber).toString()
+          if (currentNumber >= 1000) {
+            formattedNumber = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (unit || '')
+          } else {
+            formattedNumber = numStr + (unit || '')
+          }
+        }
+        
+        setDisplayValue(formattedNumber)
+
+        if (progress < 1) {
+          requestAnimationFrame(animate)
+        }
+      }
+
+      requestAnimationFrame(animate)
+    }
+  }, [isInView, value, isAnimating])
+
+  return (
+    <motion.div
+      ref={ref}
+      className="text-center"
+      initial={{ opacity: 0, y: 30, scale: 0.9 }}
+      animate={isInView ? { 
+        opacity: 1, 
+        y: 0, 
+        scale: 1 
+      } : { 
+        opacity: 0, 
+        y: 30, 
+        scale: 0.9 
+      }}
+      transition={{ 
+        duration: 0.8,
+        ease: [0.25, 0.46, 0.45, 0.94],
+        delay: 0.1
+      }}
+      whileHover={{ scale: 1.05 }}
+    >
+      <div className="mb-2 text-3xl font-bold text-neutral-950">
+        {displayValue}
+      </div>
+      <div className="text-sm text-neutral-600">{label}</div>
+    </motion.div>
+  )
+}
+
 export function CentralKitchenJourney() {
   const [activeStep, setActiveStep] = useState<string | null>(null)
 
@@ -167,21 +257,50 @@ export function CentralKitchenJourney() {
                     className="relative cursor-pointer"
                     onHoverStart={() => setActiveStep(step.id)}
                     onHoverEnd={() => setActiveStep(null)}
-                    whileHover={{ y: -10 }}
-                    transition={{ duration: 0.3 }}
+                    initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ 
+                      duration: 0.6,
+                      delay: index * 0.1,
+                      ease: [0.25, 0.46, 0.45, 0.94]
+                    }}
+                    whileHover={{ 
+                      y: -15,
+                      scale: 1.02,
+                      transition: { duration: 0.3, ease: "easeOut" }
+                    }}
                   >
                     {/* 步驟編號 */}
                     <div className="relative z-10 mb-6">
                       <motion.div
                         className={`h-16 w-16 rounded-full bg-gradient-to-br ${step.color} mx-auto flex items-center justify-center text-white shadow-lg`}
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.2 }}
+                        whileHover={{ 
+                          scale: 1.15,
+                          rotate: 5,
+                          transition: { duration: 0.2 }
+                        }}
+                        initial={{ scale: 0.8, rotate: -5 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ 
+                          duration: 0.5,
+                          delay: index * 0.1 + 0.2,
+                          ease: "easeOut"
+                        }}
                       >
                         {step.icon}
                       </motion.div>
-                      <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-neutral-950 text-sm font-bold text-white">
+                      <motion.div 
+                        className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-neutral-950 text-sm font-bold text-white"
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ 
+                          duration: 0.3,
+                          delay: index * 0.1 + 0.4,
+                          ease: "easeOut"
+                        }}
+                      >
                         {index + 1}
-                      </div>
+                      </motion.div>
                     </div>
 
                     {/* 卡片內容 */}
@@ -189,44 +308,106 @@ export function CentralKitchenJourney() {
                       className="h-full rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm"
                       whileHover={{
                         boxShadow:
-                          '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-                        scale: 1.02,
+                          '0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.1)',
+                        scale: 1.03,
+                        transition: { duration: 0.3, ease: "easeOut" }
                       }}
-                      transition={{ duration: 0.2 }}
+                      initial={{ 
+                        opacity: 0, 
+                        y: 30,
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                      }}
+                      animate={{ 
+                        opacity: 1, 
+                        y: 0,
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                      }}
+                      transition={{ 
+                        duration: 0.5,
+                        delay: index * 0.1 + 0.3,
+                        ease: [0.25, 0.46, 0.45, 0.94]
+                      }}
                     >
-                      <h3 className="mb-2 text-lg font-semibold text-neutral-950">
+                      <motion.h3 
+                        className="mb-2 text-lg font-semibold text-neutral-950"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          duration: 0.4,
+                          delay: index * 0.1 + 0.5,
+                          ease: "easeOut"
+                        }}
+                      >
                         {step.title}
-                      </h3>
-                      <p className="mb-3 text-sm font-medium text-neutral-600">
+                      </motion.h3>
+                      <motion.p 
+                        className="mb-3 text-sm font-medium text-neutral-600"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          duration: 0.4,
+                          delay: index * 0.1 + 0.6,
+                          ease: "easeOut"
+                        }}
+                      >
                         {step.subtitle}
-                      </p>
-                      <p className="mb-4 text-sm text-neutral-600">
+                      </motion.p>
+                      <motion.p 
+                        className="mb-4 text-sm text-neutral-600"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          duration: 0.4,
+                          delay: index * 0.1 + 0.7,
+                          ease: "easeOut"
+                        }}
+                      >
                         {step.description}
-                      </p>
+                      </motion.p>
 
                       {/* 詳細特點 */}
                       <AnimatePresence>
                         {activeStep === step.id && (
                           <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.3 }}
+                            initial={{ opacity: 0, height: 0, y: 20 }}
+                            animate={{ opacity: 1, height: 'auto', y: 0 }}
+                            exit={{ opacity: 0, height: 0, y: 20 }}
+                            transition={{ 
+                              duration: 0.4,
+                              ease: [0.25, 0.46, 0.45, 0.94]
+                            }}
                             className="border-t border-neutral-200 pt-4"
                           >
-                            <h4 className="mb-2 text-sm font-medium text-neutral-950">
+                            <motion.h4 
+                              className="mb-2 text-sm font-medium text-neutral-950"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.3 }}
+                            >
                               關鍵特點：
-                            </h4>
+                            </motion.h4>
                             <ul className="space-y-1">
                               {step.details.map((detail, detailIndex) => (
                                 <motion.li
                                   key={detailIndex}
                                   initial={{ opacity: 0, x: -10 }}
                                   animate={{ opacity: 1, x: 0 }}
-                                  transition={{ delay: detailIndex * 0.1 }}
+                                  transition={{ 
+                                    delay: detailIndex * 0.1,
+                                    duration: 0.3,
+                                    ease: "easeOut"
+                                  }}
                                   className="flex items-start text-xs text-neutral-600"
                                 >
-                                  <span className="mt-2 mr-2 h-1 w-1 flex-shrink-0 rounded-full bg-neutral-400" />
+                                  <motion.span 
+                                    className="mt-2 mr-2 h-1 w-1 flex-shrink-0 rounded-full bg-neutral-400"
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ 
+                                      delay: detailIndex * 0.1 + 0.1,
+                                      duration: 0.2
+                                    }}
+                                  />
                                   {detail}
                                 </motion.li>
                               ))}
@@ -244,114 +425,199 @@ export function CentralKitchenJourney() {
 
         {/* 製作流程展示 */}
         <FadeIn>
-          <div className="mt-20 rounded-3xl bg-gradient-to-br from-neutral-50 to-neutral-100 p-8 lg:p-12">
-            <div className="mb-12 text-center">
+          <motion.div 
+            className="mt-20 rounded-3xl bg-gradient-to-br from-neutral-50 to-neutral-100 p-8 lg:p-12"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.8,
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
+          >
+            <motion.div 
+              className="mb-12 text-center"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 0.6,
+                delay: 0.2,
+                ease: "easeOut"
+              }}
+            >
               <h3 className="mb-4 text-2xl font-semibold text-neutral-950">
                 專業製作流程一覽
               </h3>
               <p className="mx-auto max-w-3xl text-lg text-neutral-600">
                 透過先進的設備和嚴格的流程控制，我們確保每一份寵物鮮食都達到最高品質標準。
               </p>
-            </div>
+            </motion.div>
 
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
               {/* 製作流程圖 */}
               <div className="space-y-6">
-                <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <div className="mb-4 flex items-center">
-                    <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-100">
-                      <span className="text-sm font-bold text-neutral-700">
-                        1
-                      </span>
+                {[
+                  {
+                    step: 1,
+                    title: "原料預處理",
+                    description: "新鮮食材送達後立即進行清洗、切割和分類，確保食材的新鮮度和衛生安全。",
+                    bgColor: "bg-neutral-100"
+                  },
+                  {
+                    step: 2,
+                    title: "營養配比",
+                    description: "根據寵物營養需求，精確計算各種食材的比例，確保營養均衡完整。",
+                    bgColor: "bg-neutral-200"
+                  },
+                  {
+                    step: 3,
+                    title: "低溫烹調",
+                    description: "採用低溫慢煮技術，最大程度保留食材的營養價值和天然風味。",
+                    bgColor: "bg-neutral-300"
+                  }
+                ].map((item, index) => (
+                  <motion.div
+                    key={item.step}
+                    className="rounded-xl bg-white p-6 shadow-sm"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ 
+                      duration: 0.6,
+                      delay: 0.4 + index * 0.1,
+                      ease: "easeOut"
+                    }}
+                    whileHover={{ 
+                      y: -5,
+                      scale: 1.02,
+                      transition: { duration: 0.2 }
+                    }}
+                  >
+                    <div className="mb-4 flex items-center">
+                      <motion.div 
+                        className={`mr-3 flex h-8 w-8 items-center justify-center rounded-full ${item.bgColor}`}
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ 
+                          duration: 0.5,
+                          delay: 0.6 + index * 0.1,
+                          ease: "easeOut"
+                        }}
+                      >
+                        <span className="text-sm font-bold text-neutral-700">
+                          {item.step}
+                        </span>
+                      </motion.div>
+                      <motion.h4 
+                        className="text-lg font-semibold text-neutral-950"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          duration: 0.4,
+                          delay: 0.8 + index * 0.1,
+                          ease: "easeOut"
+                        }}
+                      >
+                        {item.title}
+                      </motion.h4>
                     </div>
-                    <h4 className="text-lg font-semibold text-neutral-950">
-                      原料預處理
-                    </h4>
-                  </div>
-                  <p className="text-sm text-neutral-600">
-                    新鮮食材送達後立即進行清洗、切割和分類，確保食材的新鮮度和衛生安全。
-                  </p>
-                </div>
-
-                <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <div className="mb-4 flex items-center">
-                    <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200">
-                      <span className="text-sm font-bold text-neutral-700">
-                        2
-                      </span>
-                    </div>
-                    <h4 className="text-lg font-semibold text-neutral-950">
-                      營養配比
-                    </h4>
-                  </div>
-                  <p className="text-sm text-neutral-600">
-                    根據寵物營養需求，精確計算各種食材的比例，確保營養均衡完整。
-                  </p>
-                </div>
-
-                <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <div className="mb-4 flex items-center">
-                    <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-300">
-                      <span className="text-sm font-bold text-neutral-700">
-                        3
-                      </span>
-                    </div>
-                    <h4 className="text-lg font-semibold text-neutral-950">
-                      低溫烹調
-                    </h4>
-                  </div>
-                  <p className="text-sm text-neutral-600">
-                    採用低溫慢煮技術，最大程度保留食材的營養價值和天然風味。
-                  </p>
-                </div>
+                    <motion.p 
+                      className="text-sm text-neutral-600"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ 
+                        duration: 0.4,
+                        delay: 1.0 + index * 0.1,
+                        ease: "easeOut"
+                      }}
+                    >
+                      {item.description}
+                    </motion.p>
+                  </motion.div>
+                ))}
               </div>
 
               {/* 品質控制要點 */}
               <div className="space-y-6">
-                <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <div className="mb-4 flex items-center">
-                    <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-400">
-                      <span className="text-sm font-bold text-white">4</span>
+                {[
+                  {
+                    step: 4,
+                    title: "急速冷卻",
+                    description: "烹調完成後立即進行急速冷卻，鎖住營養和新鮮度，抑制細菌滋生。",
+                    bgColor: "bg-neutral-400"
+                  },
+                  {
+                    step: 5,
+                    title: "無菌包裝",
+                    description: "在無塵環境中進行自動化包裝，每個包裝都經過密封檢測確保完整性。",
+                    bgColor: "bg-neutral-500"
+                  },
+                  {
+                    step: 6,
+                    title: "冷鏈配送",
+                    description: "全程冷鏈運輸，從工廠到販賣機維持0-4°C低溫，確保產品品質。",
+                    bgColor: "bg-neutral-600"
+                  }
+                ].map((item, index) => (
+                  <motion.div
+                    key={item.step}
+                    className="rounded-xl bg-white p-6 shadow-sm"
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ 
+                      duration: 0.6,
+                      delay: 0.4 + index * 0.1,
+                      ease: "easeOut"
+                    }}
+                    whileHover={{ 
+                      y: -5,
+                      scale: 1.02,
+                      transition: { duration: 0.2 }
+                    }}
+                  >
+                    <div className="mb-4 flex items-center">
+                      <motion.div 
+                        className={`mr-3 flex h-8 w-8 items-center justify-center rounded-full ${item.bgColor}`}
+                        initial={{ scale: 0, rotate: 180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ 
+                          duration: 0.5,
+                          delay: 0.6 + index * 0.1,
+                          ease: "easeOut"
+                        }}
+                      >
+                        <span className="text-sm font-bold text-white">
+                          {item.step}
+                        </span>
+                      </motion.div>
+                      <motion.h4 
+                        className="text-lg font-semibold text-neutral-950"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          duration: 0.4,
+                          delay: 0.8 + index * 0.1,
+                          ease: "easeOut"
+                        }}
+                      >
+                        {item.title}
+                      </motion.h4>
                     </div>
-                    <h4 className="text-lg font-semibold text-neutral-950">
-                      急速冷卻
-                    </h4>
-                  </div>
-                  <p className="text-sm text-neutral-600">
-                    烹調完成後立即進行急速冷卻，鎖住營養和新鮮度，抑制細菌滋生。
-                  </p>
-                </div>
-
-                <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <div className="mb-4 flex items-center">
-                    <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-500">
-                      <span className="text-sm font-bold text-white">5</span>
-                    </div>
-                    <h4 className="text-lg font-semibold text-neutral-950">
-                      無菌包裝
-                    </h4>
-                  </div>
-                  <p className="text-sm text-neutral-600">
-                    在無塵環境中進行自動化包裝，每個包裝都經過密封檢測確保完整性。
-                  </p>
-                </div>
-
-                <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <div className="mb-4 flex items-center">
-                    <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-600">
-                      <span className="text-sm font-bold text-white">6</span>
-                    </div>
-                    <h4 className="text-lg font-semibold text-neutral-950">
-                      冷鏈配送
-                    </h4>
-                  </div>
-                  <p className="text-sm text-neutral-600">
-                    全程冷鏈運輸，從工廠到販賣機維持0-4°C低溫，確保產品品質。
-                  </p>
-                </div>
+                    <motion.p 
+                      className="text-sm text-neutral-600"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ 
+                        duration: 0.4,
+                        delay: 1.0 + index * 0.1,
+                        ease: "easeOut"
+                      }}
+                    >
+                      {item.description}
+                    </motion.p>
+                  </motion.div>
+                ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         </FadeIn>
 
         {/* 品質保證說明 */}
@@ -462,49 +728,10 @@ export function CentralKitchenJourney() {
               我們的製作實力
             </h3>
             <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
-              <motion.div
-                className="text-center"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="mb-2 text-3xl font-bold text-neutral-950">
-                  50,000+
-                </div>
-                <div className="text-sm text-neutral-600">日產能（份）</div>
-              </motion.div>
-
-              <motion.div
-                className="text-center"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="mb-2 text-3xl font-bold text-neutral-950">
-                  99.9%
-                </div>
-                <div className="text-sm text-neutral-600">品質合格率</div>
-              </motion.div>
-
-              <motion.div
-                className="text-center"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="mb-2 text-3xl font-bold text-neutral-950">
-                  24小時
-                </div>
-                <div className="text-sm text-neutral-600">配送時效</div>
-              </motion.div>
-
-              <motion.div
-                className="text-center"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="mb-2 text-3xl font-bold text-neutral-950">
-                  15+
-                </div>
-                <div className="text-sm text-neutral-600">產品系列</div>
-              </motion.div>
+              <AnimatedStatNumber value="50,000+" label="日產能（份）" />
+              <AnimatedStatNumber value="99.9%" label="品質合格率" />
+              <AnimatedStatNumber value="24小時" label="配送時效" />
+              <AnimatedStatNumber value="15+" label="產品系列" />
             </div>
           </div>
         </FadeIn>
@@ -512,3 +739,4 @@ export function CentralKitchenJourney() {
     </section>
   )
 }
+

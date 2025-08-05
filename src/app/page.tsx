@@ -11,6 +11,7 @@ import { StylizedImage } from '@/components/StylizedImage'
 import { Testimonial } from '@/components/Testimonial'
 import { StatList, StatListItem } from '@/components/StatList'
 import { Button } from '@/components/Button'
+import { SafeImage } from '@/components/SafeImage'
 import {
   StatCard,
   ProgressBar,
@@ -259,12 +260,17 @@ function CaseStudies({
                 <h3>
                   <Link href={caseStudy.href}>
                     <span className="absolute inset-0 rounded-3xl" />
-                    <Image
-                      src={caseStudy.logo}
-                      alt={caseStudy.client}
-                      className="h-16 w-16"
-                      unoptimized
-                    />
+                    {caseStudy.logo && caseStudy.logo !== '' && (
+                      <SafeImage
+                        src={caseStudy.logo}
+                        alt={caseStudy.client}
+                        className="h-16 w-16"
+                        width={64}
+                        height={64}
+                        unoptimized
+                        fallbackBehavior="hide"
+                      />
+                    )}
                   </Link>
                 </h3>
                 <p className="mt-6 flex gap-x-2 text-sm text-neutral-950">

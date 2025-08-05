@@ -9,6 +9,7 @@ import {
   BreadcrumbStructuredData,
   LocalBusinessStructuredData,
 } from '@/components/StructuredData'
+import { RootLayout } from '@/components/RootLayout'
 import { StoreLocatorContent } from './components/StoreLocatorContent'
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -20,5 +21,24 @@ export const metadata: Metadata = generateSEOMetadata({
 })
 
 export default function StoreLocatorPage() {
-  return <StoreLocatorContent />
+  return (
+    <RootLayout>
+      <BreadcrumbStructuredData
+        items={[
+          { name: '首頁', url: '/' },
+          { name: '門店定位', url: '/store-locator' },
+        ]}
+      />
+      <LocalBusinessStructuredData
+        business={{
+          name: 'AMIGO寵物鮮食門店',
+          description: '提供新鮮、營養的寵物鮮食，專業營養師調配',
+          address: '台灣各地門店',
+          phone: '0800-123-456',
+          url: 'https://amigo.com.tw'
+        }}
+      />
+      <StoreLocatorContent />
+    </RootLayout>
+  )
 }

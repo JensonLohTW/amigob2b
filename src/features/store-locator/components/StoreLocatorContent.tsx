@@ -2,9 +2,14 @@
 
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { MapPin, Navigation, Grid, List, Map, Phone } from 'lucide-react'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { PageIntro } from '@/components/PageIntro'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { StoreSelector } from './StoreSelector'
 import { SearchFilters } from './SearchFilters'
 import { StoreList, StoreStats } from './StoreList'
 import { MapComponent } from './MapComponent'
@@ -204,100 +209,94 @@ export function StoreLocatorContent({
   }, [initialLocation, getUserLocation])
 
   return (
-    <div className={`bg-white ${className}`}>
+    <div className={className}>
+      {/* 頁面標題區域 */}
+      <PageIntro
+        eyebrow="門店定位"
+        title="找到離您最近的 AMIGO 門店"
+      >
+        <p>
+          我們在全台各地設有多家門店，為您提供便利的取餐服務。
+          使用下方的搜尋功能找到最適合您的門店位置。
+        </p>
+      </PageIntro>
+
       <Container>
-        <PageIntro
-          eyebrow="門店定位"
-          title="找到離您最近的 AMIGO 門店"
-        >
-          <p>
-            我們在全台各地設有多家門店，為您提供便利的取餐服務。
-            使用下方的搜尋功能找到最適合您的門店位置。
-          </p>
-        </PageIntro>
 
-        {/* 快速操作栏 */}
-        <FadeIn>
-          <div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={getUserLocation}
-                disabled={isLoading}
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  suppressHydrationWarning={true}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                {isLoading ? '定位中...' : '獲取我的位置'}
-              </button>
+        {/* 快速操作栏 - 黑白灰配色 */}
+        <div className="py-6">
+          <FadeIn>
+            <Card className="border-neutral-200 bg-white">
+              <CardContent className="p-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                    <Button
+                      onClick={getUserLocation}
+                      disabled={isLoading}
+                      variant="default"
+                      className="gap-2 w-full sm:w-auto"
+                    >
+                      <Navigation className="h-4 w-4" />
+                      {isLoading ? '定位中...' : '獲取我的位置'}
+                    </Button>
 
-              {userLocation && !locationError && (
-                <span className="text-sm font-medium text-green-600">
-                  ✓ 已獲取您的位置
-                </span>
-              )}
+                    <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+                      {userLocation && !locationError && (
+                        <Badge variant="success" className="gap-1 justify-center sm:justify-start">
+                          <span>✓</span>
+                          已獲取您的位置
+                        </Badge>
+                      )}
 
-              {locationError && (
-                <span className="text-sm font-medium text-amber-600">
-                  ⚠ {locationError}
-                </span>
-              )}
-            </div>
+                      {locationError && (
+                        <Badge variant="warning" className="gap-1 justify-center sm:justify-start">
+                          <span>⚠</span>
+                          {locationError}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
 
-            {/* 視圖切換 */}
-            {showMap && (
-              <div className="flex rounded-lg bg-gray-100 p-1">
-                <button
-                  onClick={() => handleViewModeChange('list')}
-                  className={`rounded-md px-3 py-2 text-sm transition-colors ${
-                    viewMode === 'list'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  列表視圖
-                </button>
-                <button
-                  onClick={() => handleViewModeChange('map')}
-                  className={`rounded-md px-3 py-2 text-sm transition-colors ${
-                    viewMode === 'map'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  地圖視圖
-                </button>
-                <button
-                  onClick={() => handleViewModeChange('both')}
-                  className={`rounded-md px-3 py-2 text-sm transition-colors ${
-                    viewMode === 'both'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  混合視圖
-                </button>
-              </div>
-            )}
-          </div>
-        </FadeIn>
+                  {/* 視圖切換 - 響應式設計 */}
+                  {showMap && (
+                    <div className="flex w-full sm:w-auto rounded-lg bg-neutral-100 p-1">
+                      <Button
+                        onClick={() => handleViewModeChange('list')}
+                        variant={viewMode === 'list' ? 'default' : 'ghost'}
+                        size="sm"
+                        className="flex-1 sm:flex-none gap-1 sm:gap-2 text-xs sm:text-sm"
+                      >
+                        <List className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="hidden sm:inline">列表視圖</span>
+                        <span className="sm:hidden">列表</span>
+                      </Button>
+                      <Button
+                        onClick={() => handleViewModeChange('map')}
+                        variant={viewMode === 'map' ? 'default' : 'ghost'}
+                        size="sm"
+                        className="flex-1 sm:flex-none gap-1 sm:gap-2 text-xs sm:text-sm"
+                      >
+                        <Map className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="hidden sm:inline">地圖視圖</span>
+                        <span className="sm:hidden">地圖</span>
+                      </Button>
+                      <Button
+                        onClick={() => handleViewModeChange('both')}
+                        variant={viewMode === 'both' ? 'default' : 'ghost'}
+                        size="sm"
+                        className="flex-1 sm:flex-none gap-1 sm:gap-2 text-xs sm:text-sm"
+                      >
+                        <Grid className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="hidden sm:inline">混合視圖</span>
+                        <span className="sm:hidden">混合</span>
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </FadeIn>
+        </div>
 
         {/* 搜尋過濾器 */}
         {showFilters && (
@@ -314,140 +313,113 @@ export function StoreLocatorContent({
           <StoreStats stores={filteredStores} className="mb-8" />
         </FadeIn>
 
-        {/* 主要内容区域 */}
-        <FadeInStagger>
-          <AnimatePresence mode="wait">
-            {viewMode === 'list' && (
-              <motion.div
-                key="list"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <StoreList
-                  stores={filteredStores}
-                  onStoreSelect={handleStoreSelect}
-                  loading={isLoading}
-                />
-              </motion.div>
-            )}
+        {/* 主要内容区域 - 使用新的門店選擇器 */}
+        <div className="py-8">
+          <FadeInStagger>
+            <AnimatePresence mode="wait">
+              {viewMode === 'list' && (
+                <motion.div
+                  key="list"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <StoreSelector
+                    stores={filteredStores}
+                    selectedStore={selectedStore}
+                    onStoreSelect={handleStoreSelect}
+                    userLocation={userLocation}
+                  />
+                </motion.div>
+              )}
 
-            {viewMode === 'map' && showMap && (
-              <motion.div
-                key="map"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <MapComponent
-                  stores={filteredStores}
-                  userLocation={userLocation}
-                  selectedStore={selectedStore}
-                  onStoreSelect={handleStoreSelect}
-                  className="h-96"
-                />
-              </motion.div>
-            )}
+              {viewMode === 'map' && showMap && (
+                <motion.div
+                  key="map"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card className="border-neutral-200 bg-white">
+                    <CardHeader>
+                      <CardTitle className="text-neutral-900">門店地圖</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <MapComponent
+                        stores={filteredStores}
+                        userLocation={userLocation}
+                        selectedStore={selectedStore}
+                        onStoreSelect={handleStoreSelect}
+                      />
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
 
-            {viewMode === 'both' && (
-              <motion.div
-                key="both"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="grid grid-cols-1 gap-8 lg:grid-cols-2"
-              >
-                {showMap && (
+              {viewMode === 'both' && (
+                <motion.div
+                  key="both"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="grid grid-cols-1 gap-8 lg:grid-cols-2"
+                >
+                  {showMap && (
+                    <Card className="border-neutral-200 bg-white">
+                      <CardHeader>
+                        <CardTitle className="text-neutral-900">門店地圖</CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-0">
+                        <MapComponent
+                          stores={filteredStores}
+                          userLocation={userLocation}
+                          selectedStore={selectedStore}
+                          onStoreSelect={handleStoreSelect}
+                        />
+                      </CardContent>
+                    </Card>
+                  )}
+
                   <div>
-                    <h3 className="mb-4 text-lg font-semibold text-gray-900">
-                      門店地圖
-                    </h3>
-                    <MapComponent
+                    <StoreSelector
                       stores={filteredStores}
-                      userLocation={userLocation}
                       selectedStore={selectedStore}
                       onStoreSelect={handleStoreSelect}
-                      className="h-96"
+                      userLocation={userLocation}
                     />
                   </div>
-                )}
-
-                <div>
-                  <h3 className="mb-4 text-lg font-semibold text-gray-900">
-                    門店列表
-                  </h3>
-                  <StoreList
-                    stores={filteredStores}
-                    onStoreSelect={handleStoreSelect}
-                    loading={isLoading}
-                  />
-                </div>
-              </motion.div>
-            )}
+                </motion.div>
+              )}
           </AnimatePresence>
         </FadeInStagger>
+        </div>
 
-        {/* 聯繫我們 */}
-        <FadeIn>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="mt-16 text-center"
-          >
-            <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white">
-              <h3 className="mb-4 text-2xl font-bold">找不到合適的門店？</h3>
-              <p className="mb-6 text-lg opacity-90">
-                我們持續擴展服務範圍，如果您的地區暫時沒有門店，請聯繫我們了解配送服務
-              </p>
-              <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                <button className="inline-flex items-center rounded-md border border-white bg-white px-6 py-3 text-base font-medium text-blue-600 transition-colors hover:bg-gray-50">
-                  <svg
-                    className="mr-2 h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    suppressHydrationWarning={true}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                    />
-                  </svg>
-                  聯繫客服
-                </button>
-                <button className="inline-flex items-center rounded-md border border-white px-6 py-3 text-base font-medium text-white transition-colors hover:bg-white hover:text-blue-600">
-                  <svg
-                    className="mr-2 h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    suppressHydrationWarning={true}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  申請新門店
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </FadeIn>
+        {/* 聯繫我們區域 - 黑白灰配色 */}
+        <div className="py-8">
+          <FadeIn>
+            <Card className="border-neutral-200 bg-neutral-900 text-white">
+              <CardContent className="p-8 text-center">
+                <h3 className="mb-4 text-2xl font-bold">找不到合適的門店？</h3>
+                <p className="mb-6 text-lg text-neutral-300">
+                  我們持續擴展服務範圍，如果您的地區暫時沒有門店，請聯繫我們了解配送服務
+                </p>
+                <div className="flex flex-col justify-center gap-4 sm:flex-row">
+                  <Button variant="secondary" className="gap-2">
+                    <Phone className="h-4 w-4" />
+                    聯繫客服
+                  </Button>
+                  <Button variant="outline" className="gap-2 border-white text-white hover:bg-white hover:text-neutral-900">
+                    <MapPin className="h-4 w-4" />
+                    申請新門店
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </FadeIn>
+        </div>
       </Container>
     </div>
   )

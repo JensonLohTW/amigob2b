@@ -1,3 +1,5 @@
+'use client'
+
 import * as Headless from '@headlessui/react'
 import clsx from 'clsx'
 import Image from 'next/image'
@@ -46,7 +48,7 @@ export function Avatar({
           </text>
         </svg>
       )}
-      {src && (
+      {src && src !== '' && (
         <Image
           className="size-full"
           src={src}
@@ -54,6 +56,11 @@ export function Avatar({
           width={40}
           height={40}
           unoptimized
+          onError={(e) => {
+            // 當圖片載入失敗時，隱藏圖片
+            const target = e.target as HTMLImageElement
+            target.style.display = 'none'
+          }}
         />
       )}
     </span>

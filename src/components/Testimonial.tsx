@@ -1,3 +1,5 @@
+'use client'
+
 import Image, { type ImageProps } from 'next/image'
 import clsx from 'clsx'
 
@@ -34,7 +36,20 @@ export function Testimonial({
               </p>
             </blockquote>
             <figcaption className="mt-10">
-              <Image src={client.logo} alt={client.name} unoptimized />
+              {client.logo && client.logo !== '' && (
+                <Image
+                  src={client.logo}
+                  alt={client.name}
+                  width={120}
+                  height={40}
+                  unoptimized
+                  onError={(e) => {
+                    // 當圖片載入失敗時，隱藏圖片
+                    const target = e.target as HTMLImageElement
+                    target.style.display = 'none'
+                  }}
+                />
+              )}
             </figcaption>
           </figure>
         </FadeIn>

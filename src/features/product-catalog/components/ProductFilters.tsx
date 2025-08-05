@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { Badge } from '@/components/ui/badge'
 import { ProductFiltersProps } from '../types'
 import { filterOptions } from '../data/products'
 
@@ -40,32 +41,32 @@ export function ProductFilters({
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200 ${className}`}
+      className={`rounded-lg bg-white p-4 shadow-sm ring-1 ring-neutral-200 ${className}`}
     >
-      <div className="mb-6 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">产品筛选</h3>
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-base font-medium text-neutral-950">篩選</h3>
         {hasActiveFilters && (
           <motion.button
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             onClick={resetFilters}
-            className="text-sm font-medium text-blue-600 hover:text-blue-700"
+            className="text-sm font-medium text-neutral-600 hover:text-neutral-950"
           >
-            清除筛选
+            清除篩選
           </motion.button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* 年龄组筛选 */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
-            年龄阶段
+          <label className="mb-2 block text-sm font-medium text-neutral-700">
+            年齡階段
           </label>
           <select
             value={filters.ageGroup}
             onChange={(e) => handleFilterChange('ageGroup', e.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950 focus:outline-none"
           >
             {filterOptions.ageGroup.map((option) => (
               <option key={option.value} value={option.value}>
@@ -77,13 +78,13 @@ export function ProductFilters({
 
         {/* 宠物类型筛选 */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
-            宠物类型
+          <label className="mb-2 block text-sm font-medium text-neutral-700">
+            寵物類型
           </label>
           <select
             value={filters.petType}
             onChange={(e) => handleFilterChange('petType', e.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950 focus:outline-none"
           >
             {filterOptions.petType.map((option) => (
               <option key={option.value} value={option.value}>
@@ -95,7 +96,7 @@ export function ProductFilters({
 
         {/* 功能性筛选 */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
+          <label className="mb-2 block text-sm font-medium text-neutral-700">
             功能特性
           </label>
           <select
@@ -103,7 +104,7 @@ export function ProductFilters({
             onChange={(e) =>
               handleFilterChange('functionality', e.target.value)
             }
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950 focus:outline-none"
           >
             {filterOptions.functionality.map((option) => (
               <option key={option.value} value={option.value}>
@@ -115,13 +116,13 @@ export function ProductFilters({
 
         {/* 口味筛选 */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
-            口味选择
+          <label className="mb-2 block text-sm font-medium text-neutral-700">
+            口味選擇
           </label>
           <select
             value={filters.flavor}
             onChange={(e) => handleFilterChange('flavor', e.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950 focus:outline-none"
           >
             {filterOptions.flavor.map((option) => (
               <option key={option.value} value={option.value}>
@@ -235,40 +236,34 @@ export function QuickFilters({
 }: QuickFiltersProps) {
   const quickFilters = [
     {
-      label: '幼龄专用',
+      label: '幼齡專用',
       type: 'ageGroup',
       value: 'puppy',
-      color: 'bg-pink-100 text-pink-800 hover:bg-pink-200',
     },
     {
-      label: '成年维持',
+      label: '成年維持',
       type: 'ageGroup',
       value: 'adult',
-      color: 'bg-blue-100 text-blue-800 hover:bg-blue-200',
     },
     {
-      label: '乐龄照护',
+      label: '樂齡照護',
       type: 'ageGroup',
       value: 'senior',
-      color: 'bg-purple-100 text-purple-800 hover:bg-purple-200',
     },
     {
-      label: '体重管理',
+      label: '體重管理',
       type: 'functionality',
       value: '体重管理',
-      color: 'bg-orange-100 text-orange-800 hover:bg-orange-200',
     },
     {
-      label: '关节保健',
+      label: '關節保健',
       type: 'functionality',
       value: '关节保健',
-      color: 'bg-green-100 text-green-800 hover:bg-green-200',
     },
     {
-      label: '毛发护理',
+      label: '毛髮護理',
       type: 'functionality',
       value: '毛发护理',
-      color: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200',
     },
   ]
 
@@ -279,19 +274,23 @@ export function QuickFilters({
       transition={{ duration: 0.5, delay: 0.2 }}
       className={`${className}`}
     >
-      <h4 className="mb-3 text-sm font-medium text-gray-700">快速筛选</h4>
+      <h4 className="mb-3 text-sm font-medium text-neutral-700">快速篩選</h4>
       <div className="flex flex-wrap gap-2">
         {quickFilters.map((filter, index) => (
-          <motion.button
+          <motion.div
             key={filter.label}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.1 }}
-            onClick={() => onFilterClick(filter.type, filter.value)}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${filter.color}`}
           >
-            {filter.label}
-          </motion.button>
+            <Badge
+              variant="outline"
+              className="cursor-pointer text-xs hover:bg-neutral-100 transition-colors"
+              onClick={() => onFilterClick(filter.type, filter.value)}
+            >
+              {filter.label}
+            </Badge>
+          </motion.div>
         ))}
       </div>
     </motion.div>

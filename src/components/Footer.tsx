@@ -132,13 +132,15 @@ export function Footer() {
             <NewsletterForm />
           </div>
         </div>
-        <div className="mt-24 mb-20 flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-t border-neutral-950/10 pt-12">
+        <div className="mt-24 mb-20 flex flex-wrap items-center justify-between gap-x-6 gap-y-4 border-t border-neutral-950/10 pt-12">
           <Link href="/" aria-label="Home">
-            <Logo className="h-8" fillOnHover />
+            <Logo className="h-24" fillOnHover />
           </Link>
-          <p className="text-sm text-neutral-700">
-            © AMIGO 寵物鮮食科技有限公司 {new Date().getFullYear()}
-          </p>
+          <div className="flex items-center h-24">
+            <p className="text-sm text-neutral-700">
+              © AMIGO 寵物鮮食科技有限公司 {new Date().getFullYear()}
+            </p>
+          </div>
         </div>
       </FadeIn>
     </Container>

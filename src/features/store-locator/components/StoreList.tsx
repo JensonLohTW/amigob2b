@@ -279,35 +279,35 @@ export function StoreStats({ stores, className = '' }: StoreStatsProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 p-6 ${className}`}
+      className={`rounded-xl bg-neutral-50 border border-neutral-200 p-6 ${className}`}
     >
-      <h3 className="mb-4 text-lg font-semibold text-gray-900">门店统计</h3>
+      <h3 className="mb-4 text-lg font-semibold text-neutral-900">門店統計</h3>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="text-center">
-          <div className="text-2xl font-bold text-blue-600">
+          <div className="text-2xl font-bold text-neutral-900">
             {stores.length}
           </div>
-          <div className="text-sm text-gray-600">总门店数</div>
+          <div className="text-sm text-neutral-600">總門店數</div>
         </div>
 
         <div className="text-center">
-          <div className="text-2xl font-bold text-green-600">
+          <div className="text-2xl font-bold text-neutral-700">
             {activeStores}
           </div>
-          <div className="text-sm text-gray-600">营业中</div>
+          <div className="text-sm text-neutral-600">營業中</div>
         </div>
 
         <div className="text-center">
-          <div className="text-2xl font-bold text-purple-600">{cities}</div>
-          <div className="text-sm text-gray-600">覆盖城市</div>
+          <div className="text-2xl font-bold text-neutral-800">{cities}</div>
+          <div className="text-sm text-neutral-600">覆蓋城市</div>
         </div>
 
         <div className="text-center">
-          <div className="text-2xl font-bold text-orange-600">
+          <div className="text-2xl font-bold text-neutral-900">
             {averageRating ? averageRating.toFixed(1) : '0.0'}
           </div>
-          <div className="text-sm text-gray-600">平均评分</div>
+          <div className="text-sm text-neutral-600">平均評分</div>
         </div>
       </div>
     </motion.div>

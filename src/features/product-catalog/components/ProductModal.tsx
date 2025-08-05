@@ -3,6 +3,8 @@
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { motion } from 'framer-motion'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { ProductModalProps } from '../types'
 
 /**
@@ -12,29 +14,29 @@ import { ProductModalProps } from '../types'
 export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
   if (!product) return null
 
-  const getAgeGroupColor = (ageGroup: string) => {
+  const getAgeGroupLabel = (ageGroup: string) => {
     switch (ageGroup) {
       case 'puppy':
-        return 'bg-pink-100 text-pink-800'
+        return '幼齡'
       case 'adult':
-        return 'bg-blue-100 text-blue-800'
+        return '成年'
       case 'senior':
-        return 'bg-purple-100 text-purple-800'
+        return '樂齡'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return '全齡'
     }
   }
 
-  const getPetTypeIcon = (petType: string) => {
+  const getPetTypeLabel = (petType: string) => {
     switch (petType) {
       case 'dog':
-        return '🐕'
+        return '犬用'
       case 'cat':
-        return '🐱'
+        return '貓用'
       case 'both':
-        return '🐕🐱'
+        return '犬貓通用'
       default:
-        return '🐾'
+        return '寵物用'
     }
   }
 
@@ -71,30 +73,22 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
                   transition={{ duration: 0.3 }}
                 >
                   {/* 模态框头部 */}
-                  <div className="flex items-center justify-between border-b border-gray-200 p-6">
+                  <div className="flex items-center justify-between border-b border-neutral-200 p-6">
                     <div className="flex items-center gap-4">
-                      <h3 className="text-2xl font-bold text-gray-900">
+                      <h3 className="text-2xl font-bold text-neutral-950">
                         {product.name}
                       </h3>
-                      <span
-                        className={`rounded-full px-3 py-1 text-sm font-medium ${getAgeGroupColor(product.ageGroup)}`}
-                      >
-                        {product.ageGroup === 'puppy'
-                          ? '幼龄'
-                          : product.ageGroup === 'adult'
-                            ? '成年'
-                            : product.ageGroup === 'senior'
-                              ? '乐龄'
-                              : '全龄'}
-                      </span>
-                      <span className="text-2xl">
-                        {getPetTypeIcon(product.petType)}
-                      </span>
+                      <Badge variant="secondary">
+                        {getAgeGroupLabel(product.ageGroup)}
+                      </Badge>
+                      <Badge variant="outline">
+                        {getPetTypeLabel(product.petType)}
+                      </Badge>
                     </div>
 
                     <button
                       onClick={onClose}
-                      className="rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                      className="rounded-md p-2 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600"
                     >
                       <svg
                         className="h-6 w-6"
@@ -121,31 +115,33 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
                         <div className="relative mb-6 h-64 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200">
                           <div className="absolute top-4 left-4 flex gap-2">
                             {product.isNew && (
-                              <span className="rounded-full bg-red-500 px-2 py-1 text-xs font-medium text-white">
+                              <Badge variant="default" className="text-xs">
                                 新品
-                              </span>
+                              </Badge>
                             )}
                             {product.isRecommended && (
-                              <span className="rounded-full bg-yellow-500 px-2 py-1 text-xs font-medium text-white">
-                                推荐
-                              </span>
+                              <Badge variant="secondary" className="text-xs">
+                                推薦
+                              </Badge>
                             )}
                           </div>
 
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-8xl opacity-30">🍽️</div>
+                            <div className="text-6xl font-light text-neutral-400">
+                              產品圖片
+                            </div>
                           </div>
 
                           <div className="absolute right-4 bottom-4">
                             <div className="flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 text-sm">
                               <svg
-                                className="h-4 w-4 text-yellow-500"
+                                className="h-4 w-4 text-neutral-600"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                               >
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                               </svg>
-                              <span className="font-medium">
+                              <span className="font-medium text-neutral-700">
                                 {product.popularity}
                               </span>
                             </div>
@@ -153,21 +149,21 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
                         </div>
 
                         {/* 价格和包装 */}
-                        <div className="mb-6 rounded-lg bg-gray-50 p-4">
+                        <div className="mb-6 rounded-lg bg-neutral-50 p-4">
                           <div className="flex items-center justify-between">
                             <div>
-                              <div className="text-2xl font-bold text-gray-900">
+                              <div className="text-2xl font-bold text-neutral-950">
                                 {product.price}
                               </div>
-                              <div className="text-sm text-gray-600">
+                              <div className="text-sm text-neutral-600">
                                 {product.packaging}
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="text-sm text-gray-600">
+                              <div className="text-sm text-neutral-600">
                                 保存期限
                               </div>
-                              <div className="font-medium">
+                              <div className="font-medium text-neutral-950">
                                 {product.shelfLife}
                               </div>
                             </div>
@@ -176,17 +172,17 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
 
                         {/* 认证标志 */}
                         <div>
-                          <h4 className="mb-2 text-sm font-medium text-gray-700">
-                            认证标志
+                          <h4 className="mb-2 text-sm font-medium text-neutral-700">
+                            認證標誌
                           </h4>
                           <div className="flex flex-wrap gap-2">
                             {product.certifications.map((cert, index) => (
-                              <span
+                              <Badge
                                 key={index}
-                                className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800"
+                                variant="outline"
                               >
                                 {cert}
-                              </span>
+                              </Badge>
                             ))}
                           </div>
                         </div>
@@ -196,17 +192,17 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
                       <div className="space-y-6">
                         {/* 产品描述 */}
                         <div>
-                          <h4 className="mb-2 text-lg font-semibold text-gray-900">
-                            产品描述
+                          <h4 className="mb-2 text-lg font-semibold text-neutral-950">
+                            產品描述
                           </h4>
-                          <p className="leading-relaxed text-gray-700">
+                          <p className="leading-relaxed text-neutral-700">
                             {product.description}
                           </p>
                         </div>
 
                         {/* 主要成分 */}
                         <div>
-                          <h4 className="mb-3 text-lg font-semibold text-gray-900">
+                          <h4 className="mb-3 text-lg font-semibold text-neutral-950">
                             主要成分
                           </h4>
                           <div className="grid grid-cols-2 gap-2">
@@ -214,10 +210,10 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
                               (ingredient, index) => (
                                 <div
                                   key={index}
-                                  className="flex items-center gap-2 rounded-lg bg-green-50 p-2"
+                                  className="flex items-center gap-2 rounded-lg bg-neutral-50 p-2"
                                 >
-                                  <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                                  <span className="text-sm text-green-800">
+                                  <div className="h-2 w-2 rounded-full bg-neutral-400"></div>
+                                  <span className="text-sm text-neutral-700">
                                     {ingredient}
                                   </span>
                                 </div>
@@ -228,17 +224,17 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
 
                         {/* 营养亮点 */}
                         <div>
-                          <h4 className="mb-3 text-lg font-semibold text-gray-900">
-                            营养亮点
+                          <h4 className="mb-3 text-lg font-semibold text-neutral-950">
+                            營養亮點
                           </h4>
                           <div className="grid grid-cols-2 gap-3">
                             {product.nutritionHighlights.map(
                               (highlight, index) => (
                                 <div
                                   key={index}
-                                  className="rounded-lg border border-orange-200 bg-orange-50 p-3"
+                                  className="rounded-lg border border-neutral-200 bg-neutral-50 p-3"
                                 >
-                                  <span className="text-sm font-medium text-orange-800">
+                                  <span className="text-sm font-medium text-neutral-700">
                                     {highlight}
                                   </span>
                                 </div>
@@ -249,34 +245,34 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
 
                         {/* 功能特性 */}
                         <div>
-                          <h4 className="mb-3 text-lg font-semibold text-gray-900">
+                          <h4 className="mb-3 text-lg font-semibold text-neutral-950">
                             功能特性
                           </h4>
                           <div className="flex flex-wrap gap-2">
                             {product.functionality.map((func, index) => (
-                              <span
+                              <Badge
                                 key={index}
-                                className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800"
+                                variant="secondary"
                               >
                                 {func}
-                              </span>
+                              </Badge>
                             ))}
                           </div>
                         </div>
 
                         {/* 适用对象 */}
                         <div>
-                          <h4 className="mb-3 text-lg font-semibold text-gray-900">
-                            适用对象
+                          <h4 className="mb-3 text-lg font-semibold text-neutral-950">
+                            適用對象
                           </h4>
                           <div className="space-y-2">
                             {product.suitableFor.map((suitable, index) => (
                               <div
                                 key={index}
-                                className="flex items-center gap-2 text-sm text-gray-700"
+                                className="flex items-center gap-2 text-sm text-neutral-700"
                               >
                                 <svg
-                                  className="h-4 w-4 text-green-500"
+                                  className="h-4 w-4 text-neutral-600"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -296,10 +292,10 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
 
                         {/* 保存说明 */}
                         <div>
-                          <h4 className="mb-2 text-lg font-semibold text-gray-900">
-                            保存说明
+                          <h4 className="mb-2 text-lg font-semibold text-neutral-950">
+                            保存說明
                           </h4>
-                          <p className="rounded-lg bg-gray-50 p-3 text-sm text-gray-700">
+                          <p className="rounded-lg bg-neutral-50 p-3 text-sm text-neutral-700">
                             {product.storageInstructions}
                           </p>
                         </div>
@@ -308,22 +304,22 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
                   </div>
 
                   {/* 模态框底部 */}
-                  <div className="flex items-center justify-between border-t border-gray-200 bg-gray-50 p-6">
-                    <div className="text-sm text-gray-600">
+                  <div className="flex items-center justify-between border-t border-neutral-200 bg-neutral-50 p-6">
+                    <div className="text-sm text-neutral-600">
                       口味：
-                      <span className="font-medium">{product.flavor}</span>
+                      <span className="font-medium text-neutral-950">{product.flavor}</span>
                     </div>
 
                     <div className="flex gap-3">
-                      <button
+                      <Button
+                        variant="outline"
                         onClick={onClose}
-                        className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
                       >
-                        关闭
-                      </button>
-                      <button className="rounded-lg bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700">
-                        加入购物车
-                      </button>
+                        關閉
+                      </Button>
+                      <Button>
+                        加入購物車
+                      </Button>
                     </div>
                   </div>
                 </motion.div>

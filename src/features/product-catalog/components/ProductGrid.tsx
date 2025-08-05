@@ -22,11 +22,13 @@ export function ProductGrid({
         animate={{ opacity: 1 }}
         className={`py-12 text-center ${className}`}
       >
-        <div className="mb-4 text-6xl">🔍</div>
-        <h3 className="mb-2 text-lg font-medium text-gray-900">
-          没有找到符合条件的产品
+        <div className="mb-4 text-4xl font-light text-neutral-400">
+          暫無產品
+        </div>
+        <h3 className="mb-2 text-lg font-medium text-neutral-950">
+          沒有找到符合條件的產品
         </h3>
-        <p className="text-gray-600">请尝试调整筛选条件或清除所有筛选</p>
+        <p className="text-neutral-600">請嘗試調整篩選條件或清除所有篩選</p>
       </motion.div>
     )
   }
@@ -37,7 +39,7 @@ export function ProductGrid({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         <AnimatePresence mode="popLayout">
           {products.map((product, index) => (
@@ -92,22 +94,22 @@ export function ProductStats({
       className={`flex items-center justify-between ${className}`}
     >
       <div className="flex items-center gap-4">
-        <div className="text-sm text-gray-600">
-          显示{' '}
-          <span className="font-medium text-gray-900">{filteredProducts}</span>{' '}
-          个产品
+        <div className="text-sm text-neutral-600">
+          顯示{' '}
+          <span className="font-medium text-neutral-950">{filteredProducts}</span>{' '}
+          個產品
           {filteredProducts !== totalProducts && (
-            <span> / 共 {totalProducts} 个</span>
+            <span> / 共 {totalProducts} 個</span>
           )}
         </div>
 
         <div className="hidden items-center gap-2 sm:flex">
-          <span className="text-sm text-gray-500">分类：</span>
+          <span className="text-sm text-neutral-500">分類：</span>
           <div className="flex gap-1">
             {categories.slice(1).map((category) => (
               <span
                 key={category}
-                className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-700"
+                className="rounded-full bg-neutral-100 px-2 py-1 text-xs text-neutral-700"
               >
                 {category}
               </span>
@@ -117,11 +119,11 @@ export function ProductStats({
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-500">排序：</span>
-        <select className="rounded-md border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-          <option value="popularity">人气排序</option>
-          <option value="name">名称排序</option>
-          <option value="price">价格排序</option>
+        <span className="text-sm text-neutral-500">排序：</span>
+        <select className="rounded-md border-neutral-300 text-sm focus:border-neutral-950 focus:ring-neutral-950">
+          <option value="popularity">人氣排序</option>
+          <option value="name">名稱排序</option>
+          <option value="price">價格排序</option>
           <option value="newest">最新上架</option>
         </select>
       </div>

@@ -44,12 +44,21 @@ const enhanceArticles = (articles: any[]) => {
       tags.push('季節照護', '環境適應')
     }
 
+    // 基於文章標題長度計算確定性的閱讀時間，避免 SSR 水合錯誤
+    const titleLength = article.title.length
+    const readTime = Math.ceil((titleLength % 7) + 3) // 3-9 分鐘的確定性範圍
+
+    // 基於文章描述長度計算確定性的難度等級
+    const descriptionLength = article.description.length
+    const difficultyIndex = descriptionLength % 3
+    const difficulty = ['初級', '中級', '進階'][difficultyIndex]
+
     return {
       ...article,
       category,
       tags,
-      readTime: Math.ceil(Math.random() * 8 + 2), // 模擬閱讀時間
-      difficulty: ['初級', '中級', '進階'][Math.floor(Math.random() * 3)],
+      readTime,
+      difficulty,
     }
   })
 }
@@ -182,11 +191,19 @@ function ArticleCard({ article }: { article: any }) {
             <div className="mt-6 flex items-center gap-4">
               <div className="flex items-center gap-3">
                 <div className="h-8 w-8 overflow-hidden rounded-full bg-neutral-100">
-                  <Image
-                    alt=""
-                    {...article.author.image}
-                    className="h-full w-full object-cover grayscale"
-                  />
+                  {article.author.image?.src ? (
+                    <Image
+                      src={article.author.image.src}
+                      alt={article.author.name}
+                      width={32}
+                      height={32}
+                      className="h-full w-full object-cover grayscale"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-neutral-200 text-xs font-medium text-neutral-600">
+                      {article.author.name.charAt(0)}
+                    </div>
+                  )}
                 </div>
                 <div className="text-sm">
                   <div className="font-medium text-neutral-950">
@@ -202,15 +219,19 @@ function ArticleCard({ article }: { article: any }) {
           </div>
 
           {/* 文章圖片 */}
-          <div className="ml-6 w-24 flex-shrink-0 sm:w-32">
-            <div className="aspect-square w-full overflow-hidden rounded-2xl bg-neutral-100">
-              <Image
-                alt=""
-                {...article.image}
-                className="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
-              />
+          {article.author.image?.src && (
+            <div className="ml-6 w-24 flex-shrink-0 sm:w-32">
+              <div className="aspect-square w-full overflow-hidden rounded-2xl bg-neutral-100">
+                <Image
+                  src={article.author.image.src}
+                  alt={article.title}
+                  width={128}
+                  height={128}
+                  className="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </article>
     </FadeIn>

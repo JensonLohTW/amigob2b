@@ -1,5 +1,6 @@
 import { useId } from 'react'
 import clsx from 'clsx'
+import Image from 'next/image'
 
 export function Logomark({
   invert = false,
@@ -52,28 +53,15 @@ export function Logo({
   fillOnHover?: boolean
 }) {
   return (
-    <svg
-      viewBox="0 0 130 32"
-      aria-hidden="true"
-      className={clsx(fillOnHover && 'group/logo', className)}
-      {...props}
-    >
-      <Logomark
-        preserveAspectRatio="xMinYMid meet"
-        invert={invert}
-        filled={filled}
+    <div className={clsx('flex items-center justify-center', className)}>
+      <Image
+        src="/icon.svg"
+        alt="AMIGO"
+        width={160}
+        height={64}
+        className="h-full w-auto"
+        priority
       />
-      <text
-        x="40"
-        y="20"
-        className={clsx(
-          'text-lg font-bold',
-          invert ? 'fill-white' : 'fill-neutral-950',
-        )}
-        style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
-      >
-        AMIGO
-      </text>
-    </svg>
+    </div>
   )
 }

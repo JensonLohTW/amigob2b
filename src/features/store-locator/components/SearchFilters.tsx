@@ -188,7 +188,7 @@ export function SearchFilters({
 
   return (
     <div
-      className={`rounded-xl bg-white shadow-sm ring-1 ring-gray-200 ${className}`}
+      className={`rounded-xl bg-white shadow-sm ring-1 ring-neutral-200 ${className}`}
     >
       {/* 搜索栏和快速过滤器 */}
       <div className="p-6">
@@ -196,7 +196,7 @@ export function SearchFilters({
         <div className="relative mb-4">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             <svg
-              className="h-5 w-5 text-gray-400"
+              className="h-5 w-5 text-neutral-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -214,7 +214,7 @@ export function SearchFilters({
             placeholder="搜尋門店名稱、地址或特色..."
             value={searchText}
             onChange={(e) => handleSearchTextChange(e.target.value)}
-            className="block w-full rounded-lg border border-gray-300 py-3 pr-3 pl-10 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+            className="block w-full rounded-lg border border-neutral-300 py-3 pr-3 pl-10 focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/20"
           />
         </div>
 
