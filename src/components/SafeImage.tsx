@@ -2,7 +2,7 @@
 
 import Image, { type ImageProps } from 'next/image'
 
-interface SafeImageProps extends Omit<ImageProps, 'onError'> {
+interface SafeImageProps extends Omit<ImageProps, 'onError' | 'placeholder'> {
   fallbackBehavior?: 'hide' | 'placeholder'
   placeholder?: React.ReactNode
 }
@@ -31,6 +31,7 @@ export function SafeImage({
           {...props}
           className={className}
           onError={handleError}
+          alt={props.alt || ''}
         />
         {placeholder}
       </div>
@@ -42,6 +43,7 @@ export function SafeImage({
       {...props}
       className={className}
       onError={handleError}
+      alt={props.alt || ''}
     />
   )
 }
