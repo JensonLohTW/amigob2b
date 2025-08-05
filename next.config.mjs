@@ -63,6 +63,8 @@ const nextConfig = {
   // Images configuration for static export
   images: {
     unoptimized: true, // Required for static export
+    loader: 'custom',
+    loaderFile: './image-loader.js',
   },
 
   // Optimize for production builds
